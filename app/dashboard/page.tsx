@@ -71,7 +71,7 @@ export default function Dashboard(){
    <a href="/" style={{color:"#d5a66d",fontWeight:700}}>1960 STUDIO</a>
    <button onClick={logout} style={buttonStyle}>تسجيل خروج</button>
   </header>
-  {profile&&<section style={{marginTop:48}}>
+  {profile&&<section style={{marginTop:48}}><a href="/gallery" style={{display:"inline-block",marginBottom:22,padding:"12px 18px",background:"#583a4b",border:"1px solid #87546d",borderRadius:12,textDecoration:"none",color:"#f5c2d5",fontWeight:700}}>🎞 معرض المشروع · الصور والفيديوهات</a>
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
    <h1>أهلًا، {profile.full_name}</h1>
    {profile.app_role==="supervisor"?<>
