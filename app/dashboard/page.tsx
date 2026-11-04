@@ -39,10 +39,10 @@ export default function Dashboard(){
     db.from("team_members").select("team_id,role").eq("user_id",user.id),
     db.from("assignments").select("id,title,description,due_at").order("created_at",{ascending:false}).limit(30)
    ]);
-   if(!joins.error){setRequests((joins.data??[]) as Request[]);setSelected(((joins.data??[]) as Request[]).map(x=>x.team_id));}
+   if(!joins.error){const existing=(joins.data??[]) as Request[];setRequests(existing);setSelected(existing.map(x=>x.team_id));if(current.approval_status==="pending"&&existing.length===0){const stored=user.user_metadata?.requested_team_ids; if(Array.isArray(stored)&&stored.length>=2&&stored.length<=3&&stored.every((x:unknown)=>typeof x==="number"&&Number.isInteger(x))){const saved=await db.rpc("request_my_teams",{p_team_ids:stored});if(!saved.error){setSelected(stored);setRequests(stored.map((team_id:number)=>({user_id:user.id,team_id,status:"pending"})));}else setMessage("تعذر حفظ الفرق المختارة أثناء التسجيل: "+saved.error.message);}}}
    if(!membersResult.error)setMembers((membersResult.data??[]) as Membership[]);
    if(!taskResult.error)setTasks((taskResult.data??[]) as Task[]);
-   setMessage("");
+   if(joins.error)setMessage("تعذر تحميل اختيارات الفرق: "+joins.error.message);
   }
  },[]);
  useEffect(()=>{void load()},[load]);
