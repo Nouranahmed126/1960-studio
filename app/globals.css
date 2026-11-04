@@ -111,3 +111,11 @@ filter:drop-shadow(0 7px 4px #0009)
 }
 .site-bottom-scroll a[aria-current="page"] span{background:transparent!important;color:inherit!important;box-shadow:none!important;filter:drop-shadow(0 3px 4px #e6a1bc88)}
 @media(prefers-reduced-motion:reduce){.site-bottom-scroll a span{transition:none!important}}
+
+/* Cinematic raised portrait treatment: preserves uploaded photo itself */
+.crew-3d-track,.home-stars-3d{perspective:1000px}
+.crew-3d-card,.home-star-3d-card{position:relative;transform-style:preserve-3d;box-shadow:0 13px 25px #0009,0 4px 0 #100c16,inset 1px 1px 0 #ffe9c65c!important;border:1px solid #b994aa!important;transition:transform .3s ease,box-shadow .3s ease!important}
+.crew-3d-photo,.home-star-3d-photo{position:relative;display:block;border:2px solid #e2b7cb!important;box-shadow:inset 0 0 9px #fff5,0 4px 0 #604157,0 9px 16px #000b,0 0 18px #e9b3d02b!important;filter:contrast(1.06) saturate(1.05);transform:translateZ(12px) rotateX(2deg);transition:transform .3s ease,box-shadow .3s ease!important}
+.crew-3d-card:hover,.crew-3d-card:focus-within,.home-star-3d-card:hover,.home-star-3d-card:focus-visible{transform:translateY(-5px) rotateY(-4deg) rotateX(3deg);box-shadow:0 19px 30px #000b,0 5px 0 #100c16!important}
+.crew-3d-card:hover .crew-3d-photo,.home-star-3d-card:hover .home-star-3d-photo{transform:translateZ(22px) rotateX(-3deg) scale(1.025)}
+@media(prefers-reduced-motion:reduce){.crew-3d-card,.home-star-3d-card,.crew-3d-photo,.home-star-3d-photo{transition:none!important;transform:none!important}}
