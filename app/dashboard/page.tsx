@@ -64,7 +64,7 @@ export default function Dashboard(){
   else{await load();setMessage("تمت الموافقة على الطالب وفرق العمل.");}
  }
  async function logout(){await getSupabase()?.auth.signOut();window.location.replace("/login");}
- const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
+ const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));\n const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
  return <main className="dashboard-shell">
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
@@ -75,9 +75,9 @@ export default function Dashboard(){
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
    <h1>أهلًا، {profile.full_name}</h1><nav style={{display:"flex",gap:12,flexWrap:"wrap",margin:"18px 0"}}><a href="/sectors" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>🎬 قطاعات فرق العمل · الشات والمهام والملفات</a><a href="/chat" style={{color:"#f5c2d5",padding:12,border:"1px solid #795a70",borderRadius:10}}>💬 شات فريق الفيلم</a><a href="/requests" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>✉️ {profile.app_role==="supervisor"?"طلبات ورسائل الطلاب":"رسالة إلى نوران · طلب محاضرة"}</a></nav><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
    {profile.app_role==="supervisor"?<>
-    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><section style={{...panel,borderColor:"#886277"}}><h2>🎞 متابعة طاقم الفيلم</h2><p>الأعضاء المعتمدون: <strong>{students.filter(s=>s.approval_status==="approved").length}</strong> من العدد المستهدف 18</p><p>طلبات بانتظار الاعتماد: <strong>{students.filter(s=>s.approval_status==="pending").length}</strong></p>{students.filter(s=>s.approval_status==="approved").length>=18&&<p>تنبيه: العدد المستهدف اكتمل أو تم تجاوزه؛ راجعي الأسماء قبل الموافقة على حسابات إضافية.</p>}<a href="/crew">عرض بطاقات الطاقم والأدوار</a></section><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>عرض ملفات فرق العمل</a></p>
+    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><section style={{...panel,borderColor:"#886277"}}><h2>🎞 متابعة طاقم الفيلم</h2><p>الأعضاء المعتمدون: <strong>{students.filter(s=>s.approval_status==="approved").length}</strong> من العدد المستهدف 18</p><p>طلبات بانتظار الاعتماد: <strong>{visiblePending.length}</strong></p>{students.filter(s=>s.approval_status==="approved").length>=18&&<p>تنبيه: العدد المستهدف اكتمل أو تم تجاوزه؛ راجعي الأسماء قبل الموافقة على حسابات إضافية.</p>}<a href="/crew">عرض بطاقات الطاقم والأدوار</a></section><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>عرض ملفات فرق العمل</a></p>
     <div style={{display:"grid",gap:14,marginTop:26}}>
-     {students.filter(p=>p.approval_status==="pending").map(student=>{
+     {visiblePending.map(student=>{
       const own=requests.filter(r=>r.user_id===student.id&&r.status==="pending");
       return <article key={student.id} style={panel}>
        <h2 style={{marginTop:0,fontSize:19}}>{student.full_name}</h2>
@@ -85,7 +85,7 @@ export default function Dashboard(){
        <button style={buttonStyle} disabled={busy||own.length<2||own.length>3} onClick={()=>void approve(student.id)}>الموافقة على الطالب والفرق</button>
       </article>;
      })}
-     {!students.some(p=>p.approval_status==="pending")&&<p>مفيش طلبات جديدة حاليًا.</p>}
+     {visiblePending.length===0&&<p>مفيش طلبات جديدة حاليًا.</p>}
     </div>
    </>:profile.approval_status!=="approved"?<>
     <p style={{color:"#b7c0ce"}}>حسابك لسه في انتظار موافقة المشرفة. ملفات الفرق مش متاحة قبل الموافقة.</p>
