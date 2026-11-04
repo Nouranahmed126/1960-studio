@@ -6,7 +6,16 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  useEffect(() => {\n    const db = getSupabase();\n    if (!db) return;\n    let active = true;\n    void db.auth.getSession().then(({ data: { session } }) => {\n      if (active && session?.user) window.location.replace("/dashboard");\n    });\n    return () => { active = false; };\n  }, []);\n  async function submit(e: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    const db = getSupabase();
+    if (!db) return;
+    let active = true;
+    void db.auth.getSession().then(({ data: { session } }) => {
+      if (active && session?.user) window.location.replace("/dashboard");
+    });
+    return () => { active = false; };
+  }, []);
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const supabase = getSupabase();
     if (!supabase) { setMessage("لسه محتاجين نضبط إعدادات اتصال Supabase."); return; }
