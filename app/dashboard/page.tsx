@@ -103,7 +103,7 @@ export default function Dashboard(){
      {tasks.length?tasks.map(t=><article key={t.id} style={{borderTop:"1px solid #343a49",padding:"12px 0"}}>
       <strong>{t.title}</strong><p style={{whiteSpace:"pre-wrap",color:"#b7c0ce"}}>{t.description}</p>
       {t.due_at&&<small>آخر موعد: {new Date(t.due_at).toLocaleDateString("ar-EG")}</small>}
-     </article>):<p>مفيش تكليفات ظاهرة ليكي حاليًا.</p>}
+     </article>):<p>لا توجد تكليفات متاحة لك حاليًا.</p>}
     </section>
    </>}
   </section>}
