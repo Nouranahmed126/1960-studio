@@ -29,7 +29,7 @@ export default function Register() {
   setBusy(true);
   try{
    const {data,error}=await db.functions.invoke("student-signup",{body:{fullName:name.trim(),username:username.trim().toLowerCase(),password,teams:selected}});
-   if(error||!data?.ok){setMessage(data?.message||"تعذر التسجيل. تأكدي من اسم المستخدم وحاولي لاحقًا.");return;}
+   if(error||!data?.ok){let detail=data?.message; if(!detail&&error&&"context" in error){try{const response=(error as {context?:Response}).context;if(response)detail=(await response.json()).message;}catch{}} setMessage(detail||"تعذر التسجيل. إذا كنتِ سجّلتِ بالفعل، جرّبي تسجيل الدخول بنفس اسم المستخدم وكلمة المرور.");return;}
    window.location.assign("/login?registered=1");
   }catch{setMessage("حصلت مشكلة اتصال. حاولي تاني.");}
   finally{setBusy(false);}
