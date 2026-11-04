@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState,type FormEvent} from "react";
-import {getSupabase} from "../../../lib/supabase-browser";
+import {getSupabase} from "../../lib/supabase-browser";
 type Contribution={id:number;title:string;assignment_id:number;team_id:number;user_id:string};
 type Attachment={id:number;contribution_id:number;original_filename:string;storage_path:string;size_bytes:number;created_at:string};
 export default function TeamFiles(){
