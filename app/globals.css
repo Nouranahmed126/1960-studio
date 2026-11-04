@@ -94,3 +94,20 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 .site-bottom-scroll a:hover span{transform:rotateX(-12deg) translateY(-2px)}
 .site-bottom-scroll a[aria-current="page"] span{background:linear-gradient(145deg,#dfb3c5,#a96c8b);color:#2a1724}
 @media(prefers-reduced-motion:reduce){.site-bottom-scroll a,.site-bottom-scroll a span{transition:none;transform:none}}
+
+/* Raised 3D glyphs: sculpt the symbol, not its surrounding tile */
+.site-bottom-scroll a span{
+background:transparent!important;border:0!important;border-radius:0!important;
+font-size:20px!important;width:30px;height:30px;
+box-shadow:none!important;
+transform:perspective(130px) rotateX(13deg) translateY(-2px)!important;
+text-shadow:0 1px 0 #fff8,0 2px 0 #c895ae,0 3px 0 #8b5974,0 4px 0 #553247,1px 6px 5px #000b!important;
+filter:drop-shadow(0 3px 2px #0009);
+transition:transform .22s ease,filter .22s ease!important
+}
+.site-bottom-scroll a:hover span,.site-bottom-scroll a:focus-visible span{
+transform:perspective(130px) rotateX(-10deg) translateY(-5px) scale(1.12)!important;
+filter:drop-shadow(0 7px 4px #0009)
+}
+.site-bottom-scroll a[aria-current="page"] span{background:transparent!important;color:inherit!important;box-shadow:none!important;filter:drop-shadow(0 3px 4px #e6a1bc88)}
+@media(prefers-reduced-motion:reduce){.site-bottom-scroll a span{transition:none!important}}
