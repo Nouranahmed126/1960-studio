@@ -39,7 +39,7 @@ export default function Login() {
         <button type="submit" disabled={busy} style={{padding:14,background:"#d5a66d",border:0,borderRadius:10,fontWeight:700,cursor:"pointer"}}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
       {message && <p role="alert" style={{color:"#ffb5a9",lineHeight:1.8}}>{message}</p>}
-      <button type="button" disabled={busy} onClick={()=>void resendConfirmation()} style={{display:"none"}} data-legacy="email-confirmation" style={{background:"transparent",border:"1px solid #7d6072",borderRadius:9,padding:11,color:"#f5c2d5",cursor:"pointer"}}>إعادة إرسال تأكيد البريد الإلكتروني</button>
+      <button type="button" disabled={busy} onClick={()=>void resendConfirmation()} style={{background:"transparent",border:"1px solid #7d6072",borderRadius:9,padding:11,color:"#f5c2d5",cursor:"pointer"}}>إعادة إرسال تأكيد البريد الإلكتروني</button>
       <p style={{fontSize:13,color:"#aeb8ca"}}>الطلاب الجدد لا يحتاجون بريدًا إلكترونيًا. حساب المشرفة القديم يعمل بالبريد.</p><p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
     </section>
   </main>;
