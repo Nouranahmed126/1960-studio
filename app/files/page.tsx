@@ -2,7 +2,7 @@
 import {useEffect,useState,type FormEvent} from "react";
 import {getSupabase} from "../../lib/supabase-browser";
 type Contribution={id:number;title:string;assignment_id:number;team_id:number;user_id:string};
-type Attachment={id:number;contribution_id:number;original_filename:string;storage_path:string;size_bytes:number;created_at:string};
+type Attachment={id:number;contribution_id:number;file_name:string;storage_path:string|null;created_at:string};
 export default function TeamFiles(){
  const [contributions,setContributions]=useState<Contribution[]>([]);
  const [attachments,setAttachments]=useState<Attachment[]>([]);
@@ -17,7 +17,7 @@ export default function TeamFiles(){
   setUserId(user.id);
   const [c,a]=await Promise.all([
    db.from("contributions").select("id,title,assignment_id,team_id,user_id").order("created_at",{ascending:false}).limit(100),
-   db.from("attachments").select("id,contribution_id,original_filename,storage_path,size_bytes,created_at").order("created_at",{ascending:false}).limit(100)
+   db.from("attachments").select("id,contribution_id,file_name,storage_path,created_at").order("created_at",{ascending:false}).limit(100)
   ]);
   if(c.error||a.error){setMessage("الملفات مش متاحة حاليًا. لازم تطبيق تحديث attachments.sql في Supabase.");return;}
   setContributions((c.data??[]) as Contribution[]);setAttachments((a.data??[]) as Attachment[]);setMessage("");
@@ -33,9 +33,9 @@ export default function TeamFiles(){
   const up=await db.storage.from("studio-files").upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
   if(up.error){setMessage("رفع الملف فشل. راجعي صلاحيات Storage وحجم الملف.");setBusy(false);return;}
   const added=await db.from("attachments").insert({
-   contribution_id:c.id,assignment_id:c.assignment_id,team_id:c.team_id,
-   uploaded_by:userId,storage_path:path,original_filename:file.name,
-   mime_type:file.type||null,size_bytes:file.size
+   contribution_id:c.id,
+   uploaded_by:userId,storage_path:path,file_name:file.name,
+   file_type:file.type||null
   });
   if(added.error){
    setMessage("الملف اترفع لكن تسجيله فشل. اطلبي من المشرفة مراجعة التخزين، ومتكرريش الرفع دلوقتي.");
@@ -70,9 +70,9 @@ export default function TeamFiles(){
   <h2 style={{marginTop:32}}>الملفات المتاحة ليكي</h2>
   {attachments.length===0&&<p>مفيش ملفات ظاهرة حاليًا.</p>}
   {attachments.map(a=><article key={a.id} style={{border:"1px solid #343a49",borderRadius:12,padding:16,marginBottom:12}}>
-   <strong style={{overflowWrap:"anywhere"}}>{a.original_filename}</strong>
-   <p style={{color:"#b7c0ce",fontSize:13}}>{contributions.find(c=>c.id===a.contribution_id)?.title??"مساهمة"} • {(a.size_bytes/1048576).toFixed(1)} MB</p>
-   <button onClick={()=>void openFile(a.storage_path)} style={{border:0,borderRadius:8,padding:"10px 14px",background:"#d5a66d",fontWeight:700}}>فتح الملف</button>
+   <strong style={{overflowWrap:"anywhere"}}>{a.file_name}</strong>
+   <p style={{color:"#b7c0ce",fontSize:13}}>{contributions.find(c=>c.id===a.contribution_id)?.title??"مساهمة"}</p>
+   <button disabled={!a.storage_path} onClick={()=>a.storage_path&&void openFile(a.storage_path)} style={{border:0,borderRadius:8,padding:"10px 14px",background:"#d5a66d",fontWeight:700}}>فتح الملف</button>
   </article>)}
  </main>;
 }
