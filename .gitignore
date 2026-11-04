@@ -1,0 +1,15 @@
+# Never commit local environment secrets
+.env
+.env.*
+!.env.example
+
+# Node / Next.js generated files
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+.DS_Store
