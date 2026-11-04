@@ -28,9 +28,9 @@ export default function Register() {
   const db=getSupabase();if(!db){setMessage("الاتصال بـ Supabase لسه مش متضبط.");return;}
   setBusy(true);
   try{
-   const {data,error}=await db.auth.signUp({email,password,options:{data:{full_name:name.trim(),requested_team_ids:selected}}});
+   const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+"/login",data:{full_name:name.trim(),requested_team_ids:selected}}});
    if(error){setMessage(error.message.toLowerCase().includes("already")||error.message.toLowerCase().includes("registered")?"البريد ده مسجل بالفعل. اضغطي «عندي حساب بالفعل» وسجّلي الدخول، وبعدها اختاري الفرق من لوحة الطالب.":"تعذر إنشاء الحساب: "+error.message+" — لو عندك حساب سابق، استخدمي تسجيل الدخول بدل إنشاء حساب جديد.");return;}
-   if(!data.session){setMessage("تم إنشاء طلب الحساب. افتحي رسالة تأكيد البريد الإلكتروني (وافحصي الرسائل غير المرغوبة)، وبعد التأكيد سجّلي الدخول. اختيارات الفرق محفوظة مع طلبك وسيحاول الموقع إرسالها عند أول دخول.");return;}
+   if(!data.session){setMessage("تم استلام التسجيل. افتحي بريدك وأكّدي الحساب من الرابط المرسل (راجعي Spam أيضًا). بعد التأكيد سجّلي الدخول. لو لم تصلك الرسالة، استخدمي «إعادة إرسال التأكيد» في صفحة الدخول.");return;}
    const result=await db.rpc("request_my_teams",{p_team_ids:selected});
    if(result.error){setMessage("الحساب اتعمل، لكن طلب الفرق لم يُحفظ. سجّلي الدخول وكمّلي اختيار الفرق.");return;}
    window.location.assign("/dashboard");
