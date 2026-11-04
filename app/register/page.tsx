@@ -6,7 +6,7 @@ export default function Register() {
  const [teams,setTeams]=useState<Team[]>([]);
  const [selected,setSelected]=useState<number[]>([]);
  const [name,setName]=useState("");
- const [email,setEmail]=useState("");
+ const [username,setUsername]=useState("");
  const [password,setPassword]=useState("");
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState("");
@@ -28,12 +28,9 @@ export default function Register() {
   const db=getSupabase();if(!db){setMessage("الاتصال بـ Supabase لسه مش متضبط.");return;}
   setBusy(true);
   try{
-   const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+"/login",data:{full_name:name.trim(),requested_team_ids:selected}}});
-   if(error){if(error.message.toLowerCase().includes("rate limit")){setMessage("التسجيل متوقف مؤقتًا بسبب تجاوز الحد المسموح لإرسال رسائل التأكيد من خدمة البريد. لا تعيدي المحاولة الآن، وأبلغي المشرفة. حسابك لم يكتمل في هذه المحاولة.");return;}setMessage(error.message.toLowerCase().includes("already")||error.message.toLowerCase().includes("registered")?"البريد ده مسجل بالفعل. اضغطي «عندي حساب بالفعل» وسجّلي الدخول، وبعدها اختاري الفرق من لوحة الطالب.":"تعذر إنشاء الحساب: "+error.message+" — لو عندك حساب سابق، استخدمي تسجيل الدخول بدل إنشاء حساب جديد.");return;}
-   if(!data.session){setMessage("تم استلام التسجيل. افتحي بريدك وأكّدي الحساب من الرابط المرسل (راجعي Spam أيضًا). بعد التأكيد سجّلي الدخول. لو لم تصلك الرسالة، استخدمي «إعادة إرسال التأكيد» في صفحة الدخول.");return;}
-   const result=await db.rpc("request_my_teams",{p_team_ids:selected});
-   if(result.error){setMessage("الحساب اتعمل، لكن طلب الفرق لم يُحفظ. سجّلي الدخول وكمّلي اختيار الفرق.");return;}
-   window.location.assign("/dashboard");
+   const {data,error}=await db.functions.invoke("student-signup",{body:{fullName:name.trim(),username:username.trim().toLowerCase(),password,teams:selected}});
+   if(error||!data?.ok){setMessage(data?.message||"تعذر التسجيل. تأكدي من اسم المستخدم وحاولي لاحقًا.");return;}
+   window.location.assign("/login?registered=1");
   }catch{setMessage("حصلت مشكلة اتصال. حاولي تاني.");}
   finally{setBusy(false);}
  }
@@ -44,7 +41,7 @@ export default function Register() {
   <p style={{color:"#aeb8ca",lineHeight:1.8}}>اختاري فريقين أو ثلاثة. العضوية بتتفعل بعد موافقة المشرفة.</p>
   <form onSubmit={submit} style={{display:"grid",gap:18}}>
    <label>الاسم الثلاثي<input style={inputStyle} required autoComplete="name" value={name} onChange={e=>setName(e.target.value)}/></label>
-   <label>البريد الإلكتروني<input style={inputStyle} required type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)}/></label>
+   <label>اسم المستخدم (حروف إنجليزية صغيرة وأرقام وشرطة سفلية، يبدأ بحرف، 4–24 خانة)<input style={inputStyle} required minLength={4} maxLength={24} pattern="[a-z][a-z0-9_]{3,23}" autoCapitalize="none" autoComplete="username" value={username} onChange={e=>setUsername(e.target.value.toLowerCase())}/></label>
    <label>كلمة المرور<input style={inputStyle} required type="password" minLength={8} autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)}/></label>
    <fieldset style={{border:"1px solid #596174",borderRadius:12,padding:15}}>
     <legend>الفرق المطلوبة ({selected.length} من 2–3)</legend>
@@ -56,6 +53,6 @@ export default function Register() {
    <button disabled={busy||teams.length===0} style={{padding:15,border:0,borderRadius:10,background:"#d5a66d",fontWeight:700}}>{busy?"جارٍ التسجيل...":"إنشاء حساب وطلب الانضمام"}</button>
   </form>
   {message&&<p role="status" style={{lineHeight:1.8,color:"#ffca9f"}}>{message}</p>}
-  <p style={{color:"#ffdfb2",lineHeight:1.8}}>⚠️ لو سجلتي قبل كده، حتى لو طلب الفرق ما اتحفظش، ما تعمليش حساب جديد. ادخلي بحسابك القديم واختاري الفرق من لوحة الطالب.</p><p><a href="/login" style={{color:"#d5a66d",fontWeight:700}}>عندي حساب بالفعل — تسجيل الدخول</a></p>
+  <p style={{color:"#ffdfb2",lineHeight:1.8}}>⚠️ احتفظي باسم المستخدم وكلمة المرور. مش مطلوب بريد إلكتروني أو رسالة تأكيد.</p><p><a href="/login" style={{color:"#d5a66d",fontWeight:700}}>عندي حساب بالفعل — تسجيل الدخول</a></p>
  </main>;
 }
