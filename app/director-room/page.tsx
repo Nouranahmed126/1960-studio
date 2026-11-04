@@ -1,6 +1,8 @@
 "use client";
 import {useEffect,useState} from "react";
 import {getSupabase} from "../../lib/supabase-browser";
+type Bible={premise:string;synopsis:string;characters:string;timeline:string;continuity_notes:string;next_steps:string};
+const blankBible:Bible={premise:"",synopsis:"",characters:"",timeline:"",continuity_notes:"",next_steps:""};
 type Scene={id:number;scene_number:number;title:string;setting:string;location:string;time_of_day:string;characters:string;dramatic_goal:string;action_text:string;dialogue:string;camera:string;lighting:string;sound:string;production_notes:string;status:string};
 type Contribution={id:number;title:string;content:string|null;team_id:number;created_at:string};
 type Attachment={id:number;contribution_id:number;file_name:string;storage_path:string|null;external_url:string|null;description:string|null};
@@ -9,19 +11,22 @@ const empty={scene_number:1,title:"",setting:"داخلي",location:"",time_of_da
 const fields:[keyof typeof empty,string][]=[["title","عنوان المشهد"],["setting","داخلي / خارجي"],["location","المكان"],["time_of_day","الزمن"],["characters","الشخصيات"],["dramatic_goal","الهدف الدرامي"],["action_text","وصف الحركة والأحداث"],["dialogue","الحوار"],["camera","الكادرات وحركة الكاميرا"],["lighting","الإضاءة"],["sound","الصوت والموسيقى"],["production_notes","الملابس والإكسسوارات والاستمرارية وملاحظات الإنتاج"]];
 export default function DirectorRoom(){
  const [attachments,setAttachments]=useState<Attachment[]>([]);
+ const [bible,setBible]=useState<Bible>(blankBible);
  const [allowed,setAllowed]=useState<boolean|null>(null),[scenes,setScenes]=useState<Scene[]>([]),[contributions,setContributions]=useState<Contribution[]>([]),[reviews,setReviews]=useState<Review[]>([]),[draft,setDraft]=useState(empty),[editing,setEditing]=useState<number|null>(null),[note,setNote]=useState<Record<number,string>>({}),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
  async function load(){
   const db=getSupabase();if(!db)return;
   const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("app_role").eq("id",user.id).single();
   if(p.data?.app_role!=="supervisor"){setAllowed(false);return;}setAllowed(true);
-  const [s,c,r,a]=await Promise.all([db.from("director_scenes").select("*").order("scene_number"),db.from("contributions").select("id,title,content,team_id,created_at").order("created_at",{ascending:false}).limit(60),db.from("director_reviews").select("*").order("created_at",{ascending:false}),db.from("attachments").select("id,contribution_id,file_name,storage_path,external_url,description").order("created_at",{ascending:false})]);
+  const [s,c,r,a,b]=await Promise.all([db.from("director_scenes").select("*").order("scene_number"),db.from("contributions").select("id,title,content,team_id,created_at").order("created_at",{ascending:false}).limit(60),db.from("director_reviews").select("*").order("created_at",{ascending:false}),db.from("attachments").select("id,contribution_id,file_name,storage_path,external_url,description").order("created_at",{ascending:false}),db.from("director_story_bible").select("*").eq("id",1).maybeSingle()]);
   if(s.error||r.error)setMessage("تعذر تحميل السجل الخاص. تحققي من صلاحيات قاعدة البيانات.");
   else {setScenes((s.data??[]) as Scene[]);setReviews((r.data??[]) as Review[]);}
   if(!c.error)setContributions((c.data??[]) as Contribution[]);
   if(!a.error)setAttachments((a.data??[]) as Attachment[]);
+  if(!b.error&&b.data)setBible(b.data as Bible);
  }
  useEffect(()=>{void load()},[]);
+ async function saveBible(){const db=getSupabase();if(!db)return;setBusy(true);const {error}=await db.from("director_story_bible").upsert({id:1,...bible,updated_at:new Date().toISOString()});setBusy(false);setMessage(error?"تعذر حفظ ملف القصة: "+error.message:"تم حفظ ملف القصة وملاحظات المتابعة الخاصة.");}
  async function saveScene(approve=false){
   const db=getSupabase();if(!db||!draft.title.trim()) {setMessage("اكتبي عنوان المشهد أولًا.");return;}
   setBusy(true);const payload={...draft,status:approve?"approved":"draft"};
@@ -44,6 +49,7 @@ export default function DirectorRoom(){
  <a href="/dashboard" style={{color:"#e6a4be"}}>← لوحة المشرفة</a><p style={{color:"#e6a4be",marginBottom:3}}>1960 STUDIO · PRIVATE WORKSPACE</p><h1 style={{fontSize:"clamp(25px,5vw,37px)"}}>غرفة المخرجة · السيناريو والتقييم</h1><p style={{color:"#c4b8c1"}}>مساحتك الخاصة لمتابعة القصة والمشاهد وتسليمات الفرق. كل التعديلات والقرارات محفوظة للمشرفة فقط.</p>
  <div style={{display:"flex",gap:12,flexWrap:"wrap",margin:"22px 0"}}>{[["المشاهد",scenes.length],["المعتمدة",scenes.filter(s=>s.status==="approved").length],["تسليمات للمراجعة",contributions.filter(c=>!reviews.some(r=>r.contribution_id===c.id&&r.decision!=="pending")).length]].map(([label,count])=><div key={label} style={{...style,width:"auto",minWidth:135}}><strong style={{fontSize:24}}>{count}</strong><p style={{margin:"5px 0",fontSize:13}}>{label}</p></div>)}</div>
  {message&&<p role="status" style={{color:"#f2b9a1"}}>{message}</p>}
+ <section style={{...style,marginBottom:22}}><h2>📖 ذاكرة الفيلم · ملف القصة</h2><p style={{fontSize:13,color:"#c4b8c1"}}>مرجعك الدائم لأحداث الفيلم وشخصياته، وآخر نقطة وصلتي إليها. لا يظهر للطلاب.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:12}}>{([["premise","الفكرة الأساسية والرسالة"],["synopsis","ملخص القصة والحبكة"],["characters","ملفات الشخصيات وعلاقاتها"],["timeline","الخط الزمني للأحداث"],["continuity_notes","ملاحظات الاستمرارية والتناقضات"],["next_steps","آخر ما وصلنا إليه والخطوة التالية"]] as [keyof Bible,string][]).map(([key,label])=><label key={key} style={{fontSize:13}}>{label}<textarea style={style} rows={5} value={bible[key]} onChange={e=>setBible({...bible,[key]:e.target.value})}/></label>)}</div><button disabled={busy} style={{...style,width:"auto",marginTop:14,background:"#78485f"}} onClick={()=>void saveBible()}>حفظ ذاكرة الفيلم</button></section>
  <section style={{...style,marginBottom:22}}><h2>السيناريو الاحترافي</h2><p style={{fontSize:13,color:"#c4b8c1"}}>احفظي المسودة أولًا، ثم اعتمدي المشهد عندما يصبح جاهزًا.</p>
  <label>رقم المشهد<input style={style} type="number" min={1} value={draft.scene_number} onChange={e=>setDraft({...draft,scene_number:Number(e.target.value)})}/></label>
  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:13,marginTop:14}}>{fields.map(([key,label])=><label key={key} style={{fontSize:13}}>{label}{(["action_text","dialogue","production_notes","camera","sound","dramatic_goal"] as string[]).includes(key)?<textarea rows={4} style={style} value={String(draft[key])} onChange={e=>setDraft({...draft,[key]:e.target.value})}/>:<input style={style} value={String(draft[key])} onChange={e=>setDraft({...draft,[key]:e.target.value})}/>}</label>)}</div>
