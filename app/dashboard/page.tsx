@@ -31,7 +31,7 @@ export default function Dashboard(){
     db.from("profiles").select("id,full_name,approval_status,app_role").eq("app_role","student").order("created_at",{ascending:false}),
     db.from("team_join_requests").select("user_id,team_id,status")
    ]);
-   if(people.error||joins.error)setMessage("تعذر تحميل طلبات الطلاب. راجعي سياسات المشرفة.");
+   if(people.error||joins.error)setMessage("تعذر تحميل طلبات الطلاب: "+(people.error?.message||joins.error?.message));
    else{setStudents((people.data??[]) as Profile[]);setRequests((joins.data??[]) as Request[]);setMessage("");}
   }else{
    const [joins,membersResult,taskResult]=await Promise.all([
@@ -52,15 +52,15 @@ export default function Dashboard(){
   setBusy(true);setMessage("");
   const {error}=await db.rpc("request_my_teams",{p_team_ids:selected});
   setBusy(false);
-  if(error)setMessage("تعذر إرسال الطلب. تأكدي إن تحديث قاعدة البيانات اتنفذ.");
-  else{setMessage("اتسجل طلبك بنجاح، وفي انتظار موافقة المشرفة.");await load();}
+  if(error)setMessage("لم يتم حفظ اختيار الفرق: "+error.message);
+  else{await load();setMessage("تم حفظ اختيار الفرق بنجاح، وفي انتظار موافقة المشرفة.");}
  }
  async function approve(id:string){
   const db=getSupabase();if(!db)return;
   setBusy(true);setMessage("");
   const {error}=await db.rpc("approve_student",{p_user_id:id});
   setBusy(false);
-  if(error)setMessage("الموافقة ما تمتّش. تأكدي إن الطالب اختار فريقين أو ثلاثة وإن دالة الموافقة متفعلة.");
+  if(error)setMessage("الموافقة لم تتم: "+error.message);
   else{await load();setMessage("تمت الموافقة على الطالب وفرق العمل.");}
  }
  async function logout(){await getSupabase()?.auth.signOut();window.location.replace("/login");}
