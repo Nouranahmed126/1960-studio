@@ -8,7 +8,7 @@ export default function Home() {
   return <main style={{ minHeight: "100vh", maxWidth: 960, margin: "auto", padding: "36px 22px" }}>
     <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
       <strong style={{ letterSpacing: 2, fontSize: 19 }}>1960 STUDIO</strong>
-      <span style={{ color: "#aab3c5", fontSize: 13 }}>مساحة مشروع التخرج</span>
+      <a href="/login" style={{ color: "#d5a66d", fontSize: 14, textDecoration: "none" }}>تسجيل الدخول ←</a>
     </header>
     <section style={{ padding: "90px 0 65px" }}>
       <p style={{ color: "#d5a66d", fontSize: 14 }}>من الفكرة إلى الشاشة</p>
