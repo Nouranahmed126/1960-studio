@@ -15,6 +15,7 @@ export default function Login() {
     });
     return () => { active = false; };
   }, []);
+  async function resendConfirmation(){const db=getSupabase();if(!db)return;if(!email.trim()){setMessage("اكتبي بريدك الإلكتروني الأول، وبعدها اضغطي إعادة إرسال التأكيد.");return;}setBusy(true);const {error}=await db.auth.resend({type:"signup",email:email.trim()});setBusy(false);setMessage(error?"تعذر طلب رسالة التأكيد: "+error.message:"لو البريد مسجل ولسه محتاج تأكيد، هتوصلك رسالة جديدة. راجعي البريد والرسائل غير المرغوبة.");}
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const supabase = getSupabase();
@@ -22,7 +23,7 @@ export default function Login() {
     setBusy(true); setMessage("");
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) { setMessage("تعذر تسجيل الدخول. راجعي البريد وكلمة المرور أو تأكيد البريد الإلكتروني."); return; }
+      if (error) { setMessage(error.message.toLowerCase().includes("email not confirmed")?"بريدك لسه غير مؤكَّد. افتحي رسالة التأكيد من البريد أو استخدمي زر إعادة إرسال التأكيد تحت.":"تعذر تسجيل الدخول: "+error.message); return; }
       window.location.replace("/dashboard");
     } catch { setMessage("حصلت مشكلة في الاتصال. حاولي تاني."); }
     finally { setBusy(false); }
@@ -38,6 +39,7 @@ export default function Login() {
         <button type="submit" disabled={busy} style={{padding:14,background:"#d5a66d",border:0,borderRadius:10,fontWeight:700,cursor:"pointer"}}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
       {message && <p role="alert" style={{color:"#ffb5a9",lineHeight:1.8}}>{message}</p>}
+      <button type="button" disabled={busy} onClick={()=>void resendConfirmation()} style={{background:"transparent",border:"1px solid #7d6072",borderRadius:9,padding:11,color:"#f5c2d5",cursor:"pointer"}}>إعادة إرسال تأكيد البريد الإلكتروني</button>
       <p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
     </section>
   </main>;
