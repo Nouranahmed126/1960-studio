@@ -66,7 +66,7 @@ export default function Dashboard(){
  async function logout(){await getSupabase()?.auth.signOut();window.location.replace("/login");}
  const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
- return <main style={{maxWidth:900,margin:"auto",padding:"24px 18px"}}>
+ return <main className="dashboard-shell">
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
    <a href="/" style={{color:"#d5a66d",fontWeight:700}}>1960 STUDIO</a>
    <button onClick={logout} style={buttonStyle}>تسجيل خروج</button>
