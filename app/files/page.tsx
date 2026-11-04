@@ -67,7 +67,7 @@ export default function TeamFiles(){
    <button disabled={busy||!selected||!file} style={{padding:14,background:"#d5a66d",border:0,borderRadius:9,fontWeight:700}}>{busy?"جارٍ الرفع...":"رفع الملف للفريق"}</button>
   </form>
   {message&&<p role="status" style={{color:"#ffca9f",lineHeight:1.8}}>{message}</p>}
-  <h2 style={{marginTop:32}}>الملفات المتاحة ليكي</h2>
+  <h2 style={{marginTop:32}}>الملفات المتاحة لك</h2>
   {attachments.length===0&&<p>مفيش ملفات ظاهرة حاليًا.</p>}
   {attachments.map(a=><article key={a.id} style={{border:"1px solid #343a49",borderRadius:12,padding:16,marginBottom:12}}>
    <strong style={{overflowWrap:"anywhere"}}>{a.file_name}</strong>
