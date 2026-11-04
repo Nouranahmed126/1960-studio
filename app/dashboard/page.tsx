@@ -64,7 +64,8 @@ export default function Dashboard(){
   else{await load();setMessage("تمت الموافقة على الطالب وفرق العمل.");}
  }
  async function logout(){await getSupabase()?.auth.signOut();window.location.replace("/login");}
- const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));\n const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
+ const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));
+ const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
  return <main className="dashboard-shell">
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
