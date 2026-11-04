@@ -22,7 +22,7 @@ export default function Login() {
     if (!supabase) { setMessage("لسه محتاجين نضبط إعدادات اتصال Supabase."); return; }
     setBusy(true); setMessage("");
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email:email.includes("@")?email.trim():email.trim().toLowerCase()+"@students.1960.invalid", password });
       if (error) { setMessage(error.message.toLowerCase().includes("email not confirmed")?"بريدك لسه غير مؤكَّد. افتحي رسالة التأكيد من البريد أو استخدمي زر إعادة إرسال التأكيد تحت.":"تعذر تسجيل الدخول: "+error.message); return; }
       window.location.replace("/dashboard");
     } catch { setMessage("حصلت مشكلة في الاتصال. حاولي تاني."); }
@@ -34,13 +34,13 @@ export default function Login() {
       <h1>تسجيل الدخول</h1>
       <p style={{color:"#aeb8ca",lineHeight:1.8}}>لأعضاء مشروع التخرج والمشرفة.</p>
       <form onSubmit={submit} style={{display:"grid",gap:15}}>
-        <label>البريد الإلكتروني<input type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)} style={field}/></label>
+        <label>اسم المستخدم للطالب أو البريد الإلكتروني للمشرفة<input type="text" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)} style={field}/></label>
         <label>كلمة المرور<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)} style={field}/></label>
         <button type="submit" disabled={busy} style={{padding:14,background:"#d5a66d",border:0,borderRadius:10,fontWeight:700,cursor:"pointer"}}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
       {message && <p role="alert" style={{color:"#ffb5a9",lineHeight:1.8}}>{message}</p>}
-      <button type="button" disabled={busy} onClick={()=>void resendConfirmation()} style={{background:"transparent",border:"1px solid #7d6072",borderRadius:9,padding:11,color:"#f5c2d5",cursor:"pointer"}}>إعادة إرسال تأكيد البريد الإلكتروني</button>
-      <p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
+      <button type="button" disabled={busy} onClick={()=>void resendConfirmation()} style={{display:"none"}} data-legacy="email-confirmation" style={{background:"transparent",border:"1px solid #7d6072",borderRadius:9,padding:11,color:"#f5c2d5",cursor:"pointer"}}>إعادة إرسال تأكيد البريد الإلكتروني</button>
+      <p style={{fontSize:13,color:"#aeb8ca"}}>الطلاب الجدد لا يحتاجون بريدًا إلكترونيًا. حساب المشرفة القديم يعمل بالبريد.</p><p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
     </section>
   </main>;
 }
