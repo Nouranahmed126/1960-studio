@@ -75,7 +75,7 @@ export default function Dashboard(){
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
    <h1>أهلًا، {profile.full_name}</h1>
    {profile.app_role==="supervisor"?<>
-    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p>
+    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p>
     <div style={{display:"grid",gap:14,marginTop:26}}>
      {students.filter(p=>p.approval_status==="pending").map(student=>{
       const own=requests.filter(r=>r.user_id===student.id&&r.status==="pending");
