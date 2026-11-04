@@ -86,3 +86,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 .site-bottom-scroll a small{font-size:11px}
 .site-bottom-scroll a[aria-current="page"]{background:#78445d;color:white!important}
 @media(min-width:1000px){.site-bottom-scroll{justify-content:center}.site-bottom-scroll a{flex:0 0 95px}}
+
+.site-bottom-scroll a{min-width:62px;flex:0 0 62px;padding:4px 5px;gap:2px;transition:transform .2s,box-shadow .2s;transform-style:preserve-3d}
+.site-bottom-scroll a span{font-size:16px;display:grid;place-items:center;width:27px;height:27px;border-radius:8px;background:linear-gradient(145deg,#74546b,#3b2c40);box-shadow:2px 3px 0 #211723,0 5px 9px #0005,inset 1px 1px 2px #fff4;transform:rotateX(8deg);transition:transform .2s}
+.site-bottom-scroll a small{font-size:9px}
+.site-bottom-scroll a:hover,.site-bottom-scroll a:focus-visible{transform:translateY(-3px) rotateX(6deg)}
+.site-bottom-scroll a:hover span{transform:rotateX(-12deg) translateY(-2px)}
+.site-bottom-scroll a[aria-current="page"] span{background:linear-gradient(145deg,#dfb3c5,#a96c8b);color:#2a1724}
+@media(prefers-reduced-motion:reduce){.site-bottom-scroll a,.site-bottom-scroll a span{transition:none;transform:none}}
