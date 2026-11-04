@@ -29,7 +29,7 @@ export default function Register() {
   setBusy(true);
   try{
    const {data,error}=await db.auth.signUp({email,password,options:{data:{full_name:name.trim()}}});
-   if(error){setMessage("تعذر إنشاء الحساب. تأكدي من البريد وكلمة المرور أو جرّبي بريدًا آخر.");return;}
+   if(error){setMessage(error.message.toLowerCase().includes("already")||error.message.toLowerCase().includes("registered")?"البريد ده مسجل بالفعل. اضغطي «عندي حساب بالفعل» وسجّلي الدخول، وبعدها اختاري الفرق من لوحة الطالب.":"تعذر إنشاء الحساب: "+error.message+" — لو عندك حساب سابق، استخدمي تسجيل الدخول بدل إنشاء حساب جديد.");return;}
    if(!data.session){setMessage("تم إرسال رسالة تأكيد البريد لو التفعيل مطلوب. بعد التأكيد سجّلي الدخول وقدّمي طلب الفرق من لوحة الحساب.");return;}
    const result=await db.rpc("request_my_teams",{p_team_ids:selected});
    if(result.error){setMessage("الحساب اتعمل، لكن طلب الفرق لم يُحفظ. سجّلي الدخول وكمّلي اختيار الفرق.");return;}
@@ -56,6 +56,6 @@ export default function Register() {
    <button disabled={busy||teams.length===0} style={{padding:15,border:0,borderRadius:10,background:"#d5a66d",fontWeight:700}}>{busy?"جارٍ التسجيل...":"إنشاء حساب وطلب الانضمام"}</button>
   </form>
   {message&&<p role="status" style={{lineHeight:1.8,color:"#ffca9f"}}>{message}</p>}
-  <p><a href="/login" style={{color:"#d5a66d"}}>عندي حساب بالفعل</a></p>
+  <p style={{color:"#ffdfb2",lineHeight:1.8}}>⚠️ لو سجلتي قبل كده، حتى لو طلب الفرق ما اتحفظش، ما تعمليش حساب جديد. ادخلي بحسابك القديم واختاري الفرق من لوحة الطالب.</p><p><a href="/login" style={{color:"#d5a66d",fontWeight:700}}>عندي حساب بالفعل — تسجيل الدخول</a></p>
  </main>;
 }
