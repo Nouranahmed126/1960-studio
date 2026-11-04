@@ -1,12 +1,12 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  async function submit(e: FormEvent<HTMLFormElement>) {
+  useEffect(() => {\n    const db = getSupabase();\n    if (!db) return;\n    let active = true;\n    void db.auth.getSession().then(({ data: { session } }) => {\n      if (active && session?.user) window.location.replace("/dashboard");\n    });\n    return () => { active = false; };\n  }, []);\n  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const supabase = getSupabase();
     if (!supabase) { setMessage("لسه محتاجين نضبط إعدادات اتصال Supabase."); return; }
@@ -14,7 +14,7 @@ export default function Login() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) { setMessage("تعذر تسجيل الدخول. راجعي البريد وكلمة المرور أو تأكيد البريد الإلكتروني."); return; }
-      window.location.assign("/dashboard");
+      window.location.replace("/dashboard");
     } catch { setMessage("حصلت مشكلة في الاتصال. حاولي تاني."); }
     finally { setBusy(false); }
   }
