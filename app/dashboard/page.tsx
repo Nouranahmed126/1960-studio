@@ -73,7 +73,7 @@ export default function Dashboard(){
   </header>
   {profile&&<section style={{marginTop:48}}><a href="/gallery" style={{display:"inline-block",marginBottom:22,padding:"12px 18px",background:"#583a4b",border:"1px solid #87546d",borderRadius:12,textDecoration:"none",color:"#f5c2d5",fontWeight:700}}>🎞 معرض المشروع · الصور والفيديوهات</a>
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
-   <h1>أهلًا، {profile.full_name}</h1><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
+   <h1>أهلًا، {profile.full_name}</h1><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
    {profile.app_role==="supervisor"?<>
     <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>عرض ملفات فرق العمل</a></p>
     <div style={{display:"grid",gap:14,marginTop:26}}>
