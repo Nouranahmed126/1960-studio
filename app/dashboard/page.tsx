@@ -99,7 +99,7 @@ export default function Dashboard(){
     <section style={panel}><h2>فرقي</h2>
      {members.length?members.map(m=><p key={m.team_id}>{teamName(m.team_id)} — {m.role==="leader"?"قائد الفريق":"عضو"}</p>):<p>مفيش فرق ظاهرة حاليًا.</p>}
     </section>
-    <section style={panel}><h2>التكليفات</h2>
+    <p><a href="/contributions/new" style={{color:"#d5a66d"}}>+ إضافة مساهمة في تكليفات الفريق</a></p><section style={panel}><h2>التكليفات</h2>
      {tasks.length?tasks.map(t=><article key={t.id} style={{borderTop:"1px solid #343a49",padding:"12px 0"}}>
       <strong>{t.title}</strong><p style={{whiteSpace:"pre-wrap",color:"#b7c0ce"}}>{t.description}</p>
       {t.due_at&&<small>آخر موعد: {new Date(t.due_at).toLocaleDateString("ar-EG")}</small>}
