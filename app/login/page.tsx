@@ -29,7 +29,7 @@ export default function Login() {
         <button type="submit" disabled={busy} style={{padding:14,background:"#d5a66d",border:0,borderRadius:10,fontWeight:700,cursor:"pointer"}}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
       {message && <p role="alert" style={{color:"#ffb5a9",lineHeight:1.8}}>{message}</p>}
-      <p style={{fontSize:13,color:"#aeb8ca"}}>تسجيل الطلاب الجدد هيتفعل بعد اختبار الموافقات والصلاحيات.</p>
+      <p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
     </section>
   </main>;
 }
