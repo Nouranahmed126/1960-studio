@@ -118,3 +118,38 @@ filter:drop-shadow(0 7px 4px #0009)
 .crew-3d-photo,.home-star-3d-photo{transform:none!important;filter:none!important;transition:none!important;box-shadow:none!important;border:1px solid #8e6b80!important}
 .crew-3d-card:hover,.crew-3d-card:focus-within,.home-star-3d-card:hover,.home-star-3d-card:focus-visible{transform:none!important;box-shadow:0 7px 20px #0004!important}
 .crew-3d-card:hover .crew-3d-photo,.home-star-3d-card:hover .home-star-3d-photo{transform:none!important}
+
+
+/* 1960 Studio — Burgundy Cinema identity */
+:root{--rose:#D6B68A;--rose-deep:#B99A72;--ink:#F2E8DB;--muted:#D0BDC0;--cream:#19171B;--blush:#391C29;--line:#76525D}
+html{background:#19171B!important}
+body{background:radial-gradient(ellipse at 0 0,#391C29 0,transparent 44%),radial-gradient(ellipse at 100% 30%,#271A22 0,transparent 40%),#19171B!important;color:#F2E8DB!important}
+main section[style*="background"],main article[style*="background"],fieldset{background:#391C29!important;border-color:#76525D!important}
+a,a[style*="color"]{color:#D6B68A!important}
+input:not([type="checkbox"]),textarea,select{background:#241B22!important;color:#F2E8DB!important;border:1px solid #886675!important;outline-color:#D6B68A!important}
+input[type="checkbox"]{accent-color:#D6B68A}
+button,button[type="submit"]{background:#D6B68A!important;color:#19171B!important;box-shadow:none!important}
+button:disabled{opacity:.55}
+h1,h2,strong{color:#F2E8DB}
+p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!important}
+.studio-nav-link,.studio-primary{background:#D6B68A!important;color:#19171B!important;box-shadow:none!important}
+.studio-feature,.gallery-upload,.gallery-card{background:#391C29!important;border-color:#76525D!important}
+.studio-feature:hover,.gallery-card:hover{border-color:#D6B68A!important}
+.studio-feature-icon{background:#722F45!important;color:#F2E8DB!important}
+.studio-feature-line{background:linear-gradient(90deg,#D6B68A,transparent)!important}
+.studio-hero h1 em,.gallery-intro h1 em{color:#D6B68A!important}
+.gallery-filters button{background:#391C29!important;color:#F2E8DB!important;border-color:#76525D!important}
+.gallery-filters button[aria-pressed="true"]{background:#722F45!important;border-color:#D6B68A!important}
+.site-menu-trigger{border-color:#D6B68A!important}
+.site-menu-panel{background:#19171B!important;border-color:#76525D!important}
+.site-menu-panel a{background:#391C29!important;color:#F2E8DB!important}
+.site-menu-panel a[aria-current="page"]{background:#722F45!important;color:#F2E8DB!important}
+.site-bottom-nav{background:#19171Bf2!important;border-color:#76525D!important}
+.site-bottom-scroll a{color:#F2E8DB!important}
+.site-bottom-scroll a[aria-current="page"]{background:#722F45!important;color:#F2E8DB!important}
+.site-bottom-scroll a span{transform:none!important;text-shadow:none!important;filter:none!important;transition:none!important}
+.site-bottom-scroll a:hover,.site-bottom-scroll a:focus-visible,.site-bottom-scroll a:hover span,.site-bottom-scroll a:focus-visible span{transform:none!important;filter:none!important}
+.site-bottom-scroll a[aria-current="page"] span{filter:none!important}
+.crew-3d-track,.home-stars-3d{perspective:none!important}
+.crew-3d-card,.home-star-3d-card,.crew-3d-photo,.home-star-3d-photo{transform:none!important;filter:none!important;transform-style:flat!important}
+.crew-3d-card:hover,.crew-3d-card:focus-within,.home-star-3d-card:hover,.home-star-3d-card:focus-visible,.crew-3d-card:hover .crew-3d-photo,.home-star-3d-card:hover .home-star-3d-photo{transform:none!important}
