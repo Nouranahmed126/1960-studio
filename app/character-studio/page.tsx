@@ -73,6 +73,7 @@ export default function CharacterStudio(){
  <div style={{height:330,position:"relative",borderRadius:14,overflow:"hidden",background:"radial-gradient(circle at 50% 42%,#60545b,#241d25)"}}>
  <iframe title="عارض الشخصية ثلاثي الأبعاد" sandbox="allow-scripts" srcDoc={avatar3d} ref={frameRef} onLoad={()=>frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")} style={{border:0,width:"100%",height:"100%",display:"block"}}/>
  </div>
+ <label style={{display:"block",background:"#D6B68A",color:"#19171B",padding:"15px",borderRadius:12,textAlign:"center",fontWeight:800,cursor:"pointer",marginTop:12}}>📂 اضغطي هنا لرفع مجسم الجد GLB<input type="file" accept=".glb,model/gltf-binary,application/octet-stream" disabled={modelBusy} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadModel(f);e.target.value=""}} style={{display:"block",width:"100%",marginTop:8,fontSize:13}}/></label><p style={{fontSize:12,opacity:.8,textAlign:"center"}}>{modelBusy?"⏳ جار رفع المجسم...":look.modelUrl?"✓ تم اختيار المجسم — احفظي التصميم بالأسفل":"اختاري ملف الجد من تطبيق الملفات على الآيفون"}</p>
  <button type="button" onClick={()=>frameRef.current?.contentWindow?.postMessage({kind:"snapshot"},"*")} style={{...field,cursor:"pointer",fontWeight:700}}>📸 حفظ صورة المعاينة PNG لفريق الأزياء</button>
  <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. المجسم الواقعي يظهر هنا بعد رفع ملف GLB.</p>
  <p style={{textAlign:"center",fontWeight:700}}>{character} · المشهد {scene}</p>
