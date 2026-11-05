@@ -12,7 +12,7 @@ import * as THREE from "https://esm.sh/three@0.170.0";
 import {GLTFLoader} from "https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js";
 let look={"skin":"#C58E69","hair":"#39302C","hairStyle":"قصير","face":"بيضاوي","eyes":"بني","brows":"عريضة","nose":"متوسط","mouth":"عادي","top":"#B8A07A","bottom":"#333B48","shoes":"#292421","glasses":false,"beard":false,"body":"متوسط"};
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,2.35,7.7);camera.lookAt(0,1.75,0);
-const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0,0);document.body.appendChild(renderer.domElement);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0,0);document.body.appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight(0xffffff,0x4c3741,2.2));const key=new THREE.DirectionalLight(0xffe5d4,3);key.position.set(-3,6,5);scene.add(key);const rim=new THREE.DirectionalLight(0xc5d5ff,1.6);rim.position.set(4,4,-3);scene.add(rim);
 const root=new THREE.Group();scene.add(root);let avatar=new THREE.Group();root.add(avatar);let loadedModel=null;let loadedUrl="";const loader=new GLTFLoader();
 function material(color,roughness=.87){return new THREE.MeshStandardMaterial({color,roughness,metalness:0})}
@@ -43,8 +43,8 @@ function loadModel(url){document.getElementById("error").style.display="none";if
 avatar.visible=false;
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 let down=false,last=0;renderer.domElement.addEventListener("pointerdown",e=>{down=true;last=e.clientX;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener("pointermove",e=>{if(down){root.rotation.y+=(e.clientX-last)*.012;last=e.clientX}});renderer.domElement.addEventListener("pointerup",()=>down=false);
-renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.position.z=Math.max(5,Math.min(11,camera.position.z+e.deltaY*.008))},{passive:false});
-addEventListener("message",e=>{if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}}});
+let pinch=0;renderer.domElement.addEventListener("touchmove",e=>{if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;const dist=Math.hypot(dx,dy);if(pinch)camera.position.z=Math.max(4.2,Math.min(12,camera.position.z+(pinch-dist)*.014));pinch=dist;e.preventDefault()}},{passive:false});renderer.domElement.addEventListener("touchend",()=>pinch=0);renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.position.z=Math.max(5,Math.min(11,camera.position.z+e.deltaY*.008))},{passive:false});
+addEventListener("message",e=>{if(e.data?.kind==="snapshot"){parent.postMessage({kind:"character-snapshot",image:renderer.domElement.toDataURL("image/png")},"*");return}if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}}});
 function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}animate();
 </script></body></html>`;
 export default function CharacterStudio(){
@@ -53,6 +53,7 @@ export default function CharacterStudio(){
  const change=<K extends keyof Look>(key:K,value:Look[K])=>setLook(p=>({...p,[key]:value}));
  async function load(){const db=getSupabase();if(!db)return;const {data:{user:u}}=await db.auth.getUser();if(!u){location.href="/login";return}setUser(u.id);const r=await db.from("studio_character_designs").select("*").order("created_at",{ascending:false}).limit(120);if(r.error)setMessage(r.error.message);else setItems(r.data||[])}
  useEffect(()=>{void load()},[]);
+ useEffect(()=>{const handler=(e:MessageEvent)=>{if(e.source!==frameRef.current?.contentWindow||e.data?.kind!=="character-snapshot"||typeof e.data.image!=="string"||!e.data.image.startsWith("data:image/png;base64,"))return;const link=document.createElement("a");link.href=e.data.image;link.download="1960-character-"+(scene.replace(/[^a-zA-Z0-9\u0600-\u06ff-]/g,"")||"scene")+".png";link.click()};window.addEventListener("message",handler);return()=>window.removeEventListener("message",handler)},[scene]);
  useEffect(()=>{frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")},[look]);
  async function uploadModel(file:File){const db=getSupabase();if(!db||!user)return;if(!file.name.toLowerCase().endsWith(".glb")||file.size>25*1024*1024){setMessage("اختاري ملف GLB أقل من 25 ميجابايت");return}setModelBusy(true);const path=user+"/avatar-"+crypto.randomUUID()+".glb";const r=await db.storage.from("character-models").upload(path,file,{contentType:"model/gltf-binary"});setModelBusy(false);if(r.error){setMessage("فشل رفع المجسم: "+r.error.message);return}const url=db.storage.from("character-models").getPublicUrl(path).data.publicUrl;setLook(p=>({...p,modelUrl:url}));setMessage("تم رفع المجسم الواقعي. احفظي التصميم لربطه بالمشهد.")}
  async function save(){const db=getSupabase();if(!db||!user)return;if(!character.trim()||!title.trim()){setMessage("اكتبي اسم الشخصية واسم التصميم");return}setBusy(true);const data={owner_id:user,title:title.trim(),character_name:character.trim(),scene_number:scene.trim()||"1",notes:notes.trim(),appearance:look,updated_at:new Date().toISOString()};const r=editId?await db.from("studio_character_designs").update(data).eq("id",editId).eq("owner_id",user):await db.from("studio_character_designs").insert(data);setBusy(false);setMessage(r.error?"تعذر الحفظ: "+r.error.message:"تم حفظ تصميم الشخصية على الموقع ✓");if(!r.error){setEditId(null);await load()}}
@@ -61,7 +62,7 @@ export default function CharacterStudio(){
  const faceWidth=look.face==="عريض"?64:look.face==="نحيف"?46:56;
  const skin=look.skin,hair=look.hair;
  return <main dir="rtl" style={{maxWidth:1120,margin:"auto",padding:"24px 16px 120px",color:"#F5EDE8"}}>
- <h1>🎭 استوديو تصميم شخصيات 1960</h1><p>اختاري الشخصية والمشهد، وعدّلي شكل الأفاتار قدامك، وبعدها احفظي التصميم عشان كل الفريق يقدر يشوفه.</p>
+ <h1>🎭 استوديو تصميم شخصيات 1960</h1><p>اختاري الشخصية والمشهد، ارفعي مجسمًا بشريًا بصيغة GLB، ثم احفظي التصميم عشان فريق الأزياء يقدر يشوفه.</p>
  {message&&<p role="status" style={{padding:12,background:"#513445",borderRadius:10}}>{message}</p>}
  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
  <section style={{...panel,position:"relative"}}>
@@ -69,6 +70,7 @@ export default function CharacterStudio(){
  <div style={{height:330,position:"relative",borderRadius:14,overflow:"hidden",background:"radial-gradient(circle at 50% 42%,#60545b,#241d25)"}}>
  <iframe title="عارض الشخصية ثلاثي الأبعاد" sandbox="allow-scripts" srcDoc={avatar3d} ref={frameRef} onLoad={()=>frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")} style={{border:0,width:"100%",height:"100%",display:"block"}}/>
  </div>
+ <button type="button" onClick={()=>frameRef.current?.contentWindow?.postMessage({kind:"snapshot"},"*")} style={{...field,cursor:"pointer",fontWeight:700}}>📸 حفظ صورة المعاينة PNG لفريق الأزياء</button>
  <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. المجسم الواقعي يظهر هنا بعد رفع ملف GLB.</p>
  <p style={{textAlign:"center",fontWeight:700}}>{character} · المشهد {scene}</p>
  <p style={{fontSize:12,opacity:.75}}>لن نعرض الأفاتار الكرتوني القديم. المعاينة الواقعية تتطلب رفع نموذج GLB صالح.</p>
