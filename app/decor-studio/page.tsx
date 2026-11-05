@@ -7,13 +7,15 @@ const W=510,H=400;
 
 function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor:string;sceneName:string}){
  const [angle,setAngle]=useState(0);
- const payload=JSON.stringify({pieces,wall,floor,angle}).replace(/</g,"\\u003c");
+ const [shot,setShot]=useState("wide");
+ const [lighting,setLighting]=useState("warm");
+ const payload=JSON.stringify({pieces,wall,floor,angle,shot,lighting}).replace(/</g,"\\u003c");
  const srcDoc=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;overflow:hidden;background:#17171c"><div id="notice" style="position:absolute;left:12px;top:12px;color:#fff;font:12px system-ui;z-index:2;background:#0008;padding:6px;border-radius:6px">اسحبي لتدوير الكاميرا • عجلة الماوس للتقريب</div><script type="module">
  import * as THREE from 'https://esm.sh/three@0.169.0';
  const data=${payload};
  const scene=new THREE.Scene();scene.background=new THREE.Color('#211b20');
- const camera=new THREE.PerspectiveCamera(42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
- renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.5;document.body.appendChild(renderer.domElement);
+ const camera=new THREE.PerspectiveCamera(data.shot==='detail'?32:data.shot==='eye'?55:42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
  const mat=(color,roughness=0.83)=>new THREE.MeshStandardMaterial({color,roughness});
  const wood=mat('#62412e'),dark=mat('#322a26'),fabric=mat('#a07b64'),cream=mat('#d5bd98'),metal=mat('#595a5b',.42),glass=mat('#3d4b4c',.22);
  function box(w,h,d,x,y,z,m,shadow=true){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=shadow;a.receiveShadow=true;scene.add(a);return a}
@@ -21,9 +23,9 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const wallMat=mat(data.wall);box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
  for(let i=-4;i<=4;i++){box(.035,.025,8,i,0,0,wood,false)}
  box(10,.1,.12,0,.12,-3.92,wood);box(.1,.1,8,-4.91,.12,0,wood);
- const hemi=new THREE.HemisphereLight('#fff1d5','#493128',2.1);scene.add(hemi);
- const key=new THREE.DirectionalLight('#ffe1b0',3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
- const bulb=new THREE.PointLight('#ffb86d',20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
+ const hemi=new THREE.HemisphereLight(data.lighting==='night'?'#9aa7d9':data.lighting==='day'?'#ffffff':'#fff1d5','#493128',data.lighting==='night'?.7:2.1);scene.add(hemi);
+ const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
+ const bulb=new THREE.PointLight('#ffb86d',data.lighting==='night'?12:data.lighting==='day'?2:20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
  function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
  function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
  const t=p.type;
@@ -41,7 +43,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='door'){part(1.05,2.1,.1,0,1.05,0,wood);part(.08,.08,.1,.4,1.08,.1,metal)}
  }
  data.pieces.forEach(make);
- let theta=-.65+data.angle*Math.PI/180,phi=.92,radius=15;const target=new THREE.Vector3(0,.6,0);
+ let theta=-.65+data.angle*Math.PI/180,phi=data.shot==='eye'?1.37:data.shot==='detail'?1.15:.92,radius=data.shot==='detail'?8:data.shot==='eye'?10:15;const target=new THREE.Vector3(0,data.shot==='eye'?1.15:.6,0);
  function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
  view();let dragging=false,px=0,py=0;
  renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});
@@ -52,8 +54,11 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  function render(){requestAnimationFrame(render);renderer.render(scene,camera)}render();
  </script></body></html>`;
  return <section style={{background:"#241d22",padding:16,borderRadius:16,border:"1px solid #84675c",marginBottom:20}}>
- <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}><div><h2 style={{margin:"0 0 6px"}}>🎬 معاينة ثلاثية الأبعاد — {sceneName}</h2><p style={{fontSize:13,margin:"0 0 12px"}}>غرفة بإضاءة دافئة وأثاث ثلاثي الأبعاد مبدئي؛ أي تعديل على المخطط يظهر هنا.</p></div><button onClick={()=>setAngle(v=>(v+45)%360)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer"}}>↻ تدوير الكاميرا</button></div>
- <iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",height:"min(62vw,480px)",minHeight:290,border:0,borderRadius:12,background:"#17171c"}}/>
+ <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}><div><h2 style={{margin:"0 0 6px"}}>🎬 معاينة ثلاثية الأبعاد — {sceneName}</h2><p style={{fontSize:13,margin:"0 0 12px"}}>غرفة بإضاءة دافئة وأثاث ثلاثي الأبعاد مبدئي؛ أي تعديل على المخطط يظهر هنا، مع اختبار زوايا التصوير والإضاءة.</p></div><button onClick={()=>setAngle(v=>(v+45)%360)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer"}}>↻ تدوير الكاميرا</button></div>
+ <div style={{display:"flex",gap:8,flexWrap:"wrap",margin:"0 0 12px"}}>
+ <label style={{fontSize:13}}>زاوية التصوير <select value={shot} onChange={e=>setShot(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="wide">لقطة تأسيسية واسعة</option><option value="eye">مستوى نظر الشخصيات</option><option value="detail">لقطة تفاصيل الديكور</option></select></label>
+ <label style={{fontSize:13}}>الإضاءة <select value={lighting} onChange={e=>setLighting(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="warm">دفء البيت مساءً</option><option value="day">ضوء نهاري</option><option value="night">ليل هادئ</option></select></label>
+ </div><iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",height:"min(62vw,480px)",minHeight:290,border:0,borderRadius:12,background:"#17171c"}}/>
  </section>
 }
 
