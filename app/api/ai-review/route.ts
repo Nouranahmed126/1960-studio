@@ -21,14 +21,14 @@ export async function POST(req:NextRequest){
  const key=process.env.GEMINI_API_KEY;
  if(!key)return NextResponse.json({error:"Gemini لم يُفعّل بعد: أضيفي GEMINI_API_KEY في إعدادات Vercel"},{status:503});
  result=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:"user",parts:[{text:"تعليمات المشرفة: "+request+"\nمحتوى العمل:\n"+scene}]}],generationConfig:{maxOutputTokens:1500}}),signal:AbortSignal.timeout(45000)});
- const data=await result.json();if(!result.ok)return NextResponse.json({error:"تعذر الاتصال بـ Gemini. تحققي من المفتاح والرصيد وحدود الاستخدام."},{status:502});
+ const data=await result.json();if(!result.ok){const code=String(data?.error?.status??"");const msg=result.status===429?"تم تجاوز حد استخدام Gemini. جربي لاحقًا أو راجعي الحصة المجانية في Google AI Studio.":result.status===403?"مفتاح Gemini ليس لديه صلاحية استخدام هذا النموذج. راجعي قيود المفتاح وإعدادات المشروع.":result.status===400||result.status===404?"النموذج المطلوب غير متاح للمشروع أو الطلب غير مدعوم.":result.status===401?"مفتاح Gemini غير صالح أو غير مقبول.":"تعذر الاتصال بـ Gemini مؤقتًا.";return NextResponse.json({error:msg,providerStatus:result.status,providerCode:code},{status:502})}
  return NextResponse.json({review:(data.candidates?.[0]?.content?.parts??[]).map((p:{text?:string})=>p.text??"").join("\n"),provider:"gemini"});
  }
  if(input.provider==="openai"){
  const key=process.env.OPENAI_API_KEY;
  if(!key)return NextResponse.json({error:"OpenAI لم يُفعّل بعد: أضيفي OPENAI_API_KEY في إعدادات Vercel"},{status:503});
  result=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},body:JSON.stringify({model:"gpt-4.1-mini",messages:[{role:"system",content:instruction},{role:"user",content:"راجع المشهد التالي:\n"+scene}],max_tokens:1500}),signal:AbortSignal.timeout(45000)});
- const data=await result.json();if(!result.ok)return NextResponse.json({error:"تعذر الاتصال بـ OpenAI. تحققي من المفتاح والرصيد وحدود الاستخدام."},{status:502});
+ const data=await result.json();if(!result.ok){const code=String(data?.error?.code??"");const msg=result.status===429?"رصيد OpenAI API غير كافٍ أو تم تجاوز حدود الاستخدام.":result.status===401?"مفتاح OpenAI غير صالح.":result.status===403?"مفتاح OpenAI لا يملك صلاحية استخدام هذا النموذج.":"تعذر الاتصال بـ OpenAI.";return NextResponse.json({error:msg,providerStatus:result.status,providerCode:code},{status:502})}
  return NextResponse.json({review:data.choices?.[0]?.message?.content??"",provider:"openai"});
  }
  return NextResponse.json({error:"اختاري Gemini أو OpenAI"},{status:400});
