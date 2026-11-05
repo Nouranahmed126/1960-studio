@@ -22,14 +22,14 @@ export async function POST(req:NextRequest){
 
  const scene=typeof input.scene==="string"?input.scene.trim():"";const request=typeof input.request==="string"?input.request.slice(0,1200):"راجع هذا العمل، واقترح إجراءات واضحة للمشرفة دون تنفيذها.";
  if((scene.length<20&&!media)||scene.length>12000)return NextResponse.json({error:"أدخل مشهدًا من 20 إلى 12000 حرف"},{status:400});
- let result:Response;
+ let result:Response|null=null;
  if(input.provider==="gemini"){
  const key=process.env.GEMINI_API_KEY;
  if(!key)return NextResponse.json({error:"Gemini لم يُفعّل بعد: أضيفي GEMINI_API_KEY في إعدادات Vercel"},{status:503});
  const body=JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:"user",parts:[{text:"تعليمات المشرفة: "+request+"\\nمحتوى العمل:\\n"+scene},...(media?[{inline_data:media}]:[])]}],generationConfig:{maxOutputTokens:1500}});
  const choices=["gemini-2.5-flash","gemini-2.5-flash-lite"];let modelUsed=choices[0];
  for(const candidate of choices){modelUsed=candidate;result=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+candidate+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body,signal:AbortSignal.timeout(45000),cache:"no-store"});if(result.status!==404)break}
- const data=await result.json();if(!result.ok){const code=String(data?.error?.status??"");const msg=result.status===429?"تم تجاوز حد استخدام Gemini. جربي لاحقًا أو راجعي الحصة المجانية في Google AI Studio.":result.status===403?"مفتاح Gemini ليس لديه صلاحية استخدام هذا النموذج. راجعي قيود المفتاح وإعدادات المشروع.":result.status===400||result.status===404?"النموذج المطلوب غير متاح للمشروع أو الطلب غير مدعوم.":result.status===401?"مفتاح Gemini غير صالح أو غير مقبول.":"تعذر الاتصال بـ Gemini مؤقتًا.";return NextResponse.json({error:msg,providerStatus:result.status,providerCode:code,providerMessage:typeof data?.error?.message==="string"?data.error.message.slice(0,350):undefined},{status:502})}
+ if(!result)throw Error("Gemini request was not sent");const data=await result.json();if(!result.ok){const code=String(data?.error?.status??"");const msg=result.status===429?"تم تجاوز حد استخدام Gemini. جربي لاحقًا أو راجعي الحصة المجانية في Google AI Studio.":result.status===403?"مفتاح Gemini ليس لديه صلاحية استخدام هذا النموذج. راجعي قيود المفتاح وإعدادات المشروع.":result.status===400||result.status===404?"النموذج المطلوب غير متاح للمشروع أو الطلب غير مدعوم.":result.status===401?"مفتاح Gemini غير صالح أو غير مقبول.":"تعذر الاتصال بـ Gemini مؤقتًا.";return NextResponse.json({error:msg,providerStatus:result.status,providerCode:code,providerMessage:typeof data?.error?.message==="string"?data.error.message.slice(0,350):undefined},{status:502})}
  return NextResponse.json({review:(data.candidates?.[0]?.content?.parts??[]).map((p:{text?:string})=>p.text??"").join("\n"),provider:"gemini",model:modelUsed});
  }
  if(input.provider==="openai"){
