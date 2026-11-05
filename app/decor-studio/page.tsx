@@ -4,6 +4,59 @@ type Piece={id:number;type:string;x:number;y:number;rotation:number};
 const catalog=[["sofa","كنبة كلاسيكية","🛋️",110,48],["chair","كرسي خشب","🪑",42,42],["table","ترابيزة صالون","▣",70,42],["tv","تليفزيون قديم","📺",52,35],["radio","راديو خشبي","📻",42,30],["archive","دولاب أرشيف","🗄️",78,34],["lamp","أباجورة","💡",28,28],["rug","سجادة شرقية","▦",135,90],["books","مكتبة","📚",90,32],["window","شباك خشب","▤",75,15],["door","باب","▯",58,16],["plant","نبات منزلي","🪴",32,32]] as const;
 const presets=[{name:"صالون بيت الجد",description:"دفء البيت المصري وذكريات الإعلام القديم",wall:"#aa8771",floor:"#9d7357",pieces:[{type:"sofa",x:80,y:95},{type:"rug",x:170,y:195},{type:"table",x:195,y:222},{type:"tv",x:385,y:95},{type:"radio",x:350,y:330},{type:"books",x:75,y:335},{type:"lamp",x:65,y:215}]},{name:"غرفة الأرشيف",description:"أوراق وتسجيلات وشهادات محفوظة من الزمن",wall:"#817969",floor:"#746250",pieces:[{type:"archive",x:60,y:80},{type:"archive",x:180,y:80},{type:"books",x:330,y:80},{type:"table",x:225,y:220},{type:"chair",x:175,y:285},{type:"radio",x:340,y:325}]},{name:"ركن الحفيدة",description:"زاوية طفلة في الثامنة داخل عالم الجد",wall:"#b6a08c",floor:"#b78c68",pieces:[{type:"rug",x:150,y:165},{type:"chair",x:85,y:105},{type:"table",x:235,y:200},{type:"books",x:335,y:95},{type:"lamp",x:365,y:280}]}];
 const W=510,H=400;
+
+function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor:string;sceneName:string}){
+ const [angle,setAngle]=useState(0);
+ const payload=JSON.stringify({pieces,wall,floor,angle}).replace(/</g,"\\u003c");
+ const srcDoc=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;overflow:hidden;background:#17171c"><div id="notice" style="position:absolute;left:12px;top:12px;color:#fff;font:12px system-ui;z-index:2;background:#0008;padding:6px;border-radius:6px">اسحبي لتدوير الكاميرا • عجلة الماوس للتقريب</div><script type="module">
+ import * as THREE from 'https://esm.sh/three@0.169.0';
+ const data=${payload};
+ const scene=new THREE.Scene();scene.background=new THREE.Color('#211b20');
+ const camera=new THREE.PerspectiveCamera(42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.5;document.body.appendChild(renderer.domElement);
+ const mat=(color,roughness=0.83)=>new THREE.MeshStandardMaterial({color,roughness});
+ const wood=mat('#62412e'),dark=mat('#322a26'),fabric=mat('#a07b64'),cream=mat('#d5bd98'),metal=mat('#595a5b',.42),glass=mat('#3d4b4c',.22);
+ function box(w,h,d,x,y,z,m,shadow=true){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=shadow;a.receiveShadow=true;scene.add(a);return a}
+ const floorMat=mat(data.floor);box(10,.18,8,0,-.12,0,floorMat,false);
+ const wallMat=mat(data.wall);box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
+ for(let i=-4;i<=4;i++){box(.035,.025,8,i,0,0,wood,false)}
+ box(10,.1,.12,0,.12,-3.92,wood);box(.1,.1,8,-4.91,.12,0,wood);
+ const hemi=new THREE.HemisphereLight('#fff1d5','#493128',2.1);scene.add(hemi);
+ const key=new THREE.DirectionalLight('#ffe1b0',3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
+ const bulb=new THREE.PointLight('#ffb86d',20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
+ function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
+ function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
+ const t=p.type;
+ if(t==='rug'){part(2.3,.035,1.5,0,.04,0,mat('#833d3f'));part(2,.04,1.2,0,.07,0,mat('#c99d70'))}
+ else if(t==='sofa'){part(2,.45,.8,0,.48,0,fabric);part(2,.85,.23,0,.9,-.35,fabric);part(.22,.7,.8,-.95,.66,0,wood);part(.22,.7,.8,.95,.66,0,wood);for(const x of [-.48,.48])part(.82,.14,.65,x,.77,.08,cream)}
+ else if(t==='chair'){part(.7,.13,.65,0,.55,0,wood);part(.7,.9,.13,0,1,-.28,wood);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.08,.55,.08,x,.28,z,wood)}
+ else if(t==='table'){part(1.3,.13,.8,0,.7,0,wood);for(const x of [-.55,.55])for(const z of [-.28,.28])part(.09,.65,.09,x,.34,z,wood)}
+ else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
+ else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
+ else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
+ else if(t==='books'){part(1.4,2.1,.45,0,1.05,0,wood);for(let y=.4;y<2;y+=.42){part(1.28,.05,.4,0,y,0,dark);for(let x=-.5;x<.6;x+=.18)part(.11,.31,.28,x,y+.17,0,mat(['#835748','#526456','#aa8c60'][Math.floor((x+1)*4)%3]))}}
+ else if(t==='lamp'){part(.34,.1,.34,0,.06,0,metal);part(.07,1.15,.07,0,.67,0,metal);part(.7,.5,.7,0,1.35,0,cream)}
+ else if(t==='plant'){part(.4,.4,.4,0,.25,0,mat('#ad7454'));for(let i=0;i<5;i++){const leaf=part(.2,.7,.16,Math.sin(i*1.25)*.2,.78,Math.cos(i*1.25)*.2,mat('#54704b'));leaf.rotation.z=i*.4}}
+ else if(t==='window'){part(1.4,1.5,.08,0,1.55,-.08,wood);part(1.2,1.3,.05,0,1.55,0,glass);part(.08,1.4,.08,0,1.55,.06,wood);part(1.3,.08,.08,0,1.55,.06,wood)}
+ else if(t==='door'){part(1.05,2.1,.1,0,1.05,0,wood);part(.08,.08,.1,.4,1.08,.1,metal)}
+ }
+ data.pieces.forEach(make);
+ let theta=-.65+data.angle*Math.PI/180,phi=.92,radius=15;const target=new THREE.Vector3(0,.6,0);
+ function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
+ view();let dragging=false,px=0,py=0;
+ renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});
+ renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;theta-=(e.clientX-px)*.007;phi=Math.max(.25,Math.min(1.5,phi+(e.clientY-py)*.007));px=e.clientX;py=e.clientY;view()});
+ renderer.domElement.addEventListener('pointerup',()=>dragging=false);
+ renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(6,Math.min(26,radius+e.deltaY*.015));view()},{passive:false});
+ function resize(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}addEventListener('resize',resize);resize();
+ function render(){requestAnimationFrame(render);renderer.render(scene,camera)}render();
+ </script></body></html>`;
+ return <section style={{background:"#241d22",padding:16,borderRadius:16,border:"1px solid #84675c",marginBottom:20}}>
+ <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}><div><h2 style={{margin:"0 0 6px"}}>🎬 معاينة ثلاثية الأبعاد — {sceneName}</h2><p style={{fontSize:13,margin:"0 0 12px"}}>غرفة بإضاءة دافئة وأثاث ثلاثي الأبعاد مبدئي؛ أي تعديل على المخطط يظهر هنا.</p></div><button onClick={()=>setAngle(v=>(v+45)%360)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer"}}>↻ تدوير الكاميرا</button></div>
+ <iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",height:"min(62vw,480px)",minHeight:290,border:0,borderRadius:12,background:"#17171c"}}/>
+ </section>
+}
+
 export default function DecorStudio(){
  const [scene,setScene]=useState(0),[pieces,setPieces]=useState<Piece[]>(()=>presets[0].pieces.map((p,i)=>({...p,id:i+1,rotation:0}))),[selected,setSelected]=useState<number|null>(null),[wall,setWall]=useState(presets[0].wall),[floor,setFloor]=useState(presets[0].floor),[sceneName,setSceneName]=useState("صالون بيت الجد"),[notes,setNotes]=useState(""),[status,setStatus]=useState(""),[grid,setGrid]=useState(true);
  const chosen=pieces.find(p=>p.id===selected);const meta=useMemo(()=>Object.fromEntries(catalog.map(x=>[x[0],x])),[]);
@@ -16,7 +69,7 @@ export default function DecorStudio(){
  const surface:React.CSSProperties={background:"#2c2227",border:"1px solid #84675c",borderRadius:16,padding:16};const button:React.CSSProperties={border:"1px solid #ac8a67",borderRadius:10,padding:"10px 12px",cursor:"pointer",fontWeight:700};
  return <main dir="rtl" style={{maxWidth:1250,margin:"auto",padding:"28px 16px 140px",color:"#f4e6d5",fontFamily:"system-ui"}}>
  <div style={{marginBottom:24}}><div style={{fontSize:12,letterSpacing:3,color:"#d6b68a"}}>1960 • PRODUCTION DESIGN</div><h1 style={{fontSize:"clamp(26px,5vw,44px)",margin:"6px 0"}}>🏠 استوديو الديكور السينمائي</h1><p style={{maxWidth:750,lineHeight:1.8}}>صممي أماكن فيلم «1960» بروح البيت المصري القديم: صالون الجد، غرفة الأرشيف، وركن الحفيدة ذات الـ8 سنوات. اسحبي قطع الأثاث على المخطط، وغيّري الألوان واحفظي تصور المشهد.</p></div>
- <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
+ <Decor3D pieces={pieces} wall={wall} floor={floor} sceneName={sceneName}/><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
  <section style={surface}><h2 style={{marginTop:0}}>لوحة المشهد</h2><label style={{display:"block",marginBottom:10}}>اسم الديكور<input value={sceneName} onChange={e=>setSceneName(e.target.value)} style={{width:"100%",padding:10,marginTop:5,borderRadius:8}}/></label>
  <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:14}}>{presets.map((p,i)=><button key={p.name} style={{...button,background:i===scene?"#d6b68a":"#49353a"}} onClick={()=>apply(i)}>{p.name}</button>)}</div>
  <svg viewBox="0 0 510 400" onPointerMove={move} onPointerUp={()=>{}} style={{width:"100%",touchAction:"none",borderRadius:12,background:floor,border:"9px solid "+wall,boxSizing:"border-box",cursor:selected?"move":"default"}} role="img" aria-label="مخطط الديكور التفاعلي">
@@ -33,5 +86,5 @@ export default function DecorStudio(){
  <h3>الخامات والألوان</h3><div style={{display:"flex",gap:16,flexWrap:"wrap"}}><label>الجدران <input type="color" value={wall} onChange={e=>setWall(e.target.value)} style={{display:"block",width:70,height:40}}/></label><label>الأرضية <input type="color" value={floor} onChange={e=>setFloor(e.target.value)} style={{display:"block",width:70,height:40}}/></label></div>
  <h3>ملاحظات مصمم الديكور</h3><textarea value={notes} onChange={e=>setNotes(e.target.value)} rows={4} placeholder="الإضاءة، حالة الأثاث، الإكسسوارات، زاوية الكاميرا، زمن المشهد..." style={{width:"100%",padding:12,borderRadius:10}}/>
  <div style={{display:"flex",flexWrap:"wrap",gap:8,marginTop:14}}><button style={button} onClick={save}>💾 حفظ على الجهاز</button><button style={button} onClick={restore}>📂 فتح المحفوظ</button><button style={button} onClick={exportFile}>⬇️ تصدير المخطط</button></div>{status&&<p role="status" style={{color:"#ead0a4"}}>{status}</p>}
- </section></div><p style={{fontSize:13,marginTop:24,opacity:.8}}>النسخة الأولى للتخطيط البصري. تطوير العرض ثلاثي الأبعاد، المكتبة الواقعية، والحفظ المشترك للفريق مراحل لاحقة، وليست مفعلة بعد.</p></main>
+ </section></div><p style={{fontSize:13,marginTop:24,opacity:.8}}>المعاينة ثلاثية الأبعاد تستخدم نماذج هندسية مبدئية وليست مجسمات واقعية نهائية. مكتبة الأصول الواقعية والحفظ المشترك للفريق مراحل لاحقة.</p></main>
 }
