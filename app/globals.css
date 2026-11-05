@@ -157,3 +157,6 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 /* Keep the character editor usable on narrow screens */
 .site-menu-trigger.studio-character-menu{position:fixed!important;top:auto!important;bottom:calc(88px + env(safe-area-inset-bottom,0px))!important;right:12px!important;left:auto!important;padding:9px 12px!important;font-size:13px!important;z-index:30!important;max-width:110px!important}
 @media(max-width:700px){main:has(iframe[title="عارض الشخصية ثلاثي الأبعاد"]) h1{font-size:clamp(24px,6vw,34px)!important;padding-top:8px}main:has(iframe[title="عارض الشخصية ثلاثي الأبعاد"]){padding-top:16px!important}}
+
+/* Character workspace: avoid two floating controls obscuring the 3D canvas */
+@media(max-width:700px){.site-menu-trigger.studio-character-menu{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;right:12px!important;top:auto!important;left:auto!important;font-size:12px!important;padding:8px 10px!important}}
