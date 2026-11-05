@@ -7,7 +7,7 @@ const initial:Look={skin:"#C58E69",hair:"#39302C",hairStyle:"قصير",face:"ب�
 const palettes={skin:["#E8C6A3","#C58E69","#A96E4F","#75462F","#4E3026"],hair:["#292321","#655041","#B5A48F","#E1D8CC","#171719"],top:["#B8A07A","#FFFFFF","#38536D","#6F3547","#4B614C","#242329"],bottom:["#333B48","#1F2227","#6D594A","#A29B8B","#42534A"],shoes:["#292421","#6A4B37","#A5A09B"]};
 const field:React.CSSProperties={width:"100%",padding:12,borderRadius:10,border:"1px solid #80616B",background:"#251D24",color:"#fff",boxSizing:"border-box"};
 const panel:React.CSSProperties={background:"#39242F",border:"1px solid #785968",borderRadius:18,padding:18};
-const avatar3d = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;overflow:hidden;background:transparent"><div id="error" style="position:absolute;inset:0;display:none;place-items:center;color:white;font:14px sans-serif;text-align:center;padding:20px"></div><script type="module">
+const avatar3d = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;overflow:hidden;background:transparent"><div id="empty" style="position:absolute;inset:0;display:grid;place-items:center;color:#f6e9df;font:16px sans-serif;text-align:center;padding:24px;pointer-events:none">لا يوجد مجسم واقعي مرفوع بعد. ارفعي ملف شخصية GLB من الاختيارات أسفل المعاينة.</div><div id="error" style="position:absolute;inset:0;display:none;place-items:center;color:white;font:14px sans-serif;text-align:center;padding:20px"></div><script type="module">
 import * as THREE from "https://esm.sh/three@0.170.0";
 import {GLTFLoader} from "https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js";
 let look={"skin":"#C58E69","hair":"#39302C","hairStyle":"قصير","face":"بيضاوي","eyes":"بني","brows":"عريضة","nose":"متوسط","mouth":"عادي","top":"#B8A07A","bottom":"#333B48","shoes":"#292421","glasses":false,"beard":false,"body":"متوسط"};
@@ -39,12 +39,12 @@ if(look.hairStyle!=="أصلع"){sphere(avatar,0,3.58,-.045,.36*face,.21,.32,hair
 if(look.beard){sphere(avatar,0,2.93,.13,.27,.16,.23,hair)}
 if(look.glasses){const frame=material("#27272b",.5);for(const x of [-.145,.145]){const ring=new THREE.Mesh(new THREE.TorusGeometry(.107,.012,8,32),frame);ring.position.set(x,3.27,.35);avatar.add(ring)}cylinder(avatar,[-.04,3.27,.35],[.04,3.27,.35],.012,.012,frame)}
 }
-function loadModel(url){if(!url){if(loadedModel){root.remove(loadedModel);loadedModel=null;loadedUrl=""}rebuild();return}if(url===loadedUrl)return;loadedUrl=url;loader.load(url,gltf=>{if(loadedModel)root.remove(loadedModel);loadedModel=gltf.scene;const bounds=new THREE.Box3().setFromObject(loadedModel);const size=bounds.getSize(new THREE.Vector3());const center=bounds.getCenter(new THREE.Vector3());const scale=3.55/Math.max(size.y,.001);loadedModel.scale.setScalar(scale);loadedModel.position.set(-center.x*scale,.43-bounds.min.y*scale,-center.z*scale);root.add(loadedModel);avatar.visible=false;},undefined,()=>{loadedUrl="";document.getElementById("error").style.display="grid";document.getElementById("error").textContent="تعذر فتح النموذج. تأكدي إن الملف GLB صالح.";});}
-rebuild();
+function loadModel(url){if(!url){if(loadedModel){root.remove(loadedModel);loadedModel=null;loadedUrl=""}avatar.visible=false;return}if(url===loadedUrl)return;loadedUrl=url;loader.load(url,gltf=>{if(loadedModel)root.remove(loadedModel);loadedModel=gltf.scene;const bounds=new THREE.Box3().setFromObject(loadedModel);const size=bounds.getSize(new THREE.Vector3());const center=bounds.getCenter(new THREE.Vector3());const scale=3.55/Math.max(size.y,.001);loadedModel.scale.setScalar(scale);loadedModel.position.set(-center.x*scale,.43-bounds.min.y*scale,-center.z*scale);root.add(loadedModel);avatar.visible=false;document.getElementById("empty").style.display="none";},undefined,()=>{loadedUrl="";document.getElementById("error").style.display="grid";document.getElementById("error").textContent="تعذر فتح النموذج. تأكدي إن الملف GLB صالح.";});}
+avatar.visible=false;
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 let down=false,last=0;renderer.domElement.addEventListener("pointerdown",e=>{down=true;last=e.clientX;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener("pointermove",e=>{if(down){root.rotation.y+=(e.clientX-last)*.012;last=e.clientX}});renderer.domElement.addEventListener("pointerup",()=>down=false);
 renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.position.z=Math.max(5,Math.min(11,camera.position.z+e.deltaY*.008))},{passive:false});
-addEventListener("message",e=>{if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};rebuild();if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}}});
+addEventListener("message",e=>{if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}}});
 function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}animate();
 </script></body></html>`;
 export default function CharacterStudio(){
@@ -69,9 +69,9 @@ export default function CharacterStudio(){
  <div style={{height:330,position:"relative",borderRadius:14,overflow:"hidden",background:"radial-gradient(circle at 50% 42%,#60545b,#241d25)"}}>
  <iframe title="عارض الشخصية ثلاثي الأبعاد" sandbox="allow-scripts" srcDoc={avatar3d} ref={frameRef} onLoad={()=>frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")} style={{border:0,width:"100%",height:"100%",display:"block"}}/>
  </div>
- <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. الشخصية منفصلة عن الخلفية.</p>
+ <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. المجسم الواقعي يظهر هنا بعد رفع ملف GLB.</p>
  <p style={{textAlign:"center",fontWeight:700}}>{character} · المشهد {scene}</p>
- <p style={{fontSize:12,opacity:.75}}>معاينة ثلاثية الأبعاد قابلة للدوران، لكنها نموذج أولي مبسّط وليست شخصية فوتوغرافية.</p>
+ <p style={{fontSize:12,opacity:.75}}>لن نعرض الأفاتار الكرتوني القديم. المعاينة الواقعية تتطلب رفع نموذج GLB صالح.</p>
  </section>
  <section style={panel}><h2 style={{marginTop:0}}>اختيارات التصميم</h2>
  <label>الشخصية<input style={field} value={character} maxLength={100} onChange={e=>setCharacter(e.target.value)} placeholder="الجد حسن"/></label>
