@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useState,useRef} from "react";
 import {getSupabase} from "../../lib/supabase-browser";
 type Look={skin:string;hair:string;hairStyle:string;face:string;eyes:string;brows:string;nose:string;mouth:string;top:string;bottom:string;shoes:string;glasses:boolean;beard:boolean;body:string};
 type Design={id:number;owner_id:string;title:string;character_name:string;scene_number:string;notes:string;appearance:Look;created_at:string};
@@ -7,11 +7,50 @@ const initial:Look={skin:"#C58E69",hair:"#39302C",hairStyle:"قصير",face:"ب�
 const palettes={skin:["#E8C6A3","#C58E69","#A96E4F","#75462F","#4E3026"],hair:["#292321","#655041","#B5A48F","#E1D8CC","#171719"],top:["#B8A07A","#FFFFFF","#38536D","#6F3547","#4B614C","#242329"],bottom:["#333B48","#1F2227","#6D594A","#A29B8B","#42534A"],shoes:["#292421","#6A4B37","#A5A09B"]};
 const field:React.CSSProperties={width:"100%",padding:12,borderRadius:10,border:"1px solid #80616B",background:"#251D24",color:"#fff",boxSizing:"border-box"};
 const panel:React.CSSProperties={background:"#39242F",border:"1px solid #785968",borderRadius:18,padding:18};
-export default function CharacterStudio(){
+const avatar3d = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;overflow:hidden;background:transparent"><div id="error" style="position:absolute;inset:0;display:none;place-items:center;color:white;font:14px sans-serif;text-align:center;padding:20px"></div><script type="module">
+import * as THREE from "https://esm.sh/three@0.170.0";
+let look={"skin":"#C58E69","hair":"#39302C","hairStyle":"قصير","face":"بيضاوي","eyes":"بني","brows":"عريضة","nose":"متوسط","mouth":"عادي","top":"#B8A07A","bottom":"#333B48","shoes":"#292421","glasses":false,"beard":false,"body":"متوسط"};
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,2.35,7.7);camera.lookAt(0,1.75,0);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0,0);document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff,0x4c3741,2.2));const key=new THREE.DirectionalLight(0xffe5d4,3);key.position.set(-3,6,5);scene.add(key);const rim=new THREE.DirectionalLight(0xc5d5ff,1.6);rim.position.set(4,4,-3);scene.add(rim);
+const root=new THREE.Group();scene.add(root);let avatar=new THREE.Group();root.add(avatar);
+function material(color,roughness=.87){return new THREE.MeshStandardMaterial({color,roughness,metalness:0})}
+function sphere(parent,x,y,z,sx,sy,sz,mat){const mesh=new THREE.Mesh(new THREE.SphereGeometry(1,24,18),mat);mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);parent.add(mesh);return mesh}
+function cylinder(parent,a,b,r1,r2,mat){const from=new THREE.Vector3(...a),to=new THREE.Vector3(...b),diff=to.clone().sub(from);const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r2,r1,diff.length(),18),mat);mesh.position.copy(from.add(to).multiplyScalar(.5));mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),diff.normalize());parent.add(mesh);return mesh}
+function rebuild(){root.remove(avatar);avatar=new THREE.Group();root.add(avatar);
+const skin=material(look.skin),hair=material(look.hair),top=material(look.top),pants=material(look.bottom),shoes=material(look.shoes),white=material("#fffaf5"),iris=material(look.eyes==="أزرق"?"#527c9a":look.eyes==="أخضر"?"#51795b":"#513b2f"),dark=material("#242126"),lip=material("#895953");
+const body=look.body==="ممتلئ"?1.18:look.body==="نحيف"?.85:1,face=look.face==="عريض"?1.12:look.face==="نحيف"?.88:1;
+sphere(avatar,0,2.03,0,.49*body,.72,.27*body,top);sphere(avatar,0,1.58,0,.43*body,.26,.27*body,top);
+cylinder(avatar,[-.23,1.52,0],[-.24,.56,0],.18,.14,pants);cylinder(avatar,[.23,1.52,0],[.24,.56,0],.18,.14,pants);
+sphere(avatar,-.24,.47,.12,.2,.12,.34,shoes);sphere(avatar,.24,.47,.12,.2,.12,.34,shoes);
+cylinder(avatar,[-.44*body,2.53,0],[-.63*body,1.68,0],.16,.13,top);cylinder(avatar,[.44*body,2.53,0],[.63*body,1.68,0],.16,.13,top);
+sphere(avatar,-.64*body,1.6,0,.13,.16,.13,skin);sphere(avatar,.64*body,1.6,0,.13,.16,.13,skin);
+cylinder(avatar,[0,2.65,0],[0,2.92,0],.17,.17,skin);
+sphere(avatar,0,3.24,0,.35*face,.46,.32,skin);
+sphere(avatar,-.35*face,3.23,0,.08,.12,.075,skin);sphere(avatar,.35*face,3.23,0,.08,.12,.075,skin);
+sphere(avatar,-.145,3.27,.292,.095,.065,.035,white);sphere(avatar,.145,3.27,.292,.095,.065,.035,white);
+sphere(avatar,-.145,3.27,.322,.045,.049,.019,iris);sphere(avatar,.145,3.27,.322,.045,.049,.019,iris);
+sphere(avatar,-.145,3.27,.339,.022,.029,.009,dark);sphere(avatar,.145,3.27,.339,.022,.029,.009,dark);
+sphere(avatar,-.145,3.365,.302,.12,look.brows==="رفيعة"?.014:.029,.026,hair);sphere(avatar,.145,3.365,.302,.12,look.brows==="رفيعة"?.014:.029,.026,hair);
+sphere(avatar,0,3.13,.36,look.nose==="طويل"?.078:.065,look.nose==="طويل"?.16:.12,.10,skin);
+sphere(avatar,0,2.975,.295,look.mouth==="رفيع"?.095:.125,look.mouth==="رفيع"?.009:.022,.016,lip);
+if(look.hairStyle!=="أصلع"){sphere(avatar,0,3.58,-.045,.36*face,.21,.32,hair);if(look.hairStyle==="طويل"){sphere(avatar,-.29,3.12,-.10,.12,.55,.18,hair);sphere(avatar,.29,3.12,-.10,.12,.55,.18,hair)}}
+if(look.beard){sphere(avatar,0,2.93,.13,.27,.16,.23,hair)}
+if(look.glasses){const frame=material("#27272b",.5);for(const x of [-.145,.145]){const ring=new THREE.Mesh(new THREE.TorusGeometry(.107,.012,8,32),frame);ring.position.set(x,3.27,.35);avatar.add(ring)}cylinder(avatar,[-.04,3.27,.35],[.04,3.27,.35],.012,.012,frame)}
+}
+rebuild();
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener("resize",resize);resize();
+let down=false,last=0;renderer.domElement.addEventListener("pointerdown",e=>{down=true;last=e.clientX;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener("pointermove",e=>{if(down){root.rotation.y+=(e.clientX-last)*.012;last=e.clientX}});renderer.domElement.addEventListener("pointerup",()=>down=false);
+renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.position.z=Math.max(5,Math.min(11,camera.position.z+e.deltaY*.008))},{passive:false});
+addEventListener("message",e=>{if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};rebuild()}});
+function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}animate();
+</script></body></html>`;
+\nexport default function CharacterStudio(){
+ const frameRef=useRef<HTMLIFrameElement>(null);
  const [look,setLook]=useState<Look>(initial),[character,setCharacter]=useState("الجد حسن"),[scene,setScene]=useState("1"),[title,setTitle]=useState(""),[notes,setNotes]=useState(""),[items,setItems]=useState<Design[]>([]),[user,setUser]=useState(""),[editId,setEditId]=useState<number|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
  const change=<K extends keyof Look>(key:K,value:Look[K])=>setLook(p=>({...p,[key]:value}));
  async function load(){const db=getSupabase();if(!db)return;const {data:{user:u}}=await db.auth.getUser();if(!u){location.href="/login";return}setUser(u.id);const r=await db.from("studio_character_designs").select("*").order("created_at",{ascending:false}).limit(120);if(r.error)setMessage(r.error.message);else setItems(r.data||[])}
- useEffect(()=>{void load()},[]);
+ useEffect(()=>{void load()},[]);\n useEffect(()=>{frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")},[look]);
  async function save(){const db=getSupabase();if(!db||!user)return;if(!character.trim()||!title.trim()){setMessage("اكتبي اسم الشخصية واسم التصميم");return}setBusy(true);const data={owner_id:user,title:title.trim(),character_name:character.trim(),scene_number:scene.trim()||"1",notes:notes.trim(),appearance:look,updated_at:new Date().toISOString()};const r=editId?await db.from("studio_character_designs").update(data).eq("id",editId).eq("owner_id",user):await db.from("studio_character_designs").insert(data);setBusy(false);setMessage(r.error?"تعذر الحفظ: "+r.error.message:"تم حفظ تصميم الشخصية على الموقع ✓");if(!r.error){setEditId(null);await load()}}
  function open(d:Design){setLook({...initial,...d.appearance});setCharacter(d.character_name);setScene(d.scene_number);setTitle(d.title);setNotes(d.notes||"");setEditId(d.owner_id===user?d.id:null);window.scrollTo({top:0,behavior:"smooth"});setMessage(d.owner_id===user?"تم فتح تصميمك للتعديل":"تم فتح التصميم للمعاينة. للحفظ كنسخة جديدة غيّري الاسم واضغطي حفظ")}
  async function remove(d:Design){if(d.owner_id!==user||!confirm("حذف التصميم نهائيًا؟"))return;const db=getSupabase();if(!db)return;const r=await db.from("studio_character_designs").delete().eq("id",d.id).eq("owner_id",user);setMessage(r.error?r.error.message:"تم حذف التصميم");if(!r.error)await load()}
@@ -21,45 +60,14 @@ export default function CharacterStudio(){
  <h1>🎭 استوديو تصميم شخصيات 1960</h1><p>اختاري الشخصية والمشهد، وعدّلي شكل الأفاتار قدامك، وبعدها احفظي التصميم عشان كل الفريق يقدر يشوفه.</p>
  {message&&<p role="status" style={{padding:12,background:"#513445",borderRadius:10}}>{message}</p>}
  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
- <section style={{...panel,position:"sticky",top:8}}>
+ <section style={{...panel,position:"relative"}}>
  <h2 style={{marginTop:0}}>معاينة الشخصية</h2>
- <div style={{background:"linear-gradient(#77716d,#b6aaa0)",borderRadius:16,overflow:"hidden",textAlign:"center"}}>
- <svg viewBox="0 0 300 460" role="img" aria-label="معاينة مرئية للشخصية بالملابس والملامح المختارة" style={{width:"100%",maxWidth:360,display:"block",margin:"auto"}}>
- <defs>
- <radialGradient id="skinReal" cx="38%" cy="28%" r="85%"><stop offset="0%" stopColor="#fff0d9" stopOpacity=".53"/><stop offset="38%" stopColor={skin}/><stop offset="83%" stopColor={skin}/><stop offset="100%" stopColor="#4b3029" stopOpacity=".92"/></radialGradient>
- <linearGradient id="clothReal" x1="0" x2="1"><stop offset="0%" stopColor="#101015" stopOpacity=".55"/><stop offset="25%" stopColor={look.top}/><stop offset="56%" stopColor={look.top}/><stop offset="100%" stopColor="#17141b" stopOpacity=".6"/></linearGradient>
- <linearGradient id="trouserReal" x1="0" x2="1"><stop offset="0%" stopColor="#13141b" stopOpacity=".5"/><stop offset="38%" stopColor={look.bottom}/><stop offset="72%" stopColor={look.bottom}/><stop offset="100%" stopColor="#14131a" stopOpacity=".55"/></linearGradient>
- <radialGradient id="hairReal"><stop offset="0%" stopColor={hair}/><stop offset="100%" stopColor="#181414"/></radialGradient>
- <filter id="softPortrait"><feGaussianBlur stdDeviation="1.4"/></filter>
- <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".58" numOctaves="3" seed="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".065"/></feComponentTransfer></filter>
- </defs>
- <ellipse cx="150" cy="438" rx="78" ry="10" fill="#49423f" opacity=".3"/>
- <path d={look.body==="ممتلئ"?"M105 185 Q67 197 77 291 L100 316 L200 316 L223 291 Q232 197 195 185 Z":look.body==="نحيف"?"M118 185 Q91 195 93 288 L110 312 L190 312 L207 288 Q209 195 182 185 Z":"M110 185 Q77 195 84 292 L105 314 L195 314 L216 292 Q223 195 190 185 Z"} fill="url(#clothReal)" stroke="#41333a" strokeWidth="1.2"/>
- <path d="M111 300 L106 404 L143 404 L150 321 L158 404 L195 404 L189 300 Z" fill="url(#trouserReal)" stroke="#353138" strokeWidth="1.2"/>
- <path d="M106 398 L144 398 L145 427 Q126 435 94 428 Z M158 398 L196 398 L208 428 Q177 435 157 427 Z" fill={look.shoes}/>
- <path d="M107 189 L92 191 Q76 212 64 292 L84 300 L116 231 Z M193 189 L208 191 Q224 212 236 292 L216 300 L184 231 Z" fill={look.top} stroke="#41333a" strokeWidth="2"/>
- <path d="M64 291 Q65 316 79 319 Q89 313 84 298 Z M216 298 Q211 313 221 319 Q235 316 236 291 Z" fill="url(#skinReal)"/>
- <rect x="137" y="161" width="26" height="35" rx="10" fill={skin}/>
- <ellipse cx="150" cy="112" rx={faceWidth} ry={look.face==="عريض"?65:72} fill="url(#skinReal)" stroke="#785c50" strokeWidth=".7"/>
- <ellipse cx={150-faceWidth} cy="122" rx="7" ry="12" fill={skin}/><ellipse cx={150+faceWidth} cy="122" rx="7" ry="12" fill={skin}/>
- {look.hairStyle!=="أصلع"&&<path d={look.hairStyle==="طويل"?"M96 116 Q83 45 150 36 Q220 42 204 116 L209 188 L192 180 L195 100 Q150 69 105 99 L108 179 L91 189 Z":"M96 108 Q91 46 150 42 Q209 43 204 108 Q188 85 171 82 Q133 91 105 85 Z"} fill="url(#hairReal)"/>}
- <path d={look.brows==="رفيعة"?"M117 109 L139 107 M161 107 L183 109":"M115 108 Q127 102 140 107 M160 107 Q173 102 185 108"} stroke={hair} strokeWidth={look.brows==="رفيعة"?2:5} strokeLinecap="round" fill="none"/>
- <ellipse cx="128" cy="123" rx="10" ry="6" fill="#fff"/><ellipse cx="172" cy="123" rx="10" ry="6" fill="#fff"/>
- <circle cx="128" cy="123" r="5" fill={look.eyes==="أزرق"?"#447FA0":look.eyes==="أخضر"?"#547F5C":"#573D30"}/><circle cx="172" cy="123" r="5" fill={look.eyes==="أزرق"?"#447FA0":look.eyes==="أخضر"?"#547F5C":"#573D30"}/>
- <path d={look.nose==="طويل"?"M150 125 L145 157 Q150 162 158 157":"M150 132 L146 151 Q151 155 157 151"} stroke="#986B55" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
- <path d={look.mouth==="مبتسم"?"M130 170 Q150 186 170 170":look.mouth==="رفيع"?"M135 172 L165 172":"M134 172 Q150 178 166 172"} fill="none" stroke="#754D4B" strokeWidth="3" strokeLinecap="round"/>
- {look.beard&&<path d="M105 151 Q108 200 150 202 Q192 200 195 151 Q183 188 150 189 Q117 188 105 151" fill={hair} opacity=".85"/>}
- {look.glasses&&<g stroke="#292829" strokeWidth="3" fill="none"><rect x="111" y="114" width="35" height="24" rx="9"/><rect x="154" y="114" width="35" height="24" rx="9"/><path d="M146 120 Q150 116 154 120 M111 120 L98 116 M189 120 L202 116"/></g>}
- <path d="M107 183 Q120 194 136 197 M193 183 Q180 194 164 197 M150 210 L150 295 M112 309 Q150 320 188 309" fill="none" stroke="#eee7d7" opacity=".28" strokeWidth="1.2"/>
- <path d="M114 251 Q120 255 126 250 M174 250 Q180 255 186 251 M128 335 L123 393 M172 335 L177 393" fill="none" stroke="#000" opacity=".2" strokeWidth="2"/>
- <path d="M110 136 Q126 142 139 138 M161 138 Q175 142 190 136 M119 148 Q128 152 139 149 M161 149 Q174 152 181 148" fill="none" stroke="#603f36" strokeWidth="1" opacity=".28"/>
- <ellipse cx="125" cy="140" rx="13" ry="7" fill="#6e443a" opacity=".11" filter="url(#softPortrait)"/><ellipse cx="175" cy="140" rx="13" ry="7" fill="#6e443a" opacity=".11" filter="url(#softPortrait)"/>
- <path d="M141 161 Q150 165 160 161 M136 179 Q150 184 164 179" fill="none" stroke="#4e302d" strokeWidth=".8" opacity=".3"/>
- <rect x="0" y="0" width="300" height="460" filter="url(#grain)" opacity=".55" pointerEvents="none"/>
- <path d="M135 194 L150 207 L165 194" fill="none" stroke="#eee" strokeWidth="3"/>
- </svg></div>
+ <div style={{height:330,position:"relative",borderRadius:14,overflow:"hidden",background:"radial-gradient(circle at 50% 42%,#60545b,#241d25)"}}>
+ <iframe title="عارض الشخصية ثلاثي الأبعاد" sandbox="allow-scripts" srcDoc={avatar3d} ref={frameRef} onLoad={()=>frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")} style={{border:0,width:"100%",height:"100%",display:"block"}}/>
+ </div>
+ <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. الشخصية منفصلة عن الخلفية.</p>
  <p style={{textAlign:"center",fontWeight:700}}>{character} · المشهد {scene}</p>
- <p style={{fontSize:12,opacity:.75}}>معاينة ثنائية الأبعاد بإضاءة وظلال وخامات أكثر طبيعية. ما زالت ليست صورة فوتوغرافية أو نموذجًا ثلاثي الأبعاد.</p>
+ <p style={{fontSize:12,opacity:.75}}>معاينة ثلاثية الأبعاد قابلة للدوران، لكنها نموذج أولي مبسّط وليست شخصية فوتوغرافية.</p>
  </section>
  <section style={panel}><h2 style={{marginTop:0}}>اختيارات التصميم</h2>
  <label>الشخصية<input style={field} value={character} maxLength={100} onChange={e=>setCharacter(e.target.value)} placeholder="الجد حسن"/></label>
