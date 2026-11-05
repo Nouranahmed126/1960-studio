@@ -1,5 +1,5 @@
 import HomeCrewStrip from "./home-crew-strip";
-const links=[{icon:"🏆",title:"لوحة شرف 1960",desc:"نجوم الأسبوع وتكريمات الإخراج",href:"/honor-board"},
+const links=[{icon:"🎭",title:"استوديو تصميم الشخصيات",desc:"صمّم شكل الشخصيات والملابس لكل مشهد واحفظه للفريق",href:"/character-studio"},{icon:"🏆",title:"لوحة شرف 1960",desc:"نجوم الأسبوع وتكريمات الإخراج",href:"/honor-board"},
 {icon:"🎬",title:"فرق العمل",desc:"ادخل على فريقك والشات والملفات",href:"/sectors"},
 {icon:"📝",title:"التكليفات",desc:"شوف المطلوب منك ومواعيد التسليم",href:"/dashboard"},
 {icon:"📸",title:"كواليس 1960",desc:"صور اللحظات وارفع صورك",href:"/gallery"},
