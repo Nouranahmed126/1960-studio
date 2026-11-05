@@ -45,12 +45,13 @@ renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.posit
 addEventListener("message",e=>{if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};rebuild()}});
 function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}animate();
 </script></body></html>`;
-\nexport default function CharacterStudio(){
+export default function CharacterStudio(){
  const frameRef=useRef<HTMLIFrameElement>(null);
  const [look,setLook]=useState<Look>(initial),[character,setCharacter]=useState("الجد حسن"),[scene,setScene]=useState("1"),[title,setTitle]=useState(""),[notes,setNotes]=useState(""),[items,setItems]=useState<Design[]>([]),[user,setUser]=useState(""),[editId,setEditId]=useState<number|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
  const change=<K extends keyof Look>(key:K,value:Look[K])=>setLook(p=>({...p,[key]:value}));
  async function load(){const db=getSupabase();if(!db)return;const {data:{user:u}}=await db.auth.getUser();if(!u){location.href="/login";return}setUser(u.id);const r=await db.from("studio_character_designs").select("*").order("created_at",{ascending:false}).limit(120);if(r.error)setMessage(r.error.message);else setItems(r.data||[])}
- useEffect(()=>{void load()},[]);\n useEffect(()=>{frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")},[look]);
+ useEffect(()=>{void load()},[]);
+ useEffect(()=>{frameRef.current?.contentWindow?.postMessage({kind:"look",look},"*")},[look]);
  async function save(){const db=getSupabase();if(!db||!user)return;if(!character.trim()||!title.trim()){setMessage("اكتبي اسم الشخصية واسم التصميم");return}setBusy(true);const data={owner_id:user,title:title.trim(),character_name:character.trim(),scene_number:scene.trim()||"1",notes:notes.trim(),appearance:look,updated_at:new Date().toISOString()};const r=editId?await db.from("studio_character_designs").update(data).eq("id",editId).eq("owner_id",user):await db.from("studio_character_designs").insert(data);setBusy(false);setMessage(r.error?"تعذر الحفظ: "+r.error.message:"تم حفظ تصميم الشخصية على الموقع ✓");if(!r.error){setEditId(null);await load()}}
  function open(d:Design){setLook({...initial,...d.appearance});setCharacter(d.character_name);setScene(d.scene_number);setTitle(d.title);setNotes(d.notes||"");setEditId(d.owner_id===user?d.id:null);window.scrollTo({top:0,behavior:"smooth"});setMessage(d.owner_id===user?"تم فتح تصميمك للتعديل":"تم فتح التصميم للمعاينة. للحفظ كنسخة جديدة غيّري الاسم واضغطي حفظ")}
  async function remove(d:Design){if(d.owner_id!==user||!confirm("حذف التصميم نهائيًا؟"))return;const db=getSupabase();if(!db)return;const r=await db.from("studio_character_designs").delete().eq("id",d.id).eq("owner_id",user);setMessage(r.error?r.error.message:"تم حذف التصميم");if(!r.error)await load()}
