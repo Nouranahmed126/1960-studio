@@ -20,7 +20,7 @@ export default function InteriorPlanner({pieces,setPieces,selected,setSelected}:
  const [drag,setDrag]=useState<number|null>(null);
  const current=pieces.find(p=>p.id===selected);
  const update=(id:number,patch:Partial<Piece>)=>setPieces(old=>old.map(p=>p.id===id?{...p,...patch}:p));
- const position=(e:React.PointerEvent<SVGSVGElement>)=>{const rect=e.currentTarget.getBoundingClientRect();return {x:clamp((e.clientX-rect.left)*510/rect.width,510),y:clamp((e.clientY-rect.top)*400/rect.height,400)}};
+ const position=(e:React.PointerEvent<SVGSVGElement>)=>{const rect=e.currentTarget.getBoundingClientRect();return {x:clamp((e.clientX-rect.left)*580/rect.width-35,510),y:clamp((e.clientY-rect.top)*470/rect.height-32,400)}};
  const grid=(v:number)=>snap?Math.round(v/10)*10:Math.round(v);
  const change=(dx:number,dy:number)=>{if(current)update(current.id,{x:clamp(current.x+dx,510),y:clamp(current.y+dy,400)})};
  return <section dir="rtl" style={{background:"#241d22",border:"1px solid #84675c",borderRadius:16,padding:16,marginBottom:20}}>
