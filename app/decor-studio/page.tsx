@@ -161,6 +161,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  <div style={{display:"flex",gap:8,flexWrap:"wrap",margin:"0 0 12px"}}>
  <label style={{fontSize:13}}>زاوية التصوير <select value={shot} onChange={e=>setShot(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="wide">لقطة تأسيسية واسعة</option><option value="eye">مستوى نظر الشخصيات</option><option value="detail">لقطة تفاصيل الديكور</option></select></label>
  <label style={{fontSize:13}}>الإضاءة <select value={lighting} onChange={e=>setLighting(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="warm">دفء البيت مساءً</option><option value="day">ضوء نهاري</option><option value="night">ليل هادئ</option></select></label>
+ <label style={{fontSize:13}}>جودة العرض <select value={quality} onChange={e=>setQuality(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="balanced">متوازنة للموبايل</option><option value="high">عالية التفاصيل</option></select></label>
  </div><iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",height:"min(62vw,480px)",minHeight:290,border:0,borderRadius:12,background:"#17171c"}}/>
  </section>
 }
