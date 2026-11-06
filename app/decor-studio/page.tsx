@@ -16,6 +16,35 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const srcDoc=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;overflow:hidden;background:#17171c"><div id="notice" style="position:absolute;left:12px;top:12px;color:#fff;font:12px system-ui;z-index:2;background:#0008;padding:6px;border-radius:6px">اسحبي لتدوير الكاميرا • عجلة الماوس للتقريب</div><script type="module">
  import * as THREE from 'https://esm.sh/three@0.169.0';
  const data=${payload};
+ // CC0 chair model from Khronos glTF-Sample-Assets (Wayfair, 2020).
+ const CHAIR_GLB='https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SheenChair/glTF-Binary/SheenChair.glb';
+ let chairTemplate=null;
+ const chairGroups=[];
+ async function loadChair(){
+  try{
+   const {GLTFLoader}=await import('https://esm.sh/three@0.169.0/examples/jsm/loaders/GLTFLoader.js?external=three');
+   const loader=new GLTFLoader();
+   const gltf=await loader.loadAsync(CHAIR_GLB);
+   chairTemplate=gltf.scene;
+   for(const group of chairGroups)attachChair(group);
+  }catch(err){console.warn('Optional chair model unavailable; keeping procedural furniture',err)}
+ }
+ function attachChair(group){
+  if(!chairTemplate||!group.isObject3D)return;
+  const model=chairTemplate.clone(true);
+  const bounds=new THREE.Box3().setFromObject(model);
+  const size=bounds.getSize(new THREE.Vector3());
+  if(Math.min(size.x,size.y,size.z)<=0)return;
+  const scale=Math.min(.9/size.x,1.2/size.y,.9/size.z);
+  model.scale.setScalar(scale);
+  model.updateMatrixWorld(true);
+  const normalized=new THREE.Box3().setFromObject(model);
+  const center=normalized.getCenter(new THREE.Vector3());
+  model.position.set(-center.x,-normalized.min.y,-center.z);
+  model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
+  group.clear();group.add(model);
+ }
+ 
  const scene=new THREE.Scene();scene.background=new THREE.Color('#211b20');
  const camera=new THREE.PerspectiveCamera(data.shot==='detail'?32:data.shot==='eye'?55:42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
@@ -85,7 +114,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   for(const x of [-.44,.44]){rounded(.82,.13,.67,x,.8,.09,cream);rounded(.75,.52,.16,x,1.02,-.23,fabric)}
   for(const x of [-.66,.66])rounded(.32,.25,.13,x,.95,.28,cream);
  }
- else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood)}
+ else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood);chairGroups.push(group)}
  else if(t==='table'){
   rounded(1.35,.1,.85,0,.72,0,wood,.13);
   for(const x of [-.52,.52])for(const z of [-.28,.28])cylinder(.055,.08,.64,x,.34,z,wood,12);
@@ -115,7 +144,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='photo'){part(.68,.55,.06,0,1.4,0,wood);part(.5,.37,.07,0,1.4,.045,mat('#b99d76'))}
  else if(t==='clock'){const disk=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.07,32),cream);disk.rotation.x=Math.PI/2;disk.position.y=1.75;group.add(disk);part(.025,.2,.025,0,1.8,.06,dark)}
  }
- data.pieces.forEach(make);
+ data.pieces.forEach(make);loadChair();
  let theta=-.65+data.angle*Math.PI/180,phi=data.shot==='eye'?1.37:data.shot==='detail'?1.15:.92,radius=data.shot==='detail'?8:data.shot==='eye'?10:15;const target=new THREE.Vector3(0,data.shot==='eye'?1.15:.6,0);
  function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
  view();let dragging=false,px=0,py=0;
