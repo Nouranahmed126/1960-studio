@@ -96,7 +96,16 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
  else if(t==='books'){part(1.4,2.1,.45,0,1.05,0,wood);for(let y=.4;y<2;y+=.42){part(1.28,.05,.4,0,y,0,dark);for(let x=-.5;x<.6;x+=.18)part(.11,.31,.28,x,y+.17,0,mat(['#835748','#526456','#aa8c60'][Math.floor((x+1)*4)%3]))}}
  else if(t==='lamp'){part(.34,.1,.34,0,.06,0,metal);part(.07,1.15,.07,0,.67,0,metal);part(.7,.5,.7,0,1.35,0,cream)}
- else if(t==='plant'){part(.4,.4,.4,0,.25,0,mat('#ad7454'));for(let i=0;i<5;i++){const leaf=part(.2,.7,.16,Math.sin(i*1.25)*.2,.78,Math.cos(i*1.25)*.2,mat('#54704b'));leaf.rotation.z=i*.4}}
+ else if(t==='plant'){
+  const terracotta=mat('#b87552');cylinder(.24,.18,.38,0,.25,0,terracotta,20);
+  cylinder(.26,.26,.06,0,.45,0,terracotta,20);
+  const stem=mat('#526b3e');cylinder(.028,.045,.9,0,.85,0,stem,10);
+  const greens=[mat('#54764b'),mat('#688b51'),mat('#3f6547')];
+  for(let i=0;i<9;i++){
+   const a=i*2.39996;const radius=.2+(i%3)*.075;const leaf=sphere(.2,Math.cos(a)*radius,.92+(i%4)*.15,Math.sin(a)*radius,greens[i%3]);
+   leaf.scale.set(1.25,.42,.6);leaf.rotation.y=a;
+  }
+ }
  else if(t==='window'){part(1.4,1.5,.08,0,1.55,-.08,wood);part(1.2,1.3,.05,0,1.55,0,glass);part(.08,1.4,.08,0,1.55,.06,wood);part(1.3,.08,.08,0,1.55,.06,wood)}
  else if(t==='door'){part(1.05,2.1,.1,0,1.05,0,wood);part(.08,.08,.1,.4,1.08,.1,metal)}
  else if(t==='desk'){part(1.7,.14,.85,0,.76,0,wood);for(const x of [-.72,.72])part(.13,.75,.75,x,.38,0,wood);part(.55,.35,.7,.42,.53,0,dark);part(.36,.04,.04,.45,.56,.4,metal)}
