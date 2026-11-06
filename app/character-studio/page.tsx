@@ -51,10 +51,15 @@ function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}
 </script></body></html>`;
 export default function CharacterStudio(){
  const frameRef=useRef<HTMLIFrameElement>(null);
- const previewUrls=useRef<string[]>([]);
  const [localPreview,setLocalPreview]=useState(false);
- function previewFile(file:File,kind:"model"|"garment"){if(!file.name.toLowerCase().endsWith(".glb")){setMessage("اختاري ملف GLB");return}const url=URL.createObjectURL(file);previewUrls.current.push(url);setLocalPreview(true);setLook(p=>({...p,[kind==="model"?"modelUrl":"garmentUrl"]:url}));setMessage("تم تحميل الملف في المعاينة مباشرة — للحفظ الدائم استخدمي رفع الملف إلى مكتبة الفريق.");}
- useEffect(()=>()=>{previewUrls.current.forEach(url=>URL.revokeObjectURL(url))},[]);
+ function previewFile(file:File,kind:"model"|"garment"){
+  if(!file.name.toLowerCase().endsWith(".glb")){setMessage("اختاري ملف GLB");return}
+  if(file.size>30*1024*1024){setMessage("حجم الملف أكبر من 30 ميجابايت");return}
+  const reader=new FileReader();
+  reader.onerror=()=>setMessage("تعذر قراءة ملف GLB");
+  reader.onload=()=>{if(typeof reader.result!=="string")return;setLocalPreview(true);setLook(p=>({...p,[kind==="model"?"modelUrl":"garmentUrl"]:reader.result as string}));setMessage("المجسم جاهز للمعاينة محليًا. الحفظ الدائم يتطلب رفعه إلى مكتبة الفريق.");};
+  reader.readAsDataURL(file);
+ }
  const [modelBusy,setModelBusy]=useState(false);const [garmentBusy,setGarmentBusy]=useState(false);const [look,setLook]=useState<Look>(initial),[character,setCharacter]=useState("الجد حسن"),[scene,setScene]=useState("1"),[title,setTitle]=useState(""),[notes,setNotes]=useState(""),[items,setItems]=useState<Design[]>([]),[user,setUser]=useState(""),[editId,setEditId]=useState<number|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
  const change=<K extends keyof Look>(key:K,value:Look[K])=>setLook(p=>({...p,[key]:value}));
  async function load(){const db=getSupabase();if(!db)return;const {data:{user:u}}=await db.auth.getUser();if(!u){location.href="/login";return}setUser(u.id);const r=await db.from("studio_character_designs").select("*").order("created_at",{ascending:false}).limit(120);if(r.error)setMessage(r.error.message);else setItems(r.data||[])}
