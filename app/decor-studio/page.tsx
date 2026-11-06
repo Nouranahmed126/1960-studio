@@ -152,10 +152,21 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  data.pieces.forEach(make);if(chairGroups.length)loadChair();
  let theta=-.65+data.angle*Math.PI/180,phi=data.shot==='eye'?1.37:data.shot==='detail'?1.15:.92,radius=data.shot==='detail'?8:data.shot==='eye'?10:15;const target=new THREE.Vector3(0,data.shot==='eye'?1.15:.6,0);
  function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
- view();let dragging=false,px=0,py=0;
- renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});
- renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;theta-=(e.clientX-px)*.007;phi=Math.max(.25,Math.min(1.5,phi+(e.clientY-py)*.007));px=e.clientX;py=e.clientY;view()});
- renderer.domElement.addEventListener('pointerup',()=>dragging=false);
+ view();let dragging=false,px=0,py=0,pinchDistance=0;
+ const activePointers=new Map();
+ const distance=()=>{const points=[...activePointers.values()];return points.length<2?0:Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y)};
+ renderer.domElement.style.touchAction='none';
+ renderer.domElement.addEventListener('pointerdown',e=>{activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});dragging=true;px=e.clientX;py=e.clientY;pinchDistance=distance();renderer.domElement.setPointerCapture(e.pointerId)});
+ renderer.domElement.addEventListener('pointermove',e=>{
+  if(!activePointers.has(e.pointerId))return;
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(activePointers.size>=2){const d=distance();if(pinchDistance>0&&d>0){radius=Math.max(4,Math.min(26,radius*pinchDistance/d));view()}pinchDistance=d;return}
+  if(!dragging)return;
+  theta-=(e.clientX-px)*.007;phi=Math.max(.25,Math.min(1.5,phi+(e.clientY-py)*.007));px=e.clientX;py=e.clientY;view()
+ });
+ const stopPointer=e=>{activePointers.delete(e.pointerId);dragging=activePointers.size>0;pinchDistance=distance();if(activePointers.size===1){const p=[...activePointers.values()][0];px=p.x;py=p.y}};
+ renderer.domElement.addEventListener('pointerup',stopPointer);
+ renderer.domElement.addEventListener('pointercancel',stopPointer);
  renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(6,Math.min(26,radius+e.deltaY*.015));view()},{passive:false});
  function resize(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}addEventListener('resize',resize);resize();
  function render(){requestAnimationFrame(render);renderer.render(scene,camera)}render();
