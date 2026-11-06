@@ -2,6 +2,7 @@
 import {useState} from "react";
 import {getSupabase} from "../../lib/supabase-browser";
 type Piece={id:number;type:string;x:number;y:number;rotation:number};
+const itemNames:Record<string,string>={sofa:"كنبة",chair:"كرسي",table:"ترابيزة",rug:"سجادة",tv:"تليفزيون قديم",radio:"راديو",books:"مكتبة",lamp:"أباجورة",photo:"صورة",clock:"ساعة",archive:"دولاب أرشيف",reel:"بكرة فيلم",tape:"مسجل شرائط",files:"ملفات",desk:"مكتب"};
 const groups=[
  {name:"صالون بيت الجد",keys:["صالون","جد","بيت","معيشة"],types:["sofa","rug","table","radio","books","clock"],wall:"#aa8771",floor:"#9d7357"},
  {name:"غرفة الأرشيف",keys:["أرشيف","وثائق","ملفات","مكتب"],types:["archive","files","books","desk","reel","tape"],wall:"#817969",floor:"#746250"},
@@ -31,7 +32,7 @@ export default function SmartDecor({onApply}:{onApply:(data:{name:string;wall:st
  {preview&&<div style={{marginTop:12,padding:12,border:"1px solid #84675c",borderRadius:10}}><strong>{preview.name}</strong><p>عدد القطع: {preview.pieces.length}. اقتراح تخطيطي مبدئي يحتاج مراجعة تاريخية وفنية.</p>
  <svg viewBox="0 0 510 400" role="img" aria-label="معاينة علوية لتوزيع قطع الديكور المقترح" style={{display:"block",width:"100%",maxWidth:510,background:preview.floor,border:"8px solid "+preview.wall,borderRadius:10,boxSizing:"border-box",marginBottom:12}}>
  {preview.pieces.map((p,i)=><g key={p.id} transform={`translate(${p.x} ${p.y}) rotate(${p.rotation})`}><rect x="-25" y="-18" width="50" height="36" rx="5" fill="#ead6b3" stroke="#553a2d" strokeWidth="2"/><text textAnchor="middle" dominantBaseline="middle" fontSize="11" fill="#302019">{i+1}</text></g>)}
- </svg><p style={{fontSize:12}}>معاينة تخطيطية قبل التطبيق؛ الأرقام تمثل مواقع القطع بالترتيب.</p><button style={btn} onClick={()=>{onApply(preview);setPreview(null)}}>تطبيق الاقتراح</button> <button style={btn} onClick={()=>setPreview(null)}>إلغاء</button></div>}</section>
+ </svg><p style={{fontSize:12}}>معاينة تخطيطية قبل التطبيق؛ الأرقام تمثل مواقع القطع بالترتيب.</p><ol style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(135px,1fr))",gap:"4px 12px",paddingInlineStart:22}}>{preview.pieces.map((p,i)=><li key={p.id} style={{fontSize:13}}>{itemNames[p.type]||p.type}</li>)}</ol><button style={btn} onClick={()=>{onApply(preview);setPreview(null)}}>تطبيق الاقتراح</button> <button style={btn} onClick={()=>setPreview(null)}>إلغاء</button></div>}</section>
  <section style={card}><h2>🏺 مكتبة ديكور مصر الستينيات</h2><p>تصورات مبدئية باستخدام قطع الأثاث الموجودة بالفعل، وليست نماذج فوتوريالية أو توثيقًا تاريخيًا معتمدًا.</p>
  <input aria-label="البحث في المكتبة" value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحثي عن صالون أو أرشيف..." style={{padding:10,width:"100%",boxSizing:"border-box",borderRadius:8,marginBottom:12}}/>
  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:10}}>{groups.filter(g=>g.name.includes(search)||g.keys.some(k=>k.includes(search))).map(g=><div key={g.name} style={{padding:12,border:"1px solid #84675c",borderRadius:10}}><strong>{g.name}</strong><p>{g.types.length} عناصر في المجموعة</p><button style={btn} onClick={()=>build(g.keys[0])}>معاينة المجموعة</button></div>)}</div>
