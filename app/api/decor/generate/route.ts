@@ -14,11 +14,15 @@ export async function POST(request:NextRequest){
   const body=await request.json();
   const description=typeof body?.description==="string"?body.description.trim():"";
   if(description.length<8||description.length>800)return NextResponse.json({error:"الوصف لازم يكون بين 8 و800 حرف"},{status:400});
-  const token=process.env.AI_GATEWAY_API_KEY;
+  const gatewayKey=process.env.AI_GATEWAY_API_KEY;
+  const openaiKey=process.env.OPENAI_API_KEY;
+  const token=gatewayKey||openaiKey;
   if(!token)return NextResponse.json({error:"خدمة الذكاء الاصطناعي غير مفعلة بعد"},{status:503});
+  const endpoint=gatewayKey?"https://ai-gateway.vercel.sh/v1/chat/completions":"https://api.openai.com/v1/chat/completions";
+  const model=gatewayKey?(process.env.DECOR_AI_MODEL||"openai/gpt-5.4"):(process.env.DECOR_AI_MODEL||"gpt-4o-mini");
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
   let response:Response;
-  try{response=await fetch("https://ai-gateway.vercel.sh/v1/chat/completions",{method:"POST",signal:controller.signal,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({model:process.env.DECOR_AI_MODEL||"openai/gpt-5.4-mini",temperature:0.3,max_tokens:900,messages:[{role:"system",content:"You design preliminary film sets for Egyptian period drama. Return ONLY valid JSON with fields name (Arabic string), wall and floor (hex #RRGGBB), pieces (array of objects with type,x,y,rotation). Allowed piece types: "+allowed.join(", ")+". Use at most 12 pieces, coordinates x 20..490 and y 20..380, rotation 0..359. Avoid asserting historical authenticity. Do not include markdown."},{role:"user",content:description}]})})}finally{clearTimeout(timeout)}
+  try{response=await fetch(endpoint,{method:"POST",signal:controller.signal,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({model,temperature:0.3,max_tokens:900,messages:[{role:"system",content:"You design preliminary film sets for Egyptian period drama. Return ONLY valid JSON with fields name (Arabic string), wall and floor (hex #RRGGBB), pieces (array of objects with type,x,y,rotation). Allowed piece types: "+allowed.join(", ")+". Use at most 12 pieces, coordinates x 20..490 and y 20..380, rotation 0..359. Avoid asserting historical authenticity. Do not include markdown."},{role:"user",content:description}]})})}finally{clearTimeout(timeout)}
   if(!response.ok)return NextResponse.json({error:"خدمة التصميم غير متاحة مؤقتًا"},{status:502});
   const result=await response.json();const raw=result?.choices?.[0]?.message?.content;
   if(typeof raw!=="string")throw Error("missing content");
