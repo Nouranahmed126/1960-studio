@@ -128,7 +128,23 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
  else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
  else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
- else if(t==='books'){part(1.4,2.1,.45,0,1.05,0,wood);for(let y=.4;y<2;y+=.42){part(1.28,.05,.4,0,y,0,dark);for(let x=-.5;x<.6;x+=.18)part(.11,.31,.28,x,y+.17,0,mat(['#835748','#526456','#aa8c60'][Math.floor((x+1)*4)%3]))}}
+ else if(t==='books'){
+  // Open-back walnut bookcase with separate shelves and varied vintage book spines.
+  for(const x of [-.67,.67])part(.085,2.1,.46,x,1.05,0,wood);
+  part(1.42,.09,.48,0,2.08,0,wood);
+  part(1.42,.09,.48,0,.1,0,wood);
+  part(1.34,2,.035,0,1.06,-.23,dark);
+  for(let y=.4;y<1.98;y+=.39){
+   part(1.32,.065,.44,0,y,0,wood);
+   for(let i=0;i<8;i++){
+    const x=-.54+i*.15;
+    const h=.22+(i%3)*.045;
+    const spine=mat(['#855947','#536553','#b1976b','#635d70','#b36d50'][i%5]);
+    rounded(.11,h,.3,x,y+.05+h/2,.02,spine,.012);
+    part(.009,h-.035,.014,x-.025,y+.05+h/2,.181,cream);
+   }
+  }
+ }
  else if(t==='lamp'){part(.34,.1,.34,0,.06,0,metal);part(.07,1.15,.07,0,.67,0,metal);part(.7,.5,.7,0,1.35,0,cream)}
  else if(t==='plant'){
   const terracotta=mat('#b87552');cylinder(.24,.18,.38,0,.25,0,terracotta,20);
