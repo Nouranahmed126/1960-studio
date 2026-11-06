@@ -19,6 +19,8 @@ jobs:
       # Replace with npm ci and npm cache once an audited lockfile is committed.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Decor catalog integrity
+        run: node scripts/check-decor-catalog.mjs
       - name: TypeScript check
         run: npx tsc --noEmit
       - name: Next.js production build
