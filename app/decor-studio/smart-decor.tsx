@@ -1,0 +1,24 @@
+"use client";
+import {useState} from "react";
+type Piece={id:number;type:string;x:number;y:number;rotation:number};
+const groups=[
+ {name:"صالون بيت الجد",keys:["صالون","جد","بيت","معيشة"],types:["sofa","rug","table","radio","books","clock"],wall:"#aa8771",floor:"#9d7357"},
+ {name:"غرفة الأرشيف",keys:["أرشيف","وثائق","ملفات","مكتب"],types:["archive","files","books","desk","reel","tape"],wall:"#817969",floor:"#746250"},
+ {name:"ركن الحفيدة",keys:["حفيدة","طفلة","بنت","أطفال"],types:["rug","chair","table","books","lamp"],wall:"#b6a08c",floor:"#b78c68"},
+ {name:"ركن الإذاعة",keys:["راديو","إذاعة","تلفزيون","إعلام"],types:["radio","tv","reel","tape","photo"],wall:"#95816f",floor:"#79624e"}
+];
+export default function SmartDecor({onApply}:{onApply:(data:{name:string;wall:string;floor:string;pieces:Piece[]})=>void}){
+ const [prompt,setPrompt]=useState(""),[search,setSearch]=useState(""),[preview,setPreview]=useState<null|{name:string;wall:string;floor:string;pieces:Piece[]}>(null);
+ const build=(input:string)=>{const q=input.toLowerCase();const group=[...groups].sort((a,b)=>b.keys.filter(k=>q.includes(k)).length-a.keys.filter(k=>q.includes(k)).length)[0];const types=[...group.types];if(/نور|شباك|لمبة/.test(q)&&!types.includes("lamp"))types.push("lamp");if(/ساعة/.test(q)&&!types.includes("clock"))types.push("clock");const spots=[[85,95],[190,180],[350,100],[365,305],[90,305],[245,235],[270,90],[160,315]];setPreview({name:group.name,wall:group.wall,floor:group.floor,pieces:types.map((type,i)=>({id:Date.now()+i,type,x:spots[i%spots.length][0],y:spots[i%spots.length][1],rotation:0}))})};
+ const card={background:"#2c2227",border:"1px solid #84675c",borderRadius:16,padding:16,marginBottom:16} as const;
+ const btn={padding:"10px 14px",borderRadius:9,border:"1px solid #ac8a67",cursor:"pointer",background:"#d6b68a",color:"#241d22",fontWeight:700} as const;
+ return <div dir="rtl">
+ <section style={card}><h2>✨ مصمم الديكور من الوصف</h2><p>نسخة سريعة: اقتراحات محلية تعتمد على كلمات الوصف ومكتبة الفيلم، وليست نموذج ذكاء اصطناعي توليديًا بعد.</p>
+ <textarea aria-label="وصف الديكور" maxLength={800} value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder="مثال: صالون بيت الجد وفيه راديو ومكتبة ونور من الشباك" style={{width:"100%",minHeight:80,padding:10,boxSizing:"border-box",borderRadius:8}}/>
+ <button style={btn} disabled={prompt.trim().length<8} onClick={()=>build(prompt)}>اقترحي تصميمًا</button>
+ {preview&&<div style={{marginTop:12,padding:12,border:"1px solid #84675c",borderRadius:10}}><strong>{preview.name}</strong><p>عدد القطع: {preview.pieces.length}. اقتراح تخطيطي مبدئي يحتاج مراجعة تاريخية وفنية.</p><button style={btn} onClick={()=>{onApply(preview);setPreview(null)}}>تطبيق الاقتراح</button> <button style={btn} onClick={()=>setPreview(null)}>إلغاء</button></div>}</section>
+ <section style={card}><h2>🏺 مكتبة ديكور مصر الستينيات</h2><p>تصورات مبدئية باستخدام قطع الأثاث الموجودة بالفعل، وليست نماذج فوتوريالية أو توثيقًا تاريخيًا معتمدًا.</p>
+ <input aria-label="البحث في المكتبة" value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحثي عن صالون أو أرشيف..." style={{padding:10,width:"100%",boxSizing:"border-box",borderRadius:8,marginBottom:12}}/>
+ <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:10}}>{groups.filter(g=>g.name.includes(search)||g.keys.some(k=>k.includes(search))).map(g=><div key={g.name} style={{padding:12,border:"1px solid #84675c",borderRadius:10}}><strong>{g.name}</strong><p>{g.types.length} عناصر في المجموعة</p><button style={btn} onClick={()=>build(g.keys[0])}>معاينة المجموعة</button></div>)}</div>
+ </section></div>;
+}
