@@ -22,7 +22,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const chairGroups=[];
  async function loadChair(){
   try{
-   const {GLTFLoader}=await import('https://esm.sh/three@0.169.0/examples/jsm/loaders/GLTFLoader.js?external=three');
+   const {GLTFLoader}=await import('https://esm.sh/three@0.169.0/examples/jsm/loaders/GLTFLoader.js');
    const loader=new GLTFLoader();
    const gltf=await loader.loadAsync(CHAIR_GLB);
    chairTemplate=gltf.scene;
