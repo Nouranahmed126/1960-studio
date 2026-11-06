@@ -68,15 +68,19 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   }
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(repeatX,repeatY);t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),4);return t;
  }
- const wood=new THREE.MeshStandardMaterial({map:texture('wood','#80563c'),roughness:.63});
- const dark=new THREE.MeshStandardMaterial({map:texture('wood','#423128'),roughness:.7});
- const fabric=new THREE.MeshStandardMaterial({map:texture('fabric','#b08d78'),roughness:1});
- const cream=new THREE.MeshStandardMaterial({map:texture('fabric','#d6c4a4'),roughness:1});
+ // Micro-surface relief: subtle bump response under directional light.
+ const woodBump=texture('wood','#777777',2,2);
+ const fabricBump=texture('fabric','#777777',3,3);
+ const plasterBump=texture('plaster','#777777',3,2);
+ const wood=new THREE.MeshStandardMaterial({map:texture('wood','#80563c'),bumpMap:woodBump,bumpScale:.018,roughness:.63});
+ const dark=new THREE.MeshStandardMaterial({map:texture('wood','#423128'),bumpMap:woodBump,bumpScale:.014,roughness:.7});
+ const fabric=new THREE.MeshStandardMaterial({map:texture('fabric','#b08d78'),bumpMap:fabricBump,bumpScale:.012,roughness:1});
+ const cream=new THREE.MeshStandardMaterial({map:texture('fabric','#d6c4a4'),bumpMap:fabricBump,bumpScale:.012,roughness:1});
  const metal=new THREE.MeshStandardMaterial({color:'#777b7b',metalness:.7,roughness:.34});
  const glass=new THREE.MeshPhysicalMaterial({color:'#667d82',metalness:.08,roughness:.14,transparent:true,opacity:.8,clearcoat:1});
  const rugMaterial=new THREE.MeshStandardMaterial({map:texture('rug','#934c49'),roughness:1});
- const plaster=new THREE.MeshStandardMaterial({map:texture('plaster',data.wall,3,2),roughness:1});
- const parquet=new THREE.MeshStandardMaterial({map:texture('wood',data.floor,2,5),roughness:.75});
+ const plaster=new THREE.MeshStandardMaterial({map:texture('plaster',data.wall,3,2),bumpMap:plasterBump,bumpScale:.008,roughness:1});
+ const parquet=new THREE.MeshStandardMaterial({map:texture('wood',data.floor,2,5),bumpMap:woodBump,bumpScale:.009,roughness:.75});
  function box(w,h,d,x,y,z,m,shadow=true){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=shadow;a.receiveShadow=true;scene.add(a);return a}
  const floorMat=parquet;box(10,.18,8,0,-.12,0,floorMat,false);
  const wallMat=plaster;box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
