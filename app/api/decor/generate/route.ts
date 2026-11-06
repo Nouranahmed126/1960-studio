@@ -1,6 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@supabase/supabase-js";
 export const runtime="nodejs";
+const requestTimes=new Map<string,number[]>();
 const allowed=["sofa","chair","table","rug","tv","radio","books","lamp","photo","clock","archive","reel","tape","files","desk"];
 export async function POST(request:NextRequest){
  try{
@@ -11,6 +12,12 @@ export async function POST(request:NextRequest){
   const supabase=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
   const {data:{user},error}=await supabase.auth.getUser(bearer.slice(7));
   if(error||!user)return NextResponse.json({error:"جلسة الدخول غير صالحة"},{status:401});
+  // Best-effort per-instance limit; a shared store is needed for global rate limiting.
+  const now=Date.now();
+  const recent=(requestTimes.get(user.id)||[]).filter(t=>now-t<3600000);
+  if(recent.length>=12)return NextResponse.json({error:"وصلتي للحد المؤقت (12 تصميم في الساعة). جربي بعد شوية."},{status:429});
+  recent.push(now);requestTimes.set(user.id,recent);
+  if(requestTimes.size>1000){for(const [id,times] of requestTimes){if(times.every(t=>now-t>=3600000))requestTimes.delete(id)}}
   const body=await request.json();
   const description=typeof body?.description==="string"?body.description.trim():"";
   if(description.length<8||description.length>800)return NextResponse.json({error:"الوصف لازم يكون بين 8 و800 حرف"},{status:400});
