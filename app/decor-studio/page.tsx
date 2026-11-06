@@ -12,7 +12,8 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const [angle,setAngle]=useState(0);
  const [shot,setShot]=useState("wide");
  const [lighting,setLighting]=useState("warm");
- const payload=JSON.stringify({pieces,wall,floor,angle,shot,lighting}).replace(/</g,"\\u003c");
+ const [quality,setQuality]=useState("balanced");
+ const payload=JSON.stringify({pieces,wall,floor,angle,shot,lighting,quality}).replace(/</g,"\\u003c");
  const srcDoc=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;overflow:hidden;background:#17171c"><div id="notice" style="position:absolute;left:12px;top:12px;color:#fff;font:12px system-ui;z-index:2;background:#0008;padding:6px;border-radius:6px">اسحبي لتدوير الكاميرا • عجلة الماوس للتقريب</div><script type="module">
  import * as THREE from 'https://esm.sh/three@0.169.0';
  const data=${payload};
@@ -47,7 +48,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  
  const scene=new THREE.Scene();scene.background=new THREE.Color('#211b20');
  const camera=new THREE.PerspectiveCamera(data.shot==='detail'?32:data.shot==='eye'?55:42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
- renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,data.quality==='high'?2:1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
  const mat=(color,roughness=0.83)=>new THREE.MeshStandardMaterial({color,roughness});
  // Lightweight procedural materials: no remote image assets or extra downloads.
  function texture(kind,base,repeatX=1,repeatY=1){
@@ -82,7 +83,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  for(let i=-4;i<=4;i++){box(.035,.025,8,i,0,0,wood,false)}
  box(10,.1,.12,0,.12,-3.92,wood);box(.1,.1,8,-4.91,.12,0,wood);
  const hemi=new THREE.HemisphereLight(data.lighting==='night'?'#9aa7d9':data.lighting==='day'?'#ffffff':'#fff1d5','#493128',data.lighting==='night'?.7:2.1);scene.add(hemi);
- const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.bias=-.0002;key.shadow.radius=3;key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
+ const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(data.quality==='high'?2048:1024,data.quality==='high'?2048:1024);key.shadow.bias=-.0002;key.shadow.radius=3;key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
  const bulb=new THREE.PointLight('#ffb86d',data.lighting==='night'?12:data.lighting==='day'?2:20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
  function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
  function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
@@ -144,7 +145,7 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='photo'){part(.68,.55,.06,0,1.4,0,wood);part(.5,.37,.07,0,1.4,.045,mat('#b99d76'))}
  else if(t==='clock'){const disk=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.07,32),cream);disk.rotation.x=Math.PI/2;disk.position.y=1.75;group.add(disk);part(.025,.2,.025,0,1.8,.06,dark)}
  }
- data.pieces.forEach(make);loadChair();
+ data.pieces.forEach(make);if(chairGroups.length)loadChair();
  let theta=-.65+data.angle*Math.PI/180,phi=data.shot==='eye'?1.37:data.shot==='detail'?1.15:.92,radius=data.shot==='detail'?8:data.shot==='eye'?10:15;const target=new THREE.Vector3(0,data.shot==='eye'?1.15:.6,0);
  function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
  view();let dragging=false,px=0,py=0;
