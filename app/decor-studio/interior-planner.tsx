@@ -22,6 +22,7 @@ export default function InteriorPlanner({pieces,setPieces,selected,setSelected}:
  const update=(id:number,patch:Partial<Piece>)=>setPieces(old=>old.map(p=>p.id===id?{...p,...patch}:p));
  const position=(e:React.PointerEvent<SVGSVGElement>)=>{const rect=e.currentTarget.getBoundingClientRect();return {x:clamp((e.clientX-rect.left)*580/rect.width-35,510),y:clamp((e.clientY-rect.top)*470/rect.height-32,400)}};
  const grid=(v:number)=>snap?Math.round(v/10)*10:Math.round(v);
+ const duplicate=()=>{if(!current)return;const id=Math.max(0,...pieces.map(p=>p.id))+1;setPieces(old=>[...old,{...current,id,x:clamp(current.x+25,510),y:clamp(current.y+25,400)}]);setSelected(id)};
  const change=(dx:number,dy:number)=>{if(current)update(current.id,{x:clamp(current.x+dx,510),y:clamp(current.y+dy,400)})};
  return <section dir="rtl" style={{background:"#241d22",border:"1px solid #84675c",borderRadius:16,padding:16,marginBottom:20}}>
   <h2 style={{margin:"0 0 8px"}}>📐 مخطط التصميم الداخلي الاحترافي</h2>
@@ -49,7 +50,8 @@ export default function InteriorPlanner({pieces,setPieces,selected,setSelected}:
      <button style={btn} onClick={()=>change(0,-10)}>↑ أعلى</button><button style={btn} onClick={()=>change(0,10)}>↓ أسفل</button>
      <button style={btn} onClick={()=>change(-10,0)}>← يسار</button><button style={btn} onClick={()=>change(10,0)}>→ يمين</button>
      <button style={btn} onClick={()=>update(current.id,{rotation:(current.rotation+45)%360})}>↻ تدوير 45°</button>
-     <button style={btn} onClick={()=>setPieces(old=>old.filter(p=>p.id!==current.id))}>حذف القطعة</button>
+     <button style={btn} onClick={duplicate}>⧉ نسخ القطعة</button>
+     <button style={btn} onClick={()=>{setPieces(old=>old.filter(p=>p.id!==current.id));setSelected(null)}}>حذف القطعة</button>
     </div>
    </>:<p style={{fontSize:13}}>اختاري قطعة من المخطط لتحريكها وتدويرها.</p>}
    <p style={{fontSize:12,opacity:.85}}>تعديلات القطع مرتبطة بالمشهد الحالي وبالمعاينة ثلاثية الأبعاد. أبعاد الغرفة هنا مخصصة للمخطط العلوي حاليًا.</p>
