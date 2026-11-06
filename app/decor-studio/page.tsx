@@ -67,6 +67,14 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   geo.rotateX(-Math.PI/2);geo.translate(0,d/2,0);
   const mesh=new THREE.Mesh(geo,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
  }
+ function cylinder(radiusTop,radiusBottom,height,x,y,z,m,segments=16){
+  const mesh=new THREE.Mesh(new THREE.CylinderGeometry(radiusTop,radiusBottom,height,segments),m);
+  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
+ function sphere(radius,x,y,z,m){
+  const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius,12,8),m);
+  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
  const t=p.type;
  if(t==='rug'){part(2.3,.035,1.5,0,.04,0,rugMaterial);part(2,.04,1.2,0,.07,0,rugMaterial)}
  else if(t==='sofa'){
@@ -78,7 +86,11 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   for(const x of [-.66,.66])rounded(.32,.25,.13,x,.95,.28,cream);
  }
  else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood)}
- else if(t==='table'){part(1.3,.13,.8,0,.7,0,wood);for(const x of [-.55,.55])for(const z of [-.28,.28])part(.09,.65,.09,x,.34,z,wood)}
+ else if(t==='table'){
+  rounded(1.35,.1,.85,0,.72,0,wood,.13);
+  for(const x of [-.52,.52])for(const z of [-.28,.28])cylinder(.055,.08,.64,x,.34,z,wood,12);
+  part(.88,.065,.055,0,.39,-.27,dark);
+ }
  else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
  else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
  else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
