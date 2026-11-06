@@ -46,6 +46,11 @@ export default function InteriorPlanner({pieces,setPieces,selected,setSelected}:
   <div style={{marginTop:12,background:"#382a31",padding:12,borderRadius:12}}>
    {current?<><strong>تعديل: {items[current.type]?.name||current.type}</strong>
     <p style={{fontSize:12}}>الموقع التقريبي: {(current.x/510*roomW).toFixed(2)} م × {(current.y/400*roomD).toFixed(2)} م — الاتجاه: {current.rotation}°</p>
+    <div style={{display:"flex",flexWrap:"wrap",gap:12,alignItems:"end",marginBottom:12}}>
+     <label style={{fontSize:12}}>المسافة من اليسار (م)<input type="number" min="0" max={roomW} step=".1" value={Number((current.x/510*roomW).toFixed(2))} onChange={e=>update(current.id,{x:clamp(Number(e.target.value)/roomW*510,510)})} style={{display:"block",width:105,padding:8,borderRadius:8}}/></label>
+     <label style={{fontSize:12}}>المسافة من أعلى (م)<input type="number" min="0" max={roomD} step=".1" value={Number((current.y/400*roomD).toFixed(2))} onChange={e=>update(current.id,{y:clamp(Number(e.target.value)/roomD*400,400)})} style={{display:"block",width:105,padding:8,borderRadius:8}}/></label>
+     <label style={{fontSize:12}}>زاوية الدوران (°)<input type="number" min="0" max="359" step="1" value={current.rotation} onChange={e=>update(current.id,{rotation:((Number(e.target.value)%360)+360)%360})} style={{display:"block",width:105,padding:8,borderRadius:8}}/></label>
+    </div>
     <div style={{display:"flex",flexWrap:"wrap",gap:7,marginBottom:10}}>
      <button style={btn} onClick={()=>change(0,-10)}>↑ أعلى</button><button style={btn} onClick={()=>change(0,10)}>↓ أسفل</button>
      <button style={btn} onClick={()=>change(-10,0)}>← يسار</button><button style={btn} onClick={()=>change(10,0)}>→ يمين</button>
