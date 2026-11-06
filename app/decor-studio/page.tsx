@@ -125,8 +125,26 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   for(const x of [-.52,.52])for(const z of [-.28,.28])cylinder(.055,.08,.64,x,.34,z,wood,12);
   part(.88,.065,.055,0,.39,-.27,dark);
  }
- else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
- else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
+ else if(t==='tv'){
+  // Period CRT set: inset screen, cabinet bevels, ventilation and physical knobs.
+  rounded(1,.8,.52,0,.82,0,wood,.09);
+  rounded(.73,.57,.035,-.1,.87,.29,dark,.065);
+  const screen=rounded(.67,.5,.025,-.1,.87,.32,glass,.07);
+  screen.material=new THREE.MeshPhysicalMaterial({color:'#526b67',metalness:.08,roughness:.24,clearcoat:.9,clearcoatRoughness:.14,transparent:true,opacity:.85});
+  for(const y of [.73,.89,1.05])cylinder(.055,.055,.025,.35,y,.3,metal,20).rotation.x=Math.PI/2;
+  for(let i=0;i<7;i++)part(.018,.16,.014,.26+i*.026,.55,.29,dark);
+  for(const x of [-.35,.35])part(.16,.11,.28,x,.34,-.1,dark);
+ }
+ else if(t==='radio'){
+  // Walnut radio with slatted speaker grille, tuning dial and control knobs.
+  rounded(.88,.5,.4,0,.72,0,wood,.055);
+  rounded(.52,.34,.02,-.11,.73,.22,cream,.03);
+  for(let i=0;i<9;i++)part(.018,.29,.025,-.33+i*.055,.73,.239,dark);
+  rounded(.24,.13,.024,.25,.84,.23,glass,.015);
+  part(.19,.012,.03,.25,.84,.255,dark);
+  for(const x of [.16,.35])cylinder(.045,.045,.03,x,.62,.235,metal,18).rotation.x=Math.PI/2;
+  for(const x of [-.32,.32])part(.09,.07,.18,x,.43,-.06,dark);
+ }
  else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
  else if(t==='books'){
   // Open-back walnut bookcase with separate shelves and varied vintage book spines.
