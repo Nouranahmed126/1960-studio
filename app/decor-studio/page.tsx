@@ -146,6 +146,12 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   for(const x of [-.97,.97]){rounded(.2,.53,.87,x,.67,0,wood);part(.12,.13,.12,x,.12,-.29,dark);part(.12,.13,.12,x,.12,.29,dark)}
   for(const x of [-.44,.44]){rounded(.82,.13,.67,x,.8,.09,cream);rounded(.75,.52,.16,x,1.02,-.23,fabric)}
   for(const x of [-.66,.66])rounded(.32,.25,.13,x,.95,.28,cream);
+  // Subtle button tufting and piping on the upholstered back.
+  const buttons=new THREE.MeshStandardMaterial({color:'#765342',roughness:.86});
+  for(const x of [-.7,-.35,0,.35,.7])for(const y of [.78,1.02]){
+   sphere(.024,x,y,-.202,buttons).scale.set(1,1,.45);
+  }
+  for(const x of [-.88,.88])part(.018,.08,.66,x,.79,.06,cream);
  }
  else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood);chairGroups.push(group)}
  else if(t==='table'){
@@ -191,7 +197,22 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
    }
   }
  }
- else if(t==='lamp'){part(.34,.1,.34,0,.06,0,metal);part(.07,1.15,.07,0,.67,0,metal);part(.7,.5,.7,0,1.35,0,cream)}
+ else if(t==='lamp'){
+  // Turned brass table lamp with a tapered fabric shade and warm diffuser.
+  const brass=new THREE.MeshStandardMaterial({color:'#b58c4e',metalness:.78,roughness:.27});
+  cylinder(.18,.24,.08,0,.09,0,brass,32);
+  cylinder(.09,.14,.17,0,.22,0,brass,24);
+  cylinder(.055,.075,.62,0,.61,0,brass,24);
+  cylinder(.12,.07,.1,0,.98,0,brass,24);
+  const shade=new THREE.Mesh(new THREE.CylinderGeometry(.23,.43,.48,32,1,true),new THREE.MeshStandardMaterial({color:'#f5dfba',side:THREE.DoubleSide,roughness:.95,emissive:'#ffcc80',emissiveIntensity:data.lighting==='night'?.38:.13}));
+  shade.position.y=1.24;shade.castShadow=true;group.add(shade);
+  cylinder(.43,.43,.025,0,1.01,0,brass,32);
+  cylinder(.23,.23,.025,0,1.48,0,brass,32);
+  if(data.quality==='high'){
+   const lampLight=new THREE.PointLight('#ffbf77',data.lighting==='night'?2.2:1.2,3.5,2);
+   lampLight.position.set(0,1.23,0);group.add(lampLight);
+  }
+ }
  else if(t==='plant'){
   const terracotta=mat('#b87552');cylinder(.24,.18,.38,0,.25,0,terracotta,20);
   cylinder(.26,.26,.06,0,.45,0,terracotta,20);
