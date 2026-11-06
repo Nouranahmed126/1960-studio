@@ -57,10 +57,27 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const bulb=new THREE.PointLight('#ffb86d',data.lighting==='night'?12:data.lighting==='day'?2:20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
  function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
  function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
+ function rounded(w,h,d,x,y,z,m,r=.07){
+  const shape=new THREE.Shape();const a=-w/2,b=-h/2;
+  shape.moveTo(a+r,b);shape.lineTo(a+w-r,b);shape.quadraticCurveTo(a+w,b,a+w,b+r);
+  shape.lineTo(a+w,b+h-r);shape.quadraticCurveTo(a+w,b+h,a+w-r,b+h);
+  shape.lineTo(a+r,b+h);shape.quadraticCurveTo(a,b+h,a,b+h-r);
+  shape.lineTo(a,b+r);shape.quadraticCurveTo(a,b,a+r,b);
+  const geo=new THREE.ExtrudeGeometry(shape,{depth:d,bevelEnabled:true,bevelThickness:.025,bevelSize:.025,bevelSegments:2,steps:1,curveSegments:3});
+  geo.rotateX(-Math.PI/2);geo.translate(0,d/2,0);
+  const mesh=new THREE.Mesh(geo,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
  const t=p.type;
  if(t==='rug'){part(2.3,.035,1.5,0,.04,0,rugMaterial);part(2,.04,1.2,0,.07,0,rugMaterial)}
- else if(t==='sofa'){part(2,.45,.8,0,.48,0,fabric);part(2,.85,.23,0,.9,-.35,fabric);part(.22,.7,.8,-.95,.66,0,wood);part(.22,.7,.8,.95,.66,0,wood);for(const x of [-.48,.48])part(.82,.14,.65,x,.77,.08,cream)}
- else if(t==='chair'){part(.7,.13,.65,0,.55,0,wood);part(.7,.9,.13,0,1,-.28,wood);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.08,.55,.08,x,.28,z,wood)}
+ else if(t==='sofa'){
+  part(2.1,.22,.9,0,.32,0,wood);
+  rounded(1.75,.32,.74,0,.59,.08,fabric);
+  rounded(1.95,.68,.24,0,.92,-.35,fabric);
+  for(const x of [-.97,.97]){rounded(.2,.53,.87,x,.67,0,wood);part(.12,.13,.12,x,.12,-.29,dark);part(.12,.13,.12,x,.12,.29,dark)}
+  for(const x of [-.44,.44]){rounded(.82,.13,.67,x,.8,.09,cream);rounded(.75,.52,.16,x,1.02,-.23,fabric)}
+  for(const x of [-.66,.66])rounded(.32,.25,.13,x,.95,.28,cream);
+ }
+ else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood)}
  else if(t==='table'){part(1.3,.13,.8,0,.7,0,wood);for(const x of [-.55,.55])for(const z of [-.28,.28])part(.09,.65,.09,x,.34,z,wood)}
  else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
  else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
