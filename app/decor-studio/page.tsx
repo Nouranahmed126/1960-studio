@@ -83,13 +83,38 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const plaster=new THREE.MeshStandardMaterial({map:texture('plaster',data.wall,3,2),bumpMap:plasterBump,bumpScale:.008,roughness:1});
  const parquet=new THREE.MeshStandardMaterial({map:texture('wood',data.floor,2,5),bumpMap:woodBump,bumpScale:.009,roughness:.75});
  function box(w,h,d,x,y,z,m,shadow=true){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=shadow;a.receiveShadow=true;scene.add(a);return a}
- const floorMat=parquet;box(10,.18,8,0,-.12,0,floorMat,false);
+ // High-quality preview: richer floor finish, subtle contact shadows and period details.
+ const contactCanvas=document.createElement('canvas');contactCanvas.width=128;contactCanvas.height=128;
+ const contactCtx=contactCanvas.getContext('2d');
+ const grad=contactCtx.createRadialGradient(64,64,4,64,64,63);
+ grad.addColorStop(0,'rgba(18,11,9,.44)');grad.addColorStop(.45,'rgba(18,11,9,.17)');grad.addColorStop(1,'rgba(18,11,9,0)');
+ contactCtx.fillStyle=grad;contactCtx.fillRect(0,0,128,128);
+ const contactTexture=new THREE.CanvasTexture(contactCanvas);
+ function contactShadow(group,scaleX,scaleZ){
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(scaleX,scaleZ),new THREE.MeshBasicMaterial({map:contactTexture,transparent:true,depthWrite:false,opacity:.8}));
+  mesh.rotation.x=-Math.PI/2;mesh.position.y=.012;mesh.renderOrder=2;group.add(mesh);
+ }
+ const floorMat=parquet;floorMat.roughness=data.quality==='high'?.52:.7;
+ box(10,.18,8,0,-.12,0,floorMat,false);
  const wallMat=plaster;box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
  for(let i=-4;i<=4;i++){box(.035,.025,8,i,0,0,wood,false)}
  box(10,.1,.12,0,.12,-3.92,wood);box(.1,.1,8,-4.91,.12,0,wood);
  const hemi=new THREE.HemisphereLight(data.lighting==='night'?'#9aa7d9':data.lighting==='day'?'#ffffff':'#fff1d5','#493128',data.lighting==='night'?.7:2.1);scene.add(hemi);
  const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(data.quality==='high'?2048:1024,data.quality==='high'?2048:1024);key.shadow.bias=-.0002;key.shadow.radius=3;key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
  const bulb=new THREE.PointLight('#ffb86d',data.lighting==='night'?12:data.lighting==='day'?2:20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
+ // Warm practical sconces and sunlit window side for cinematic depth.
+ const fill=new THREE.DirectionalLight(data.lighting==='night'?'#8192bc':'#ffe4c0',data.lighting==='night'?.3:data.lighting==='day'?1.1:.75);
+ fill.position.set(-4,4,-1);scene.add(fill);
+ if(data.quality==='high'){
+  renderer.toneMappingExposure=data.lighting==='night'?1.0:1.15;
+  key.shadow.normalBias=.025;
+ }
+ // Crown moulding and skirting to ground the architecture.
+ box(10,.12,.18,0,3.38,-3.9,cream,false);
+ box(.18,.12,8,-4.9,3.38,0,cream,false);
+ box(10,.18,.12,0,.1,-3.9,dark,false);
+ box(.12,.18,8,-4.9,.1,0,dark,false);
+
  function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
  function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
  function rounded(w,h,d,x,y,z,m,r=.07){
@@ -110,6 +135,8 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
   const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius,12,8),m);
   mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
  }
+ const contactSizes={sofa:[2.5,1.4],chair:[1.1,1.1],table:[1.8,1.4],tv:[1.2,.9],radio:[.9,.65],books:[1.7,.9],archive:[1.6,1],desk:[1.8,1.1],plant:[.8,.8],lamp:[.8,.8]};
+ const size=contactSizes[p.type];if(size)contactShadow(group,size[0],size[1]);
  const t=p.type;
  if(t==='rug'){part(2.3,.035,1.5,0,.04,0,rugMaterial);part(2,.04,1.2,0,.07,0,rugMaterial)}
  else if(t==='sofa'){
