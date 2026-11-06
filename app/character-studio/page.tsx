@@ -43,10 +43,27 @@ function loadModel(url){document.getElementById("error").style.display="none";if
 avatar.visible=false;document.getElementById("empty").textContent="اختاري نموذج شخصية واقعي GLB من الملفات.";document.getElementById("empty").style.display="grid";
 function loadGarment(url){if(!url){if(garment)root.remove(garment);garment=null;garmentUrl="";return}if(url===garmentUrl)return;garmentUrl=url;loader.load(url,gltf=>{if(garment)root.remove(garment);garment=gltf.scene;const bounds=new THREE.Box3().setFromObject(garment);const size=bounds.getSize(new THREE.Vector3());const center=bounds.getCenter(new THREE.Vector3());garmentHeight=Math.max(size.y,.001);const scale=1/garmentHeight;garment.scale.setScalar(scale);garment.position.set(-center.x*scale,-center.y*scale,-center.z*scale);root.add(garment);updateGarment()},undefined,()=>{garmentUrl="";parent.postMessage({kind:"garment-error"},"*")})}
 function updateGarment(){if(!garment)return;garment.scale.setScalar((look.garmentScale||1)/garmentHeight);garment.position.set(Number(look.garmentX||0),Number(look.garmentY||1.9),Number(look.garmentZ||0))}
+// Optional simple 3D garment preview; fitted approximately, not cloth simulation.
+let sampleShirt=null;
+function toggleSampleShirt(enabled){
+ if(sampleShirt){root.remove(sampleShirt);sampleShirt=null}
+ if(!enabled||!loadedModel)return;
+ sampleShirt=new THREE.Group();
+ const cloth=new THREE.MeshStandardMaterial({color:'#6c8c7a',roughness:.96,side:THREE.DoubleSide});
+ const torso=new THREE.Mesh(new THREE.CylinderGeometry(.48,.42,.78,32,1,true),cloth);
+ torso.scale.z=.65;torso.position.y=2.55;sampleShirt.add(torso);
+ for(const side of [-1,1]){
+  const sleeve=new THREE.Mesh(new THREE.CylinderGeometry(.25,.21,.38,24,1,true),cloth);
+  sleeve.rotation.z=side*.85;sleeve.position.set(side*.52,2.77,0);sampleShirt.add(sleeve);
+ }
+ const trim=new THREE.Mesh(new THREE.TorusGeometry(.19,.025,8,32),new THREE.MeshStandardMaterial({color:'#3e5b50',roughness:.9}));
+ trim.rotation.x=Math.PI/2;trim.position.y=2.95;sampleShirt.add(trim);
+ root.add(sampleShirt);
+}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener("resize",resize);resize();
 let down=false,last=0;renderer.domElement.addEventListener("pointerdown",e=>{down=true;last=e.clientX;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener("pointermove",e=>{if(down){root.rotation.y+=(e.clientX-last)*.012;last=e.clientX}});renderer.domElement.addEventListener("pointerup",()=>down=false);
 let pinch=0;renderer.domElement.addEventListener("touchmove",e=>{if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;const dist=Math.hypot(dx,dy);if(pinch)camera.position.z=Math.max(4.2,Math.min(12,camera.position.z+(pinch-dist)*.014));pinch=dist;e.preventDefault()}},{passive:false});renderer.domElement.addEventListener("touchend",()=>pinch=0);renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();camera.position.z=Math.max(5,Math.min(11,camera.position.z+e.deltaY*.008))},{passive:false});
-addEventListener("message",e=>{if(e.data?.kind==="snapshot"){parent.postMessage({kind:"character-snapshot",image:renderer.domElement.toDataURL("image/png")},"*");return}if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}if(look.garmentUrl){loadGarment(look.garmentUrl);updateGarment()}else{loadGarment("")}}});
+addEventListener("message",e=>{if(e.data?.kind==="sample-shirt"){toggleSampleShirt(Boolean(e.data.enabled));return}if(e.data?.kind==="snapshot"){parent.postMessage({kind:"character-snapshot",image:renderer.domElement.toDataURL("image/png")},"*");return}if(e.data?.kind==="look"&&e.data.look){look={...look,...e.data.look};if(look.modelUrl){loadModel(look.modelUrl)}else{loadModel("")}if(look.garmentUrl){loadGarment(look.garmentUrl);updateGarment()}else{loadGarment("")}}});
 function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}animate();
 </script></body></html>`;
 export default function CharacterStudio(){
@@ -85,6 +102,7 @@ export default function CharacterStudio(){
  <label style={{display:"block",background:"#D6B68A",color:"#19171B",padding:"15px",borderRadius:12,textAlign:"center",fontWeight:800,cursor:"pointer",marginTop:12}}>🎭 اختاري مجسم الشخصية GLB للمعاينة الفورية<input type="file" accept=".glb,model/gltf-binary,application/octet-stream" disabled={modelBusy} onChange={e=>{const f=e.target.files?.[0];if(f)previewFile(f,"model");e.target.value=""}} style={{display:"block",width:"100%",marginTop:8,fontSize:13}}/></label><p style={{fontSize:12,opacity:.8,textAlign:"center"}}>{modelBusy?"⏳ جار رفع المجسم...":look.modelUrl?"✓ تم اختيار المجسم — احفظي التصميم بالأسفل":"اختاري ملف الرجل بالعصاية GLB — يظهر فورًا دون انتظار الرفع"}</p>
  <p style={{fontSize:12,opacity:.85}}>للتجربة: اختاري ملف الشخصية ثم التيشيرت من قسم الملابس. للظهور تلقائيًا على أي جهاز، ارفعي الملف إلى مكتبة الفريق واحفظي التصميم.</p>
  <label style={{...field,display:"block",cursor:"pointer",marginTop:10,background:"#4b654c",textAlign:"center",fontWeight:700}}>☁️ رفع الشخصية إلى مكتبة الفريق للحفظ الدائم<input type="file" accept=".glb,model/gltf-binary" disabled={modelBusy} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadModel(f);e.target.value=""}} style={{display:"block",width:"100%",marginTop:8}}/></label>
+ <button type="button" onClick={()=>frameRef.current?.contentWindow?.postMessage({kind:"sample-shirt",enabled:true},"*")} style={{...field,cursor:"pointer",marginBottom:8}}>👕 تجربة تيشيرت ثلاثي الأبعاد تقريبي على المجسم</button><button type="button" onClick={()=>frameRef.current?.contentWindow?.postMessage({kind:"sample-shirt",enabled:false},"*")} style={{...field,cursor:"pointer",marginBottom:8}}>إخفاء التيشيرت التجريبي</button><p style={{fontSize:12,opacity:.8}}>التيشيرت التجريبي هندسي وليس تفصيلًا دقيقًا على جسم الرجل؛ يتطلب اختيار مجسم الشخصية أولًا.</p>
  <button type="button" onClick={()=>frameRef.current?.contentWindow?.postMessage({kind:"snapshot"},"*")} style={{...field,cursor:"pointer",fontWeight:700}}>📸 حفظ صورة المعاينة PNG لفريق الأزياء</button>
  <p style={{fontSize:12,opacity:.8,textAlign:"center"}}>اسحبي بإصبعك لتدوير الشخصية 360°، واستخدمي التكبير بإصبعين. المجسم الواقعي يظهر فور اختيار ملف GLB.</p>
  <p style={{textAlign:"center",fontWeight:700}}>{character} · المشهد {scene}</p>
