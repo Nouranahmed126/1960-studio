@@ -1,5 +1,7 @@
 "use client";
 import {useMemo,useState} from "react";
+import SmartDecor from "./smart-decor";
+import InteriorPlanner from "./interior-planner";
 type Piece={id:number;type:string;x:number;y:number;rotation:number};
 const catalog=[["sofa","كنبة كلاسيكية","🛋️",110,48],["chair","كرسي خشب","🪑",42,42],["table","ترابيزة صالون","▣",70,42],["tv","تليفزيون قديم","📺",52,35],["radio","راديو خشبي","📻",42,30],["archive","دولاب أرشيف","🗄️",78,34],["lamp","أباجورة","💡",28,28],["rug","سجادة شرقية","▦",135,90],["books","مكتبة","📚",90,32],["window","شباك خشب","▤",75,15],["door","باب","▯",58,16],["plant","نبات منزلي","🪴",32,32],["reel","بكرة فيلم أرشيفية","🎞️",35,35],["tape","مسجل شرائط","📼",46,30],["files","صناديق وثائق","📦",52,40],["photo","صورة عائلية قديمة","🖼️",42,18],["clock","ساعة حائط","🕰️",35,18],["desk","مكتب موظف الأرشيف","🗃️",105,58]] as const;
 const presets=[{name:"صالون بيت الجد",description:"دفء البيت المصري وذكريات الإعلام القديم",wall:"#aa8771",floor:"#9d7357",pieces:[{type:"sofa",x:80,y:95},{type:"rug",x:170,y:195},{type:"table",x:195,y:222},{type:"tv",x:385,y:95},{type:"radio",x:350,y:330},{type:"books",x:75,y:335},{type:"lamp",x:65,y:215},{type:"photo",x:260,y:85},{type:"clock",x:315,y:85}]},{name:"غرفة الأرشيف",description:"أوراق وتسجيلات وشهادات محفوظة من الزمن",wall:"#817969",floor:"#746250",pieces:[{type:"archive",x:60,y:80},{type:"archive",x:180,y:80},{type:"books",x:330,y:80},{type:"table",x:225,y:220},{type:"chair",x:175,y:285},{type:"radio",x:340,y:325},{type:"reel",x:265,y:215},{type:"tape",x:325,y:240},{type:"files",x:105,y:305},{type:"desk",x:245,y:280}]},{name:"ركن الحفيدة",description:"زاوية طفلة في الثامنة داخل عالم الجد",wall:"#b6a08c",floor:"#b78c68",pieces:[{type:"rug",x:150,y:165},{type:"chair",x:85,y:105},{type:"table",x:235,y:200},{type:"books",x:335,y:95},{type:"lamp",x:365,y:280}]}];
@@ -10,36 +12,217 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  const [angle,setAngle]=useState(0);
  const [shot,setShot]=useState("wide");
  const [lighting,setLighting]=useState("warm");
- const payload=JSON.stringify({pieces,wall,floor,angle,shot,lighting}).replace(/</g,"\\u003c");
+ const [quality,setQuality]=useState("balanced");
+ const [cinemaMode,setCinemaMode]=useState(false);
+ const payload=JSON.stringify({pieces,wall,floor,angle,shot,lighting,quality}).replace(/</g,"\\u003c");
  const srcDoc=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;overflow:hidden;background:#17171c"><div id="notice" style="position:absolute;left:12px;top:12px;color:#fff;font:12px system-ui;z-index:2;background:#0008;padding:6px;border-radius:6px">اسحبي لتدوير الكاميرا • عجلة الماوس للتقريب</div><script type="module">
  import * as THREE from 'https://esm.sh/three@0.169.0';
  const data=${payload};
+ // CC0 chair model from Khronos glTF-Sample-Assets (Wayfair, 2020).
+ const CHAIR_GLB='https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SheenChair/glTF-Binary/SheenChair.glb';
+ let chairTemplate=null;
+ const chairGroups=[];
+ async function loadChair(){
+  try{
+   const {GLTFLoader}=await import('https://esm.sh/three@0.169.0/examples/jsm/loaders/GLTFLoader.js');
+   const loader=new GLTFLoader();
+   const gltf=await loader.loadAsync(CHAIR_GLB);
+   chairTemplate=gltf.scene;
+   for(const group of chairGroups)attachChair(group);
+  }catch(err){console.warn('Optional chair model unavailable; keeping procedural furniture',err)}
+ }
+ function attachChair(group){
+  if(!chairTemplate||!group.isObject3D)return;
+  const model=chairTemplate.clone(true);
+  const bounds=new THREE.Box3().setFromObject(model);
+  const size=bounds.getSize(new THREE.Vector3());
+  if(Math.min(size.x,size.y,size.z)<=0)return;
+  const scale=Math.min(.9/size.x,1.2/size.y,.9/size.z);
+  model.scale.setScalar(scale);
+  model.updateMatrixWorld(true);
+  const normalized=new THREE.Box3().setFromObject(model);
+  const center=normalized.getCenter(new THREE.Vector3());
+  model.position.set(-center.x,-normalized.min.y,-center.z);
+  model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
+  group.clear();group.add(model);
+ }
+ 
  const scene=new THREE.Scene();scene.background=new THREE.Color('#211b20');
  const camera=new THREE.PerspectiveCamera(data.shot==='detail'?32:data.shot==='eye'?55:42,1,.1,100);const renderer=new THREE.WebGLRenderer({antialias:true});
- renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,data.quality==='high'?2:1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=data.lighting==='night'?.85:data.lighting==='day'?1.8:1.5;document.body.appendChild(renderer.domElement);
  const mat=(color,roughness=0.83)=>new THREE.MeshStandardMaterial({color,roughness});
- const wood=mat('#62412e'),dark=mat('#322a26'),fabric=mat('#a07b64'),cream=mat('#d5bd98'),metal=mat('#595a5b',.42),glass=mat('#3d4b4c',.22);
+ // Lightweight procedural materials: no remote image assets or extra downloads.
+ function texture(kind,base,repeatX=1,repeatY=1){
+  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
+  const ctx=canvas.getContext('2d');ctx.fillStyle=base;ctx.fillRect(0,0,256,256);
+  let seed=kind==='wood'?17:kind==='fabric'?41:kind==='rug'?67:83;
+  const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+  if(kind==='wood'){
+   for(let i=0;i<120;i++){const y=rand()*256;ctx.strokeStyle=rand()>.5?'rgba(45,21,9,.17)':'rgba(255,229,181,.14)';ctx.lineWidth=.3+rand()*2;ctx.beginPath();ctx.moveTo(0,y);ctx.bezierCurveTo(75,y+rand()*7,170,y-rand()*7,256,y+rand()*5);ctx.stroke()}
+  }else if(kind==='fabric'){
+   for(let i=0;i<1900;i++){const x=rand()*256,y=rand()*256;ctx.fillStyle=rand()>.5?'rgba(255,255,255,.11)':'rgba(31,20,13,.12)';ctx.fillRect(x,y,rand()*2+1,rand()*2+1)}
+  }else if(kind==='rug'){
+   ctx.strokeStyle='rgba(241,213,160,.7)';ctx.lineWidth=7;ctx.strokeRect(15,15,226,226);ctx.lineWidth=2;ctx.strokeRect(28,28,200,200);
+   for(let x=48;x<230;x+=46)for(let y=48;y<230;y+=46){ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.strokeStyle='rgba(245,220,169,.5)';ctx.lineWidth=3;ctx.strokeRect(-12,-12,24,24);ctx.restore()}
+  }else{
+   for(let i=0;i<1300;i++){ctx.fillStyle=rand()>.5?'rgba(255,255,255,.045)':'rgba(25,15,10,.04)';ctx.fillRect(rand()*256,rand()*256,2,2)}
+  }
+  const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(repeatX,repeatY);t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),4);return t;
+ }
+ // Micro-surface relief: subtle bump response under directional light.
+ const woodBump=texture('wood','#777777',2,2);
+ const fabricBump=texture('fabric','#777777',3,3);
+ const plasterBump=texture('plaster','#777777',3,2);
+ const wood=new THREE.MeshStandardMaterial({map:texture('wood','#80563c'),bumpMap:woodBump,bumpScale:.018,roughness:.63});
+ const dark=new THREE.MeshStandardMaterial({map:texture('wood','#423128'),bumpMap:woodBump,bumpScale:.014,roughness:.7});
+ const fabric=new THREE.MeshStandardMaterial({map:texture('fabric','#b08d78'),bumpMap:fabricBump,bumpScale:.012,roughness:1});
+ const cream=new THREE.MeshStandardMaterial({map:texture('fabric','#d6c4a4'),bumpMap:fabricBump,bumpScale:.012,roughness:1});
+ const metal=new THREE.MeshStandardMaterial({color:'#777b7b',metalness:.7,roughness:.34});
+ const glass=new THREE.MeshPhysicalMaterial({color:'#667d82',metalness:.08,roughness:.14,transparent:true,opacity:.8,clearcoat:1});
+ const rugMaterial=new THREE.MeshStandardMaterial({map:texture('rug','#934c49'),roughness:1});
+ const plaster=new THREE.MeshStandardMaterial({map:texture('plaster',data.wall,3,2),bumpMap:plasterBump,bumpScale:.008,roughness:1});
+ const parquet=new THREE.MeshStandardMaterial({map:texture('wood',data.floor,2,5),bumpMap:woodBump,bumpScale:.009,roughness:.75});
  function box(w,h,d,x,y,z,m,shadow=true){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=shadow;a.receiveShadow=true;scene.add(a);return a}
- const floorMat=mat(data.floor);box(10,.18,8,0,-.12,0,floorMat,false);
- const wallMat=mat(data.wall);box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
+ // High-quality preview: richer floor finish, subtle contact shadows and period details.
+ const contactCanvas=document.createElement('canvas');contactCanvas.width=128;contactCanvas.height=128;
+ const contactCtx=contactCanvas.getContext('2d');
+ const grad=contactCtx.createRadialGradient(64,64,4,64,64,63);
+ grad.addColorStop(0,'rgba(18,11,9,.44)');grad.addColorStop(.45,'rgba(18,11,9,.17)');grad.addColorStop(1,'rgba(18,11,9,0)');
+ contactCtx.fillStyle=grad;contactCtx.fillRect(0,0,128,128);
+ const contactTexture=new THREE.CanvasTexture(contactCanvas);
+ function contactShadow(group,scaleX,scaleZ){
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(scaleX,scaleZ),new THREE.MeshBasicMaterial({map:contactTexture,transparent:true,depthWrite:false,opacity:.8}));
+  mesh.rotation.x=-Math.PI/2;mesh.position.y=.012;mesh.renderOrder=2;group.add(mesh);
+ }
+ const floorMat=parquet;floorMat.roughness=data.quality==='high'?.52:.7;
+ box(10,.18,8,0,-.12,0,floorMat,false);
+ const wallMat=plaster;box(10,3.5,.15,0,1.65,-4,wallMat,false);box(.15,3.5,8,-5,1.65,0,wallMat,false);
  for(let i=-4;i<=4;i++){box(.035,.025,8,i,0,0,wood,false)}
  box(10,.1,.12,0,.12,-3.92,wood);box(.1,.1,8,-4.91,.12,0,wood);
  const hemi=new THREE.HemisphereLight(data.lighting==='night'?'#9aa7d9':data.lighting==='day'?'#ffffff':'#fff1d5','#493128',data.lighting==='night'?.7:2.1);scene.add(hemi);
- const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
+ const key=new THREE.DirectionalLight(data.lighting==='night'?'#a7b5e4':data.lighting==='day'?'#ffffff':'#ffe1b0',data.lighting==='night'?.8:3);key.position.set(1,8,5);key.castShadow=true;key.shadow.mapSize.set(data.quality==='high'?2048:1024,data.quality==='high'?2048:1024);key.shadow.bias=-.0002;key.shadow.radius=3;key.shadow.camera.left=-9;key.shadow.camera.right=9;key.shadow.camera.top=9;key.shadow.camera.bottom=-9;scene.add(key);
  const bulb=new THREE.PointLight('#ffb86d',data.lighting==='night'?12:data.lighting==='day'?2:20,12);bulb.position.set(-3.2,2.6,-2.5);scene.add(bulb);
+ // Warm practical sconces and sunlit window side for cinematic depth.
+ const fill=new THREE.DirectionalLight(data.lighting==='night'?'#8192bc':'#ffe4c0',data.lighting==='night'?.3:data.lighting==='day'?1.1:.75);
+ fill.position.set(-4,4,-1);scene.add(fill);
+ if(data.quality==='high'){
+  renderer.toneMappingExposure=data.lighting==='night'?1.0:1.15;
+  key.shadow.normalBias=.025;
+ }
+ // Crown moulding and skirting to ground the architecture.
+ box(10,.12,.18,0,3.38,-3.9,cream,false);
+ box(.18,.12,8,-4.9,3.38,0,cream,false);
+ box(10,.18,.12,0,.1,-3.9,dark,false);
+ box(.12,.18,8,-4.9,.1,0,dark,false);
+
  function make(p){const group=new THREE.Group();scene.add(group);group.position.set((p.x/510-.5)*9,0,(p.y/400-.5)*7);group.rotation.y=-p.rotation*Math.PI/180;
  function part(w,h,d,x,y,z,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;group.add(o);return o}
+ function rounded(w,h,d,x,y,z,m,r=.07){
+  const shape=new THREE.Shape();const a=-w/2,b=-h/2;
+  shape.moveTo(a+r,b);shape.lineTo(a+w-r,b);shape.quadraticCurveTo(a+w,b,a+w,b+r);
+  shape.lineTo(a+w,b+h-r);shape.quadraticCurveTo(a+w,b+h,a+w-r,b+h);
+  shape.lineTo(a+r,b+h);shape.quadraticCurveTo(a,b+h,a,b+h-r);
+  shape.lineTo(a,b+r);shape.quadraticCurveTo(a,b,a+r,b);
+  const geo=new THREE.ExtrudeGeometry(shape,{depth:d,bevelEnabled:true,bevelThickness:.025,bevelSize:.025,bevelSegments:2,steps:1,curveSegments:3});
+  geo.rotateX(-Math.PI/2);geo.translate(0,d/2,0);
+  const mesh=new THREE.Mesh(geo,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
+ function cylinder(radiusTop,radiusBottom,height,x,y,z,m,segments=16){
+  const mesh=new THREE.Mesh(new THREE.CylinderGeometry(radiusTop,radiusBottom,height,segments),m);
+  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
+ function sphere(radius,x,y,z,m){
+  const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius,12,8),m);
+  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
+ }
+ const contactSizes={sofa:[2.5,1.4],chair:[1.1,1.1],table:[1.8,1.4],tv:[1.2,.9],radio:[.9,.65],books:[1.7,.9],archive:[1.6,1],desk:[1.8,1.1],plant:[.8,.8],lamp:[.8,.8]};
+ const size=contactSizes[p.type];if(size)contactShadow(group,size[0],size[1]);
  const t=p.type;
- if(t==='rug'){part(2.3,.035,1.5,0,.04,0,mat('#833d3f'));part(2,.04,1.2,0,.07,0,mat('#c99d70'))}
- else if(t==='sofa'){part(2,.45,.8,0,.48,0,fabric);part(2,.85,.23,0,.9,-.35,fabric);part(.22,.7,.8,-.95,.66,0,wood);part(.22,.7,.8,.95,.66,0,wood);for(const x of [-.48,.48])part(.82,.14,.65,x,.77,.08,cream)}
- else if(t==='chair'){part(.7,.13,.65,0,.55,0,wood);part(.7,.9,.13,0,1,-.28,wood);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.08,.55,.08,x,.28,z,wood)}
- else if(t==='table'){part(1.3,.13,.8,0,.7,0,wood);for(const x of [-.55,.55])for(const z of [-.28,.28])part(.09,.65,.09,x,.34,z,wood)}
- else if(t==='tv'){part(.95,.78,.48,0,.83,0,wood);part(.73,.52,.04,-.02,.87,.26,glass);part(.16,.25,.08,.34,.85,.3,metal);part(.8,.13,.7,0,.35,0,dark)}
- else if(t==='radio'){part(.8,.46,.34,0,.72,0,wood);part(.5,.25,.03,-.1,.75,.19,cream);part(.12,.12,.05,.28,.75,.2,metal)}
+ if(t==='rug'){part(2.3,.035,1.5,0,.04,0,rugMaterial);part(2,.04,1.2,0,.07,0,rugMaterial)}
+ else if(t==='sofa'){
+  part(2.1,.22,.9,0,.32,0,wood);
+  rounded(1.75,.32,.74,0,.59,.08,fabric);
+  rounded(1.95,.68,.24,0,.92,-.35,fabric);
+  for(const x of [-.97,.97]){rounded(.2,.53,.87,x,.67,0,wood);part(.12,.13,.12,x,.12,-.29,dark);part(.12,.13,.12,x,.12,.29,dark)}
+  for(const x of [-.44,.44]){rounded(.82,.13,.67,x,.8,.09,cream);rounded(.75,.52,.16,x,1.02,-.23,fabric)}
+  for(const x of [-.66,.66])rounded(.32,.25,.13,x,.95,.28,cream);
+  // Subtle button tufting and piping on the upholstered back.
+  const buttons=new THREE.MeshStandardMaterial({color:'#765342',roughness:.86});
+  for(const x of [-.7,-.35,0,.35,.7])for(const y of [.78,1.02]){
+   sphere(.024,x,y,-.202,buttons).scale.set(1,1,.45);
+  }
+  for(const x of [-.88,.88])part(.018,.08,.66,x,.79,.06,cream);
+ }
+ else if(t==='chair'){rounded(.68,.12,.65,0,.55,0,fabric);rounded(.68,.82,.13,0,1,-.28,wood);rounded(.55,.46,.08,0,1.08,-.19,fabric);for(const x of [-.27,.27])for(const z of [-.24,.24])part(.075,.53,.075,x,.28,z,wood);chairGroups.push(group)}
+ else if(t==='table'){
+  rounded(1.35,.1,.85,0,.72,0,wood,.13);
+  for(const x of [-.52,.52])for(const z of [-.28,.28])cylinder(.055,.08,.64,x,.34,z,wood,12);
+  part(.88,.065,.055,0,.39,-.27,dark);
+ }
+ else if(t==='tv'){
+  // Period CRT set: inset screen, cabinet bevels, ventilation and physical knobs.
+  rounded(1,.8,.52,0,.82,0,wood,.09);
+  rounded(.73,.57,.035,-.1,.87,.29,dark,.065);
+  const screen=rounded(.67,.5,.025,-.1,.87,.32,glass,.07);
+  screen.material=new THREE.MeshPhysicalMaterial({color:'#526b67',metalness:.08,roughness:.24,clearcoat:.9,clearcoatRoughness:.14,transparent:true,opacity:.85});
+  for(const y of [.73,.89,1.05])cylinder(.055,.055,.025,.35,y,.3,metal,20).rotation.x=Math.PI/2;
+  for(let i=0;i<7;i++)part(.018,.16,.014,.26+i*.026,.55,.29,dark);
+  for(const x of [-.35,.35])part(.16,.11,.28,x,.34,-.1,dark);
+ }
+ else if(t==='radio'){
+  // Walnut radio with slatted speaker grille, tuning dial and control knobs.
+  rounded(.88,.5,.4,0,.72,0,wood,.055);
+  rounded(.52,.34,.02,-.11,.73,.22,cream,.03);
+  for(let i=0;i<9;i++)part(.018,.29,.025,-.33+i*.055,.73,.239,dark);
+  rounded(.24,.13,.024,.25,.84,.23,glass,.015);
+  part(.19,.012,.03,.25,.84,.255,dark);
+  for(const x of [.16,.35])cylinder(.045,.045,.03,x,.62,.235,metal,18).rotation.x=Math.PI/2;
+  for(const x of [-.32,.32])part(.09,.07,.18,x,.43,-.06,dark);
+ }
  else if(t==='archive'){part(1.3,2.25,.62,0,1.13,0,metal);for(let y=.35;y<2.1;y+=.44){part(1.12,.04,.04,0,y,.33,dark);part(.3,.04,.04,0,y+.16,.35,cream)}}
- else if(t==='books'){part(1.4,2.1,.45,0,1.05,0,wood);for(let y=.4;y<2;y+=.42){part(1.28,.05,.4,0,y,0,dark);for(let x=-.5;x<.6;x+=.18)part(.11,.31,.28,x,y+.17,0,mat(['#835748','#526456','#aa8c60'][Math.floor((x+1)*4)%3]))}}
- else if(t==='lamp'){part(.34,.1,.34,0,.06,0,metal);part(.07,1.15,.07,0,.67,0,metal);part(.7,.5,.7,0,1.35,0,cream)}
- else if(t==='plant'){part(.4,.4,.4,0,.25,0,mat('#ad7454'));for(let i=0;i<5;i++){const leaf=part(.2,.7,.16,Math.sin(i*1.25)*.2,.78,Math.cos(i*1.25)*.2,mat('#54704b'));leaf.rotation.z=i*.4}}
+ else if(t==='books'){
+  // Open-back walnut bookcase with separate shelves and varied vintage book spines.
+  for(const x of [-.67,.67])part(.085,2.1,.46,x,1.05,0,wood);
+  part(1.42,.09,.48,0,2.08,0,wood);
+  part(1.42,.09,.48,0,.1,0,wood);
+  part(1.34,2,.035,0,1.06,-.23,dark);
+  for(let y=.4;y<1.98;y+=.39){
+   part(1.32,.065,.44,0,y,0,wood);
+   for(let i=0;i<8;i++){
+    const x=-.54+i*.15;
+    const h=.22+(i%3)*.045;
+    const spine=mat(['#855947','#536553','#b1976b','#635d70','#b36d50'][i%5]);
+    rounded(.11,h,.3,x,y+.05+h/2,.02,spine,.012);
+    part(.009,h-.035,.014,x-.025,y+.05+h/2,.181,cream);
+   }
+  }
+ }
+ else if(t==='lamp'){
+  // Turned brass table lamp with a tapered fabric shade and warm diffuser.
+  const brass=new THREE.MeshStandardMaterial({color:'#b58c4e',metalness:.78,roughness:.27});
+  cylinder(.18,.24,.08,0,.09,0,brass,32);
+  cylinder(.09,.14,.17,0,.22,0,brass,24);
+  cylinder(.055,.075,.62,0,.61,0,brass,24);
+  cylinder(.12,.07,.1,0,.98,0,brass,24);
+  const shade=new THREE.Mesh(new THREE.CylinderGeometry(.23,.43,.48,32,1,true),new THREE.MeshStandardMaterial({color:'#f5dfba',side:THREE.DoubleSide,roughness:.95,emissive:'#ffcc80',emissiveIntensity:data.lighting==='night'?.38:.13}));
+  shade.position.y=1.24;shade.castShadow=true;group.add(shade);
+  cylinder(.43,.43,.025,0,1.01,0,brass,32);
+  cylinder(.23,.23,.025,0,1.48,0,brass,32);
+  if(data.quality==='high'){
+   const lampLight=new THREE.PointLight('#ffbf77',data.lighting==='night'?2.2:1.2,3.5,2);
+   lampLight.position.set(0,1.23,0);group.add(lampLight);
+  }
+ }
+ else if(t==='plant'){
+  const terracotta=mat('#b87552');cylinder(.24,.18,.38,0,.25,0,terracotta,20);
+  cylinder(.26,.26,.06,0,.45,0,terracotta,20);
+  const stem=mat('#526b3e');cylinder(.028,.045,.9,0,.85,0,stem,10);
+  const greens=[mat('#54764b'),mat('#688b51'),mat('#3f6547')];
+  for(let i=0;i<9;i++){
+   const a=i*2.39996;const radius=.2+(i%3)*.075;const leaf=sphere(.2,Math.cos(a)*radius,.92+(i%4)*.15,Math.sin(a)*radius,greens[i%3]);
+   leaf.scale.set(1.25,.42,.6);leaf.rotation.y=a;
+  }
+ }
  else if(t==='window'){part(1.4,1.5,.08,0,1.55,-.08,wood);part(1.2,1.3,.05,0,1.55,0,glass);part(.08,1.4,.08,0,1.55,.06,wood);part(1.3,.08,.08,0,1.55,.06,wood)}
  else if(t==='door'){part(1.05,2.1,.1,0,1.05,0,wood);part(.08,.08,.1,.4,1.08,.1,metal)}
  else if(t==='desk'){part(1.7,.14,.85,0,.76,0,wood);for(const x of [-.72,.72])part(.13,.75,.75,x,.38,0,wood);part(.55,.35,.7,.42,.53,0,dark);part(.36,.04,.04,.45,.56,.4,metal)}
@@ -49,29 +232,43 @@ function Decor3D({pieces,wall,floor,sceneName}:{pieces:Piece[];wall:string;floor
  else if(t==='photo'){part(.68,.55,.06,0,1.4,0,wood);part(.5,.37,.07,0,1.4,.045,mat('#b99d76'))}
  else if(t==='clock'){const disk=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.07,32),cream);disk.rotation.x=Math.PI/2;disk.position.y=1.75;group.add(disk);part(.025,.2,.025,0,1.8,.06,dark)}
  }
- data.pieces.forEach(make);
+ data.pieces.forEach(make);if(chairGroups.length)loadChair();
  let theta=-.65+data.angle*Math.PI/180,phi=data.shot==='eye'?1.37:data.shot==='detail'?1.15:.92,radius=data.shot==='detail'?8:data.shot==='eye'?10:15;const target=new THREE.Vector3(0,data.shot==='eye'?1.15:.6,0);
  function view(){camera.position.set(Math.sin(theta)*Math.sin(phi)*radius,Math.cos(phi)*radius+target.y,Math.cos(theta)*Math.sin(phi)*radius);camera.lookAt(target)}
- view();let dragging=false,px=0,py=0;
- renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});
- renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;theta-=(e.clientX-px)*.007;phi=Math.max(.25,Math.min(1.5,phi+(e.clientY-py)*.007));px=e.clientX;py=e.clientY;view()});
- renderer.domElement.addEventListener('pointerup',()=>dragging=false);
+ view();let dragging=false,px=0,py=0,pinchDistance=0;
+ const activePointers=new Map();
+ const distance=()=>{const points=[...activePointers.values()];return points.length<2?0:Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y)};
+ renderer.domElement.style.touchAction='none';
+ renderer.domElement.addEventListener('pointerdown',e=>{activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});dragging=true;px=e.clientX;py=e.clientY;pinchDistance=distance();renderer.domElement.setPointerCapture(e.pointerId)});
+ renderer.domElement.addEventListener('pointermove',e=>{
+  if(!activePointers.has(e.pointerId))return;
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(activePointers.size>=2){const d=distance();if(pinchDistance>0&&d>0){radius=Math.max(4,Math.min(26,radius*pinchDistance/d));view()}pinchDistance=d;return}
+  if(!dragging)return;
+  theta-=(e.clientX-px)*.007;phi=Math.max(.25,Math.min(1.5,phi+(e.clientY-py)*.007));px=e.clientX;py=e.clientY;view()
+ });
+ const stopPointer=e=>{activePointers.delete(e.pointerId);dragging=activePointers.size>0;pinchDistance=distance();if(activePointers.size===1){const p=[...activePointers.values()][0];px=p.x;py=p.y}};
+ renderer.domElement.addEventListener('pointerup',stopPointer);
+ renderer.domElement.addEventListener('pointercancel',stopPointer);
  renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(6,Math.min(26,radius+e.deltaY*.015));view()},{passive:false});
  function resize(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}addEventListener('resize',resize);resize();
  function render(){requestAnimationFrame(render);renderer.render(scene,camera)}render();
  </script></body></html>`;
- return <section style={{background:"#241d22",padding:16,borderRadius:16,border:"1px solid #84675c",marginBottom:20}}>
- <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}><div><h2 style={{margin:"0 0 6px"}}>🎬 معاينة ثلاثية الأبعاد — {sceneName}</h2><p style={{fontSize:13,margin:"0 0 12px"}}>غرفة بإضاءة دافئة وأثاث ثلاثي الأبعاد مبدئي؛ أي تعديل على المخطط يظهر هنا، مع اختبار زوايا التصوير والإضاءة.</p></div><button onClick={()=>setAngle(v=>(v+45)%360)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer"}}>↻ تدوير الكاميرا</button></div>
+ return <section style={{background:"#241d22",padding:cinemaMode?12:16,borderRadius:16,border:"1px solid #84675c",marginBottom:20,...(cinemaMode?{position:"fixed" as const,inset:0,zIndex:9999,overflowY:"auto" as const,borderRadius:0,background:"#151217"}:{})}}>
+ <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}><div><h2 style={{margin:"0 0 6px"}}>🎬 معاينة ثلاثية الأبعاد — {sceneName}</h2><p style={{fontSize:13,margin:"0 0 12px"}}>غرفة بإضاءة دافئة وأثاث ثلاثي الأبعاد مبدئي؛ أي تعديل على المخطط يظهر هنا، مع اختبار زوايا التصوير والإضاءة.</p></div><button onClick={()=>setAngle(v=>(v+45)%360)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer"}}>↻ تدوير الكاميرا</button><button type="button" onClick={()=>setCinemaMode(v=>!v)} style={{padding:"10px 14px",borderRadius:9,cursor:"pointer",background:"#d4aa6e",color:"#231a1a",fontWeight:700}}>{cinemaMode?"✕ إغلاق العرض العريض":"⛶ العرض السينمائي العريض"}</button></div>
  <div style={{display:"flex",gap:8,flexWrap:"wrap",margin:"0 0 12px"}}>
  <label style={{fontSize:13}}>زاوية التصوير <select value={shot} onChange={e=>setShot(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="wide">لقطة تأسيسية واسعة</option><option value="eye">مستوى نظر الشخصيات</option><option value="detail">لقطة تفاصيل الديكور</option></select></label>
  <label style={{fontSize:13}}>الإضاءة <select value={lighting} onChange={e=>setLighting(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="warm">دفء البيت مساءً</option><option value="day">ضوء نهاري</option><option value="night">ليل هادئ</option></select></label>
- </div><iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",height:"min(62vw,480px)",minHeight:290,border:0,borderRadius:12,background:"#17171c"}}/>
+ <label style={{fontSize:13}}>جودة العرض <select value={quality} onChange={e=>setQuality(e.target.value)} style={{padding:8,borderRadius:8,marginRight:6}}><option value="balanced">متوازنة للموبايل</option><option value="high">عالية التفاصيل</option></select></label>
+ </div><iframe key={srcDoc} title="معاينة ديكور فيلم 1960 ثلاثية الأبعاد" srcDoc={srcDoc} sandbox="allow-scripts" style={{display:"block",width:"100%",aspectRatio:"16 / 9",height:cinemaMode?"min(75vh, calc(100vw * 9 / 16))":"auto",minHeight:cinemaMode?220:undefined,maxHeight:cinemaMode?"none":720,border:0,borderRadius:12,background:"#17171c"}}/>
  </section>
 }
 
 export default function DecorStudio(){
  const [continuity,setContinuity]=useState<Piece[]|null>(null);const [savedScenes,setSavedScenes]=useState<{key:string;name:string}[]>([]);const [ready,setReady]=useState<number[]>([]),[sceneNumber,setSceneNumber]=useState("1"),[scenePeriod,setScenePeriod]=useState("الحاضر"),[sceneOwner,setSceneOwner]=useState("");
  const [scene,setScene]=useState(0),[pieces,setPieces]=useState<Piece[]>(()=>presets[0].pieces.map((p,i)=>({...p,id:i+1,rotation:0}))),[selected,setSelected]=useState<number|null>(null),[wall,setWall]=useState(presets[0].wall),[floor,setFloor]=useState(presets[0].floor),[sceneName,setSceneName]=useState("صالون بيت الجد"),[notes,setNotes]=useState(""),[status,setStatus]=useState(""),[grid,setGrid]=useState(true);
+ const [beforeSmartDesign,setBeforeSmartDesign]=useState<{sceneName:string;wall:string;floor:string;pieces:Piece[]}|null>(null);
+ function undoSmartDesign(){if(!beforeSmartDesign)return;setSceneName(beforeSmartDesign.sceneName);setWall(beforeSmartDesign.wall);setFloor(beforeSmartDesign.floor);setPieces(beforeSmartDesign.pieces);setBeforeSmartDesign(null);setSelected(null);setStatus("تم استرجاع التصميم السابق")}
  const chosen=pieces.find(p=>p.id===selected);const meta=useMemo(()=>Object.fromEntries(catalog.map(x=>[x[0],x])),[]);
  function apply(i:number){const p=presets[i];setScene(i);setSceneName(p.name);setWall(p.wall);setFloor(p.floor);setPieces(p.pieces.map((q,j)=>({...q,id:Date.now()+j,rotation:0})));setSelected(null);setStatus("تم فتح تصور "+p.name)}
  function add(type:string){const id=Date.now();setPieces(p=>[...p,{id,type,x:240,y:170,rotation:0}]);setSelected(id)}
@@ -90,9 +287,18 @@ export default function DecorStudio(){
  function exportProductionSheet(){const escape=(s:string)=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");const counts=catalog.map(item=>({name:item[1],count:pieces.filter(p=>p.type===item[0]).length})).filter(item=>item.count>0);const checks=checklist.map((item,i)=>"<li>"+(ready.includes(i)?"☑":"☐")+" "+escape(item)+"</li>").join("");const props=counts.map(item=>"<tr><td>"+escape(item.name)+"</td><td>"+item.count+"</td></tr>").join("");const html='<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>1960 - '+escape(sceneName)+'</title><style>body{font:16px Tahoma,Arial,sans-serif;max-width:850px;margin:40px auto;color:#292226;line-height:1.8}h1{border-bottom:3px solid #8e6752;padding-bottom:12px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:8px;text-align:right}li{margin:5px 0}.meta{background:#f2ece6;padding:16px;border-radius:8px}pre{white-space:pre-wrap;font:inherit}@media print{body{margin:15mm}}</style></head><body><h1>1960 | بطاقة تجهيز ديكور المشهد</h1><div class="meta"><b>المشهد:</b> '+escape(sceneNumber)+' — '+escape(sceneName)+'<p><b>الزمن الدرامي:</b> '+escape(scenePeriod)+'</p><p><b>مسؤول الديكور:</b> '+escape(sceneOwner||"غير محدد")+'</p></div><h2>جرد المقتنيات</h2><table><tr><th>القطعة</th><th>العدد</th></tr>'+props+'</table><h2>قائمة الجاهزية ('+ready.length+'/'+checklist.length+')</h2><ul>'+checks+'</ul><h2>ملاحظات المشهد</h2><pre>'+escape(notes||"لا توجد ملاحظات")+'</pre><p>ورقة إنتاج قابلة للطباعة — القياسات في مخطط الاستوديو تقريبية.</p></body></html>';const url=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));const link=document.createElement("a");link.href=url;link.download="1960-scene-"+sceneNumber.replace(/[^a-zA-Z0-9_-]/g,"_")+"-sheet.html";link.click();URL.revokeObjectURL(url);setStatus("تم تنزيل بطاقة إنتاج قابلة للطباعة")}
   function exportFile(){const data=JSON.stringify({project:"1960",sceneName,wall,floor,pieces,notes,ready,sceneNumber,scenePeriod,sceneOwner},null,2);const url=URL.createObjectURL(new Blob([data],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download="1960-decor-scene.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
  const surface:React.CSSProperties={background:"#2c2227",border:"1px solid #84675c",borderRadius:16,padding:16};const button:React.CSSProperties={border:"1px solid #ac8a67",borderRadius:10,padding:"10px 12px",cursor:"pointer",fontWeight:700};
- return <main dir="rtl" style={{maxWidth:1250,margin:"auto",padding:"28px 16px 140px",color:"#f4e6d5",fontFamily:"system-ui"}}>
+ return <main dir="rtl" style={{maxWidth:1600,margin:"auto",padding:"28px 16px 140px",color:"#f4e6d5",fontFamily:"system-ui"}}>
  <div style={{marginBottom:24}}><div style={{fontSize:12,letterSpacing:3,color:"#d6b68a"}}>1960 • PRODUCTION DESIGN</div><h1 style={{fontSize:"clamp(26px,5vw,44px)",margin:"6px 0"}}>🏠 استوديو الديكور السينمائي</h1><p style={{maxWidth:750,lineHeight:1.8}}>صممي أماكن فيلم «1960» بروح البيت المصري القديم: صالون الجد، غرفة الأرشيف، وركن الحفيدة ذات الـ8 سنوات. اسحبي قطع الأثاث على المخطط، وغيّري الألوان واحفظي تصور المشهد.</p></div>
- <Decor3D pieces={pieces} wall={wall} floor={floor} sceneName={sceneName}/><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
+ <SmartDecor onApply={draft=>{setBeforeSmartDesign({sceneName,wall,floor,pieces:pieces.map(p=>({...p}))});setSceneName(draft.name);setWall(draft.wall);setFloor(draft.floor);setPieces(draft.pieces);setSelected(null);setStatus("تم تطبيق اقتراح الديكور، راجعي المخطط ثم احفظيه");}}/>{beforeSmartDesign&&<div style={{padding:12,marginBottom:14,border:"1px solid #ac8a67",borderRadius:12,background:"#2c2227"}}><span>التصميم السابق محفوظ مؤقتًا أثناء الجلسة.</span> <button onClick={undoSmartDesign} style={{padding:"8px 12px",cursor:"pointer",borderRadius:8}}>↶ التراجع عن تطبيق التصميم الذكي</button></div>}<div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) clamp(170px,19vw,270px)",gap:12,alignItems:"start",marginBottom:18}}>
+ <div style={{minWidth:0}}><Decor3D pieces={pieces} wall={wall} floor={floor} sceneName={sceneName}/></div>
+ <aside aria-label="مكتبة الأثاث" style={{background:"#211b20",border:"1px solid #695247",borderRadius:14,padding:12,maxHeight:"min(78vh,850px)",overflowY:"auto"}}>
+ <h2 style={{fontSize:"clamp(14px,1.7vw,21px)",margin:"0 0 10px",color:"#e8c58d"}}>🛋️ مكتبة الأثاث</h2>
+ <p style={{fontSize:12,opacity:.8,margin:"0 0 12px"}}>اختاري قطعة لإضافتها للمشهد، ثم حرّكيها من المخطط بالأسفل.</p>
+ <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(66px,1fr))",gap:7}}>
+ {catalog.map(item=><button key={item[0]} type="button" onClick={()=>{const id=Date.now()+Math.floor(Math.random()*1000);setPieces(prev=>[...prev,{id,type:item[0],x:255,y:200,rotation:0}]);setSelected(id);setStatus("تمت إضافة "+item[1]+" إلى منتصف المشهد. يمكن تعديل موقعها من المخطط.");}} title={"إضافة "+item[1]} style={{minWidth:0,background:"#352a2d",border:"1px solid #755d4e",borderRadius:10,color:"#f5e5d2",padding:"10px 3px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
+ <span aria-hidden="true" style={{fontSize:26}}>{item[2]}</span><span style={{fontSize:11,lineHeight:1.4}}>{item[1]}</span></button>)}
+ </div></aside></div>
+ <details style={{marginBottom:20,background:"#241d22",border:"1px solid #695247",borderRadius:14,padding:12}}><summary style={{cursor:"pointer",fontWeight:700,color:"#e8c58d"}}>📐 فتح المخطط ثنائي الأبعاد لتحريك الأثاث وتعديل المقاسات</summary><div style={{marginTop:14}}><InteriorPlanner pieces={pieces} setPieces={setPieces} selected={selected} setSelected={setSelected}/></div></details><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,330px),1fr))",gap:18,alignItems:"start"}}>
  <section style={surface}><h2 style={{marginTop:0}}>لوحة المشهد</h2><label style={{display:"block",marginBottom:10}}>اسم الديكور<input value={sceneName} onChange={e=>setSceneName(e.target.value)} style={{width:"100%",padding:10,marginTop:5,borderRadius:8}}/></label>
  <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:14}}>{presets.map((p,i)=><button key={p.name} style={{...button,background:i===scene?"#d6b68a":"#49353a"}} onClick={()=>apply(i)}>{p.name}</button>)}</div>
  <svg viewBox="0 0 510 400" onPointerMove={move} onPointerUp={()=>{}} style={{width:"100%",touchAction:"none",borderRadius:12,background:floor,border:"9px solid "+wall,boxSizing:"border-box",cursor:selected?"move":"default"}} role="img" aria-label="مخطط الديكور التفاعلي">
