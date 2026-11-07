@@ -1,28 +1,11 @@
-const features = [
-  { title: "الفرق", text: "تنظيم أعضاء فرق العمل ومتابعة طلبات الانضمام." },
-  { title: "التكليفات", text: "متابعة المهام والمواعيد والتسليمات." },
-  { title: "المساهمات", text: "جمع أعمال الطلاب ومراجعتها في مكان واحد." },
-  { title: "الإشراف", text: "متابعة طلبات الطلاب وموافقات المشرفة." },
-];
-export default function Home() {
-  return <main style={{ minHeight: "100vh", maxWidth: 960, margin: "auto", padding: "36px 22px" }}>
-    <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-      <strong style={{ letterSpacing: 2, fontSize: 19 }}>1960 STUDIO</strong>
-      <a href="/login" style={{ color: "#d5a66d", fontSize: 14, textDecoration: "none" }}>تسجيل الدخول ←</a>
-    </header>
-    <section style={{ padding: "90px 0 65px" }}>
-      <p style={{ color: "#d5a66d", fontSize: 14 }}>من الفكرة إلى الشاشة</p>
-      <h1 style={{ fontSize: "clamp(42px, 9vw, 88px)", lineHeight: 1.15, margin: "15px 0" }}>كل حكاية<br/>بتبدأ بفريق.</h1>
-      <p style={{ color: "#bac2d0", maxWidth: 500, lineHeight: 2 }}>مكان واحد يجمع فريق فيلم 1960، ويساعدنا ننظم الشغل ونوثّق كل خطوة في رحلتنا.</p>
-      <p style={{ color: "#d5a66d", fontSize: 13 }}>المنصة قيد التجهيز — التسجيل والتسليمات هتتفعل بعد اختبار الصلاحيات.</p>
-    </section>
-    <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 14 }}>
-      {features.map((item, i) => <article key={item.title} style={{ padding: 24, border: "1px solid #343a49", borderRadius: 18, background: "#191e2a" }}>
-        <span style={{ color: "#d5a66d", fontSize: 13 }}>0{i + 1}</span>
-        <h2 style={{ fontSize: 22 }}>{item.title}</h2>
-        <p style={{ color: "#aeb8ca", lineHeight: 1.8, fontSize: 14 }}>{item.text}</p>
-      </article>)}
-    </section>
-    <footer style={{ marginTop: 65, paddingTop: 20, borderTop: "1px solid #343a49", color: "#8e98ab", fontSize: 12 }}>1960 STUDIO · مشروع تخرج</footer>
-  </main>;
-}
+import HomeCrewStrip from "./home-crew-strip";
+const links=[{icon:"🎭",title:"استوديو تصميم الشخصيات",desc:"صمّم شكل الشخصيات والملابس لكل مشهد واحفظه للفريق",href:"/character-studio"},{icon:"🏆",title:"لوحة شرف 1960",desc:"نجوم الأسبوع وتكريمات الإخراج",href:"/honor-board"},
+{icon:"🎬",title:"فرق العمل",desc:"ادخل على فريقك والشات والملفات",href:"/sectors"},
+{icon:"📝",title:"التكليفات",desc:"شوف المطلوب منك ومواعيد التسليم",href:"/dashboard"},
+{icon:"📸",title:"كواليس 1960",desc:"صور اللحظات وارفع صورك",href:"/gallery"},
+{icon:"🎞️",title:"نجوم 1960",desc:"كل بطاقات فريق الفيلم",href:"/crew"},
+{icon:"💬",title:"الشات والرسائل",desc:"اتواصل مع الفريق والمشرفة",href:"/chat"},
+{icon:"📋",title:"متابعة الإنتاج",desc:"مراحل الفيلم وآخر المستجدات",href:"/production-hub"},
+{icon:"📂",title:"ملفات المشروع",desc:"الصور والفيديوهات ومستندات الفرق",href:"/files"},
+{icon:"👤",title:"حسابي",desc:"بياناتك وفرقك ومهامك",href:"/dashboard"}];
+export default function Home(){return <main dir="rtl" className="studio-shell" style={{maxWidth:1200}}><header className="studio-nav"><a className="studio-logo" href="/">1960 STUDIO</a><a className="studio-nav-link" href="/login">دخول الحساب</a></header><section style={{textAlign:"center",padding:"30px 0 12px"}}><p className="studio-eyebrow">مشروع التخرج · فيلم روائي</p><h1 style={{fontSize:"clamp(52px,12vw,108px)",lineHeight:1,margin:"10px 0",letterSpacing:3}}>1960</h1><p style={{color:"#e9afc2",fontSize:18,margin:"8px 0 0"}}>حكايتنا بتتعمل مع بعض 🎬</p></section><HomeCrewStrip/><a href="/honor-board" style={{display:"block",padding:"15px 20px",border:"1px solid #a77b91",borderRadius:14,background:"#493440",textDecoration:"none",margin:"8px 0 22px",fontWeight:800}}>🏆 لوحة شرف لوكيشن 1960 · نجوم الأسبوع وتكريمات الإخراج ←</a><section className="studio-section" style={{marginTop:22}}><div className="studio-section-heading"><div><span className="studio-kicker">YOUR STUDIO</span><h2>عايز تروح فين؟</h2></div></div><p style={{color:"#c4b8c1",marginTop:0}}>اختار البطاقة وهتدخل على القسم مباشرة.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,210px),1fr))",gap:12}}>{links.map(l=><a key={l.href+l.title} href={l.href} style={{textDecoration:"none",color:"inherit",background:"#343039",border:"1px solid #685260",borderRadius:17,padding:"20px 16px",display:"block",minHeight:135}}><div style={{fontSize:30}}>{l.icon}</div><h3 style={{fontSize:18,margin:"10px 0 6px",color:"#fff"}}>{l.title}</h3><p style={{fontSize:13,color:"#c4b8c1",lineHeight:1.7,margin:0}}>{l.desc}</p></a>)}</div></section><footer className="studio-footer">1960 STUDIO · من الفكرة إلى الشاشة</footer></main>}
