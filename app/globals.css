@@ -202,3 +202,28 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 
 /* Ivory director's ledger: readable file-first review experience */
 .notebook-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:6px 0 24px}.notebook-tabs button{font:700 15px inherit;background:#f7ead5;color:#72513f;border:1px solid #d2b58b;border-radius:40px;padding:12px 20px;cursor:pointer;transition:background .2s,transform .2s}.notebook-tabs button.active{background:linear-gradient(120deg,#9d753b,#f5d98e,#b58a46);color:#4c3329;box-shadow:0 4px 12px #b388453d;transform:translateY(-2px)}.notebook-file-ledger{position:relative;background:#fffdf8;border:1px solid #d6b98b;border-radius:5px 18px 18px 5px;padding:16px;box-shadow:inset 6px 0 #e6d6bb,0 10px 25px #4c31251e;max-height:650px;overflow:auto}.notebook-file-intro{display:flex;flex-direction:column;gap:6px;text-align:center;color:#604434;padding:10px 0 20px;border-bottom:2px double #d5b889}.notebook-file-intro strong{font-size:23px;font-family:Georgia,serif}.notebook-file-intro span{font-size:12px;color:#91745d}.notebook-file-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:17px 10px;border-bottom:1px solid #e6d9c6;color:#513a35;transition:background .2s}.notebook-file-row:hover{background:#fbf0de}.notebook-file-icon{font-size:28px;color:#c99d48;flex:0 0 35px;text-align:center}.notebook-file-details{display:flex;flex-direction:column;gap:5px;flex:1 1 230px;min-width:0}.notebook-file-details strong{overflow-wrap:anywhere;font-size:14px;color:#513a35}.notebook-file-details span{font-weight:700;color:#765343;font-size:13px}.notebook-file-details small{color:#8e7564}.notebook-open-file{background:linear-gradient(120deg,#795065,#5e3d4d);border:0;border-radius:25px;color:white;padding:10px 15px;cursor:pointer;font-weight:700}.notebook-file-stars{display:flex;align-items:center;gap:1px}.notebook-file-stars button{background:transparent!important;border:0!important;cursor:pointer;font-size:23px;line-height:1.4;padding:2px!important}.notebook-file-stars button:last-child{font-size:11px!important;color:#775d4b!important;padding:6px!important}.notebook-file-stars button:disabled{opacity:.5;cursor:wait}@media(max-width:650px){.notebook-file-ledger{padding:8px}.notebook-file-row{gap:7px}.notebook-file-details{flex-basis:calc(100% - 50px)}.notebook-file-stars{margin-inline-start:auto}}
+
+
+/* Compact landscape notebook with smooth sideways page browsing */
+.executive-office .cinematic-notebook{width:100%;max-width:100%;min-height:0;padding:18px 24px 20px!important;border-radius:16px!important;box-sizing:border-box}
+.cinematic-notebook .notebook-cover-title{margin:0 auto 10px!important;padding:0!important}
+.cinematic-notebook .notebook-cover-title h2{font-size:clamp(19px,2.5vw,28px)!important;line-height:1.2!important;margin:4px 0!important}
+.cinematic-notebook .notebook-cover-title>span{font-size:9px!important;letter-spacing:1px!important}
+.cinematic-notebook .notebook-cover-subtitle{font-size:11px!important;margin:3px 0!important}
+.cinematic-notebook .notebook-corner-stamp{transform:scale(.72);transform-origin:top left}
+.cinematic-notebook .notebook-tabs{margin:5px 0 12px!important;gap:7px}
+.cinematic-notebook .notebook-tabs button{padding:7px 15px!important;font-size:12px!important}
+.cinematic-notebook .notebook-file-ledger{max-height:none!important;display:flex;gap:12px;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-inline:contain;padding:14px!important;scrollbar-width:thin;scrollbar-color:#c69e5c #f5e9d6}
+.cinematic-notebook .notebook-file-row{flex:0 0 min(320px,82vw);min-height:185px;max-width:320px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:7px!important;padding:14px!important;border:1px solid #e2caa5!important;border-radius:12px!important;scroll-snap-align:center;background:linear-gradient(145deg,#fffdf9,#f8eedf);box-shadow:0 5px 13px #61472d13}
+.cinematic-notebook .notebook-file-icon{display:none}
+.cinematic-notebook .notebook-file-details{flex:0 1 auto;gap:5px!important}
+.cinematic-notebook .notebook-file-details strong{font-size:13px!important;line-height:1.5}
+.cinematic-notebook .notebook-file-details span{font-size:12px!important}
+.cinematic-notebook .notebook-file-details small{font-size:10px!important}
+.cinematic-notebook .notebook-open-file{padding:7px 12px!important;font-size:11px!important;align-self:flex-start}
+.cinematic-notebook .notebook-file-stars{margin:0!important;justify-content:center}
+.cinematic-notebook .notebook-file-stars button{font-size:20px!important}
+.cinematic-notebook .notebook-page{font-size:12px}
+.cinematic-notebook .notebook-page-title{font-size:14px!important}
+.cinematic-notebook .notebook-navigation button{font-size:12px!important;padding:8px 12px!important}
+@media(max-width:600px){.executive-office .cinematic-notebook{padding:14px 12px 16px!important}.cinematic-notebook .notebook-file-row{flex-basis:82vw;min-height:175px}.cinematic-notebook .notebook-file-ledger{padding:9px!important}}
