@@ -160,6 +160,7 @@ export default function Dashboard(){
      <button style={buttonStyle} disabled={busy||teams.length===0} onClick={()=>void sendTeams()}>حفظ طلب الفرق ({selected.length})</button>
     </section>
    </>:<>
+    {myAwards.length>0&&<section className="student-awards-journal" aria-label="نجوم إنجازاتك"><h2>دفتر إنجازاتي</h2><div className="student-awards-list">{myAwards.map(a=><div className="student-award-entry" key={a.award_type+"-"+a.award_id}><span className="notebook-single-star lit" aria-label="نجمة ذهبية">★</span><span>{a.award_type==="assignment"?"تكليف":a.award_type==="file"?"ملف": "مشاركة"} رقم {a.award_id}</span></div>)}</div></section>}
     <section style={panel}><h2>فرقي</h2>
      {members.length?members.map(m=><p key={m.team_id}>{teamName(m.team_id)} — {m.role==="leader"?"قائد الفريق":"عضو"}</p>):<p>مفيش فرق ظاهرة حاليًا.</p>}
     </section>
