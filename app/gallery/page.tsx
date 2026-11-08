@@ -5,7 +5,7 @@ type Item={id:number;title:string;description:string|null;storage_path:string;mi
 export default function Gallery(){
  const [items,setItems]=useState<Item[]>([]),[urls,setUrls]=useState<Record<number,string>>({});
  const [category,setCategory]=useState<"reference"|"behind_scenes">("reference"),[filter,setFilter]=useState<"all"|"reference"|"behind_scenes">("all");
- const [supervisor,setSupervisor]=useState(false),[canPost,setCanPost]=useState(false),[title,setTitle]=useState(""),[description,setDescription]=useState(""),[file,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState("جارٍ تحميل المعرض...");
+ const [supervisor,setSupervisor]=useState(false),[canPost,setCanPost]=useState(false),[title,setTitle]=useState(""),[description,setDescription]=useState(""),[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState("جارٍ تحميل المعرض...");
  async function load(){
   const db=getSupabase();if(!db){setMessage("الاتصال غير متاح.");return;}
   const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
