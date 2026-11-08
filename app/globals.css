@@ -227,3 +227,27 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-page-title{font-size:14px!important}
 .cinematic-notebook .notebook-navigation button{font-size:12px!important;padding:8px 12px!important}
 @media(max-width:600px){.executive-office .cinematic-notebook{padding:14px 12px 16px!important}.cinematic-notebook .notebook-file-row{flex-basis:82vw;min-height:175px}.cinematic-notebook .notebook-file-ledger{padding:9px!important}}
+
+
+/* 1960 Studio — minimalist editorial notebook */
+.executive-office .cinematic-notebook{position:relative!important;isolation:isolate;background:#f9f7f2!important;border:1px solid #d8cdbb!important;box-shadow:0 14px 40px #1c17231c!important;color:#3c3530!important;overflow:hidden;border-radius:18px!important;padding:24px 28px!important;animation:none!important}
+.cinematic-notebook:before,.cinematic-notebook:after{opacity:.15!important;animation:none!important}
+.cinematic-notebook .notebook-spine,.cinematic-notebook .notebook-corner-stamp,.cinematic-notebook .notebook-gold-rule{display:none!important}
+.cinematic-notebook .notebook-cover-title{display:flex;align-items:baseline;justify-content:space-between;gap:14px;text-align:start!important;margin:0 0 16px!important;border-bottom:1px solid #ded8cf;padding:0 0 13px!important}
+.cinematic-notebook .notebook-cover-title>span{display:none!important}
+.cinematic-notebook .notebook-cover-title h2{font-family:inherit!important;font-weight:750!important;letter-spacing:0!important;font-size:21px!important;color:#39332d!important;margin:0!important;text-shadow:none!important}
+.cinematic-notebook .notebook-cover-subtitle{font-size:11px!important;color:#958776!important;margin:0!important;white-space:nowrap}
+.cinematic-notebook .notebook-tabs{justify-content:flex-start;margin:0 0 14px!important}
+.cinematic-notebook .notebook-tabs button{background:transparent!important;border:1px solid #ded8cd!important;border-radius:9px!important;color:#7b7066!important;box-shadow:none!important;transform:none!important;padding:7px 15px!important;font-weight:600!important}
+.cinematic-notebook .notebook-tabs button.active{background:#38352f!important;border-color:#38352f!important;color:#fff!important}
+.cinematic-notebook .notebook-file-ledger{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:4px 2px 15px!important;gap:12px!important}
+.cinematic-notebook .notebook-file-row{background:#fff!important;border:1px solid #e5dfd6!important;border-radius:12px!important;box-shadow:none!important;min-height:164px!important;padding:16px!important;flex-basis:min(310px,80vw)!important;transition:border-color .2s,box-shadow .2s!important}
+.cinematic-notebook .notebook-file-row:hover{background:#fff!important;border-color:#c8b698!important;box-shadow:0 6px 20px #352b2010!important}
+.cinematic-notebook .notebook-file-details strong{font-size:12px!important;color:#3d3934!important}
+.cinematic-notebook .notebook-file-details span{color:#6c6258!important;font-size:11px!important}
+.cinematic-notebook .notebook-file-details small{color:#a09588!important;font-size:10px!important}
+.cinematic-notebook .notebook-open-file{background:#f2eee8!important;color:#51473c!important;border:1px solid #e0d8cb!important;border-radius:7px!important;box-shadow:none!important;font-size:11px!important}
+.cinematic-notebook .notebook-file-stars{justify-content:flex-start!important}
+.cinematic-notebook .notebook-file-stars button{font-size:19px!important}
+.cinematic-notebook .notebook-file-stars button:hover{transform:scale(1.08)}
+@media(max-width:600px){.executive-office .cinematic-notebook{padding:16px!important}.cinematic-notebook .notebook-cover-title{flex-wrap:wrap;gap:5px}.cinematic-notebook .notebook-cover-subtitle{font-size:10px!important}}
