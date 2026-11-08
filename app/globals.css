@@ -402,3 +402,10 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-assignment-card{min-height:100%!important}
 .executive-office .cinematic-notebook .notebook-assignment-people{min-height:0!important}
 }
+
+
+.notebook-publication-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:7px 9px;background:#fff8ea;border-top:1px solid #e7d7b7;color:#71542e}
+.notebook-publication-controls label{font-size:11px;display:flex;align-items:center;gap:5px}
+.notebook-publication-controls select{max-width:145px;border:1px solid #d2b986;border-radius:6px;padding:5px;background:white;color:#5e4732;font-size:11px}
+.notebook-publication-controls button{font-size:11px;border:1px solid #b18a48;border-radius:7px;background:#fff;color:#80591e;padding:6px 8px;cursor:pointer}
+.notebook-publication-controls button.is-published{background:#d6f1dc;border-color:#7db18a;color:#286a39}
