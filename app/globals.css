@@ -471,3 +471,11 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-cross-entry>small{color:#857767}
 .cinematic-notebook .notebook-cross-entry>a{margin-inline-start:auto;color:#79511f;font-weight:800}
 .cinematic-notebook .notebook-cross-entry>details{flex-basis:100%;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Supervisor notebook controls, mobile-first */
+.executive-office .cinematic-notebook .notebook-supervisor-controls{margin:12px 8px 16px;padding:12px;border:1px solid #c39a51;border-radius:13px;background:#fff8e9;color:#513924;max-width:100%;box-sizing:border-box}
+.executive-office .cinematic-notebook .notebook-supervisor-controls>summary{cursor:pointer;font-weight:900;font-size:14px;line-height:1.7}
+.executive-office .cinematic-notebook .notebook-control-guide{display:grid;gap:7px;margin-top:9px}
+.executive-office .cinematic-notebook .notebook-control-guide p{margin:0;font-size:12px;line-height:1.8;color:#513924}
+.executive-office .cinematic-notebook .notebook-manual-receipt{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:900;color:#69451c}
+.executive-office .cinematic-notebook .notebook-manual-receipt select{min-width:165px;max-width:100%;font-size:12px;font-weight:800;border:2px solid #bd9859;border-radius:9px;padding:8px;background:#fff8e9;color:#432d1e}
