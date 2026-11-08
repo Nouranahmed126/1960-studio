@@ -349,3 +349,17 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-assignment-track,.cinematic-notebook .notebook-file-ledger{flex:1 1 0!important;min-height:0!important;height:auto!important;overflow-x:auto!important;overflow-y:hidden!important;padding:3px 5px 8px!important}
 .cinematic-notebook .notebook-assignment-card,.cinematic-notebook .notebook-file-row{height:100%!important;max-height:100%!important;min-height:0!important;overflow-y:auto!important;box-sizing:border-box!important}
 }
+
+
+/* One award star only, gently breathing with metallic gold shimmer */
+@keyframes studio-star-breathe{0%,100%{transform:scale(.94);filter:drop-shadow(0 0 2px #b88b43)}50%{transform:scale(1.17);filter:drop-shadow(0 0 11px #f7c954)}}
+@keyframes studio-star-sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.notebook-single-star,.notebook-single-star-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:31px!important;line-height:1.15!important;min-width:40px!important;min-height:40px!important;transform-origin:center!important}
+.notebook-single-star.lit,.notebook-single-star-toggle.lit{background:linear-gradient(115deg,#8b5a14 0%,#f8cf61 22%,#fff6cb 40%,#d39a25 65%,#fff0a2 82%,#a46d1c 100%)!important;background-size:240% 100%!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;animation:studio-star-breathe 2.5s ease-in-out infinite,studio-star-sheen 3.2s ease-in-out infinite!important}
+.notebook-single-star-toggle{background:transparent!important;border:0!important;color:#aa9d88!important;cursor:pointer!important;padding:3px!important}
+.notebook-single-star-toggle:focus-visible{outline:2px solid #d2a74e!important;border-radius:8px!important}
+.student-awards-journal{border:1px solid #a98040;border-radius:18px;background:linear-gradient(125deg,#31251e,#211b1c);padding:17px 20px;margin:18px 0;box-shadow:0 6px 28px #0003}
+.student-awards-journal h2{font-size:18px;margin:0 0 10px;color:#f5ddb1}
+.student-awards-list{display:flex;flex-wrap:wrap;gap:10px}
+.student-award-entry{display:flex;align-items:center;gap:9px;border:1px solid #9b773b77;border-radius:12px;padding:6px 12px;color:#f6e7ce;font-size:13px}
+@media(prefers-reduced-motion:reduce){.notebook-single-star.lit,.notebook-single-star-toggle.lit{animation:none!important}}
