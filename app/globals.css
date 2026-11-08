@@ -328,3 +328,24 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-mini-classify label{font-size:10px;color:#78674e;display:flex;align-items:center;gap:4px}
 .cinematic-notebook .notebook-mini-classify select{max-width:125px;min-width:80px;font-size:10px;color:#6d5131;background:#fffdfa;border:1px solid #dacbb6;border-radius:6px;padding:4px 5px;cursor:pointer}
 @media(max-width:650px){.executive-office .delivery-register.cinematic-notebook{padding:15px 12px 18px!important}.cinematic-notebook .notebook-assignment-card{min-width:84vw!important;flex-basis:84vw!important}.cinematic-notebook .notebook-file-row{min-width:78vw!important;flex-basis:78vw!important}}
+
+
+/* FIX: landscape refers to the whole frame, not merely horizontally arranged cards. */
+@media(min-width:701px){
+.executive-office .delivery-register.cinematic-notebook{aspect-ratio:16 / 9!important;height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;overflow:hidden!important;padding:15px 24px 18px!important}
+.cinematic-notebook .notebook-cover-title{flex:0 0 auto!important;padding:0 8px 6px!important}
+.cinematic-notebook .notebook-cover-title h2{font-size:clamp(19px,2.2vw,27px)!important;margin:2px 0!important}
+.cinematic-notebook .notebook-cover-subtitle{margin:0!important}
+.cinematic-notebook .notebook-tabs{flex:0 0 auto!important;margin:4px 0 6px!important}
+.cinematic-notebook .notebook-assignment-track,.cinematic-notebook .notebook-file-ledger{flex:1 1 0!important;min-height:0!important;max-height:none!important;height:auto!important;align-items:stretch!important;overflow-x:auto!important;overflow-y:hidden!important;padding:5px 8px 12px!important}
+.cinematic-notebook .notebook-assignment-card,.cinematic-notebook .notebook-file-row{height:100%!important;max-height:100%!important;min-height:0!important;overflow-y:auto!important;box-sizing:border-box!important}
+}
+@media(max-width:700px){
+.executive-office .delivery-register.cinematic-notebook{aspect-ratio:16 / 10!important;height:auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;padding:10px!important;overflow:hidden!important}
+.cinematic-notebook .notebook-cover-title{padding:0 6px 4px!important}
+.cinematic-notebook .notebook-cover-title h2{font-size:18px!important;margin:2px 0!important}
+.cinematic-notebook .notebook-cover-subtitle{display:none!important}
+.cinematic-notebook .notebook-tabs{margin:3px 0!important}
+.cinematic-notebook .notebook-assignment-track,.cinematic-notebook .notebook-file-ledger{flex:1 1 0!important;min-height:0!important;height:auto!important;overflow-x:auto!important;overflow-y:hidden!important;padding:3px 5px 8px!important}
+.cinematic-notebook .notebook-assignment-card,.cinematic-notebook .notebook-file-row{height:100%!important;max-height:100%!important;min-height:0!important;overflow-y:auto!important;box-sizing:border-box!important}
+}
