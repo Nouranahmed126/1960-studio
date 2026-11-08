@@ -287,3 +287,13 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-empty{font-size:12px;color:#998a7b}
 @media(prefers-reduced-motion:reduce){.cinematic-notebook .notebook-rating button.lit{animation:none!important}.cinematic-notebook .notebook-assignment-track{scroll-behavior:auto}}
 @media(max-width:600px){.cinematic-notebook .notebook-assignment-card{flex-basis:88vw}.cinematic-notebook .notebook-assignment-head{padding:12px}.cinematic-notebook .notebook-assignment-people{padding:5px 12px}}
+
+
+.cinematic-notebook .notebook-file-status{display:block;font-size:10px;color:#887b69;font-weight:500;margin-top:4px}
+.cinematic-notebook .notebook-file-receipt{border:1px solid #c9c1b6;border-radius:8px;background:#f7f5f1;color:#84786a;font-size:11px;padding:8px 11px;cursor:pointer;align-self:flex-start}
+.cinematic-notebook .notebook-file-receipt.done{background:#e8f4ec;border-color:#a8d1b5;color:#247548;font-weight:700}
+.cinematic-notebook .notebook-reviewed-board{border-color:#c9b28d!important;background:#fffdfa!important}
+.cinematic-notebook .notebook-summary-rating{margin-top:7px}
+.cinematic-notebook .notebook-summary-rating span{font-size:20px;color:#d4cec4;line-height:1.2}
+.cinematic-notebook .notebook-summary-rating span.lit{background:linear-gradient(110deg,#a66b10,#f3c347,#fff2a3,#c98c16,#ffdf65);background-size:250% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gold-star-shine 2.4s ease-in-out infinite;filter:drop-shadow(0 0 3px #eebd4980)}
+@media(prefers-reduced-motion:reduce){.cinematic-notebook .notebook-summary-rating span.lit{animation:none}}
