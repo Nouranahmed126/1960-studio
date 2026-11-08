@@ -409,3 +409,13 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .notebook-publication-controls select{max-width:145px;border:1px solid #d2b986;border-radius:6px;padding:5px;background:white;color:#5e4732;font-size:11px}
 .notebook-publication-controls button{font-size:11px;border:1px solid #b18a48;border-radius:7px;background:#fff;color:#80591e;padding:6px 8px;cursor:pointer}
 .notebook-publication-controls button.is-published{background:#d6f1dc;border-color:#7db18a;color:#286a39}
+
+
+/* One reviewed student, with all their reviewed submissions nested underneath. */
+.cinematic-notebook .notebook-reviewed-person{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;padding:12px!important}
+.cinematic-notebook .notebook-reviewed-person>.notebook-student-name{width:100%!important}
+.cinematic-notebook .notebook-reviewed-submissions{display:flex;flex-direction:column;gap:7px;width:100%}
+.cinematic-notebook .notebook-reviewed-submission{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 10px;background:#f9f4e9;border:1px solid #e4d5b8;border-radius:9px;color:#5c4935;font-size:12px}
+.cinematic-notebook .notebook-reviewed-submission-title{flex:1;min-width:130px;overflow-wrap:anywhere}
+.cinematic-notebook .notebook-reviewed-submission small{font-size:10px;color:#927b5d}
+.cinematic-notebook .notebook-reviewed-submission .notebook-single-star{font-size:22px!important;min-width:24px!important;min-height:24px!important}
