@@ -251,3 +251,39 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-file-stars button{font-size:19px!important}
 .cinematic-notebook .notebook-file-stars button:hover{transform:scale(1.08)}
 @media(max-width:600px){.executive-office .cinematic-notebook{padding:16px!important}.cinematic-notebook .notebook-cover-title{flex-wrap:wrap;gap:5px}.cinematic-notebook .notebook-cover-subtitle{font-size:10px!important}}
+
+
+/* Horizontal assignment journal: independent receipt and animated rating */
+.cinematic-notebook .notebook-assignment-track{display:flex;gap:15px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-inline:contain;padding:5px 3px 18px;scrollbar-width:thin;scrollbar-color:#c6a16a #f1ece5}
+.cinematic-notebook .notebook-assignment-card{flex:0 0 min(480px,87vw);min-width:0;max-height:570px;display:flex;flex-direction:column;scroll-snap-align:center;background:#fff;border:1px solid #e5ddd2;border-radius:14px;box-shadow:0 4px 18px #4e3c2810;overflow:hidden;color:#3e3831}
+.cinematic-notebook .notebook-assignment-head{padding:16px 17px 13px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #eee7dc;background:#fdfbf7}
+.cinematic-notebook .notebook-assignment-head small{color:#9d8a71;font-size:10px}
+.cinematic-notebook .notebook-assignment-head h3{font-size:16px!important;line-height:1.5!important;margin:4px 0 0!important;color:#352f2b!important;font-weight:750!important}
+.cinematic-notebook .notebook-assignment-count{flex-shrink:0;color:#826a4a;background:#f4eee4;border-radius:20px;padding:6px 10px;font-size:10px}
+.cinematic-notebook .notebook-assignment-people{padding:5px 15px;overflow-y:auto;min-height:100px;scrollbar-width:thin}
+.cinematic-notebook .notebook-student-entry{padding:12px 0;border-bottom:1px solid #f0ebe4}
+.cinematic-notebook .notebook-student-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cinematic-notebook .notebook-student-name{display:flex;flex-direction:column;gap:4px;min-width:0}
+.cinematic-notebook .notebook-student-name strong{font-size:12px;color:#3e3832;overflow-wrap:anywhere}
+.cinematic-notebook .notebook-student-name small{font-size:10px;color:#a09280}
+.cinematic-notebook .notebook-received{display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;background:#f5f3ef;border:1px solid #e0d9ce;color:#93897c;padding:6px 9px;border-radius:8px;font-size:11px;transition:all .25s}
+.cinematic-notebook .notebook-received span{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1px solid #c6bfb5;color:transparent;font-size:13px}
+.cinematic-notebook .notebook-received.is-received{background:#edf7f0;color:#26764e;border-color:#b8dfc5}
+.cinematic-notebook .notebook-received.is-received span{background:#2f9762;color:#fff;border-color:#2f9762}
+.cinematic-notebook .notebook-student-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cinematic-notebook .notebook-rating{display:flex;align-items:center;gap:2px;direction:ltr}
+.cinematic-notebook .notebook-rating button{background:none!important;border:0!important;box-shadow:none!important;padding:1px 2px!important;font-size:24px!important;line-height:1.1!important;cursor:pointer;color:#d4cec4;transition:transform .2s,color .2s}
+.cinematic-notebook .notebook-rating button.lit{color:#e2ab25!important;background:linear-gradient(110deg,#a66b10 5%,#f3c347 28%,#fff2a3 47%,#c98c16 62%,#ffdf65 83%)!important;background-size:250% 100%!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent;animation:gold-star-shine 2.4s ease-in-out infinite;filter:drop-shadow(0 0 3px #eebd4980)}
+.cinematic-notebook .notebook-rating button:hover{transform:scale(1.18)}
+.cinematic-notebook .notebook-rating .notebook-rating-zero{font-size:10px!important;color:#938679!important;-webkit-text-fill-color:initial!important;animation:none!important;filter:none!important;margin-left:6px}
+@keyframes gold-star-shine{0%,100%{background-position:100% 50%;filter:drop-shadow(0 0 2px #dca83566)}50%{background-position:0% 50%;filter:drop-shadow(0 0 7px #f5d16e)}}
+.cinematic-notebook .notebook-student-files{font-size:10px;color:#7b6752}
+.cinematic-notebook .notebook-student-files summary{cursor:pointer}
+.cinematic-notebook .notebook-student-files button{display:block;max-width:200px;overflow-wrap:anywhere;text-align:start;border:0;background:transparent;color:#795c38;padding:5px;cursor:pointer}
+.cinematic-notebook .notebook-assignment-actions{display:flex;gap:6px;align-items:center;padding:12px;border-top:1px solid #ede6dc;background:#fcfaf7;margin-top:auto}
+.cinematic-notebook .notebook-assignment-actions input{flex:1;min-width:0;border:1px solid #e3dace;border-radius:7px;padding:8px;font-size:11px;background:#fff;color:#403831}
+.cinematic-notebook .notebook-assignment-actions button,.cinematic-notebook .notebook-archive-min button{background:#f1ece5;border:1px solid #ddd3c4;border-radius:7px;padding:7px 9px;color:#6c5944;font-size:10px;cursor:pointer}
+.cinematic-notebook .notebook-archive-min{margin-top:10px;color:#8a7967;font-size:11px}
+.cinematic-notebook .notebook-empty{font-size:12px;color:#998a7b}
+@media(prefers-reduced-motion:reduce){.cinematic-notebook .notebook-rating button.lit{animation:none!important}.cinematic-notebook .notebook-assignment-track{scroll-behavior:auto}}
+@media(max-width:600px){.cinematic-notebook .notebook-assignment-card{flex-basis:88vw}.cinematic-notebook .notebook-assignment-head{padding:12px}.cinematic-notebook .notebook-assignment-people{padding:5px 12px}}
