@@ -438,3 +438,12 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .student-discussion-symbol{font-size:23px;color:#f6c95d}
 .student-discussion-entry details{font-size:12px;flex-basis:100%}
 .student-discussion-entry summary{cursor:pointer;color:#f5d796}
+
+
+/* Strong visual distinction for supervisor's one-star toggle */
+.executive-office .cinematic-notebook .notebook-single-star-toggle{display:inline-flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;min-width:66px!important;min-height:64px!important;border:1px solid #c9c2b6!important;border-radius:12px!important;background:#eeeae3!important;color:#a5a09a!important;-webkit-text-fill-color:#a5a09a!important;box-shadow:inset 0 1px 3px #665d4b16!important;opacity:1!important;font-size:29px!important;animation:none!important;filter:none!important;transition:background .2s,border-color .2s,box-shadow .2s!important}
+.executive-office .cinematic-notebook .notebook-single-star-toggle.lit{background:linear-gradient(145deg,#fff5c8,#f3d47d,#d9a83d)!important;border:2px solid #bd8a24!important;color:#b37a14!important;-webkit-text-fill-color:#b37a14!important;box-shadow:0 0 15px #e8bd53aa,inset 0 1px 2px #fff9e9!important;animation:studio-star-breathe 2.5s ease-in-out infinite!important}
+.executive-office .cinematic-notebook .notebook-single-star-toggle .star-state-label{font-size:9px!important;line-height:1.1!important;font-weight:800!important;white-space:nowrap!important;letter-spacing:0!important;color:#756f66!important;-webkit-text-fill-color:#756f66!important}
+.executive-office .cinematic-notebook .notebook-single-star-toggle.lit .star-state-label{color:#68420c!important;-webkit-text-fill-color:#68420c!important}
+.executive-office .cinematic-notebook .notebook-single-star-toggle:focus-visible{outline:3px solid #e1a52e!important;outline-offset:3px!important}
+@media(prefers-reduced-motion:reduce){.executive-office .cinematic-notebook .notebook-single-star-toggle.lit{animation:none!important}}
