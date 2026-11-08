@@ -479,3 +479,60 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-control-guide p{margin:0;font-size:12px;line-height:1.8;color:#513924}
 .executive-office .cinematic-notebook .notebook-manual-receipt{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:900;color:#69451c}
 .executive-office .cinematic-notebook .notebook-manual-receipt select{min-width:165px;max-width:100%;font-size:12px;font-weight:800;border:2px solid #bd9859;border-radius:9px;padding:8px;background:#fff8e9;color:#432d1e}
+
+/* Accessibility repair: notebook is a readable document, never a clipped cinematic viewport */
+.executive-office .delivery-register.cinematic-notebook{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:auto!important;overflow:visible!important;
+  display:block!important;padding-bottom:24px!important;
+}
+.executive-office .cinematic-notebook .notebook-assignment-track,
+.executive-office .cinematic-notebook .notebook-file-ledger{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  flex:initial!important;align-items:stretch!important;overflow-y:visible!important;
+  padding:12px 8px 22px!important;
+}
+.executive-office .cinematic-notebook .notebook-assignment-card,
+.executive-office .cinematic-notebook .notebook-file-row{
+  height:auto!important;min-height:340px!important;max-height:none!important;
+  overflow:visible!important;flex-shrink:0!important;
+}
+.executive-office .cinematic-notebook .notebook-assignment-people{
+  height:auto!important;min-height:180px!important;max-height:none!important;
+  overflow:visible!important;flex:initial!important;
+}
+.executive-office .cinematic-notebook .notebook-student-entry{
+  min-height:0!important;height:auto!important;overflow:visible!important;
+}
+.executive-office .cinematic-notebook .notebook-student-name strong{
+  font-size:15px!important;line-height:1.7!important;white-space:normal!important;
+  overflow:visible!important;text-overflow:clip!important;
+}
+.executive-office .cinematic-notebook .notebook-supervisor-controls{margin-bottom:14px!important}
+@media(max-width:700px){
+  .executive-office .delivery-register.cinematic-notebook{
+    width:100%!important;max-width:100%!important;
+    padding:15px 9px 24px!important;border-radius:17px!important;
+  }
+  .executive-office .cinematic-notebook .notebook-assignment-track,
+  .executive-office .cinematic-notebook .notebook-file-ledger{
+    display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+    overflow:visible!important;width:100%!important;gap:16px!important;
+  }
+  .executive-office .cinematic-notebook .notebook-assignment-card,
+  .executive-office .cinematic-notebook .notebook-file-row{
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    flex:0 0 auto!important;height:auto!important;min-height:0!important;
+    max-height:none!important;overflow:visible!important;
+  }
+  .executive-office .cinematic-notebook .notebook-assignment-people{
+    padding:12px!important;min-height:0!important;
+  }
+  .executive-office .cinematic-notebook .notebook-student-top{
+    flex-wrap:wrap!important;gap:9px!important;
+  }
+  .executive-office .cinematic-notebook .notebook-assignment-head{
+    flex-wrap:wrap!important;gap:8px!important;
+  }
+  .executive-office .cinematic-notebook .notebook-control-guide p{font-size:13px!important}
+}
