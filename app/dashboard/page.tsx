@@ -5,12 +5,14 @@ type Profile={id:string;full_name:string;approval_status:string;app_role:string}
 type Team={id:number;name:string};
 type Star={id:string;full_name:string};
 type StarDetail={user_id:string;film_role:string;photo_path:string|null};
+type Delivery={user_id:string;kind:string;title:string;created_at:string};
 type Request={user_id:string;team_id:number;status:string};
 type Membership={team_id:number;role:string};
 type Task={id:number;title:string;description:string|null;due_at:string|null};
 export default function Dashboard(){
  const [profile,setProfile]=useState<Profile|null>(null);
  const [teams,setTeams]=useState<Team[]>([]);
+ const [deliveries,setDeliveries]=useState<Delivery[]>([]);
  const [stars,setStars]=useState<Star[]>([]);
  const [starDetails,setStarDetails]=useState<StarDetail[]>([]);
  const [requests,setRequests]=useState<Request[]>([]);
@@ -34,6 +36,18 @@ export default function Dashboard(){
    const [crew,crewInfo]=await Promise.all([db.rpc("list_approved_crew"),db.from("crew_profiles").select("user_id,film_role,photo_path")]);
    if(!crew.error)setStars((crew.data??[]) as Star[]);
    if(!crewInfo.error)setStarDetails((crewInfo.data??[]) as StarDetail[]);
+   const [att,cont,sub,work]=await Promise.all([
+    db.from("attachments").select("uploaded_by,file_name,created_at").order("created_at",{ascending:false}).limit(500),
+    db.from("contributions").select("user_id,title,created_at").order("created_at",{ascending:false}).limit(500),
+    db.from("submissions").select("submitted_by,assignment_id,created_at").order("created_at",{ascending:false}).limit(500),
+    db.from("work_submissions").select("student_id,title,created_at").order("created_at",{ascending:false}).limit(500)
+   ]);
+   const all:Delivery[]=[];
+   for(const x of att.data??[])if(x.uploaded_by)all.push({user_id:x.uploaded_by,kind:"ملف مرفوع",title:x.file_name,created_at:x.created_at});
+   for(const x of cont.data??[])if(x.user_id)all.push({user_id:x.user_id,kind:"مساهمة",title:x.title,created_at:x.created_at});
+   for(const x of sub.data??[])if(x.submitted_by)all.push({user_id:x.submitted_by,kind:"تسليم تكليف",title:"تكليف رقم "+x.assignment_id,created_at:x.created_at});
+   for(const x of work.data??[])if(x.student_id)all.push({user_id:x.student_id,kind:"تسليم عمل",title:x.title,created_at:x.created_at});
+   setDeliveries(all.sort((a,b)=>new Date(b.created_at).getTime()-new Date(a.created_at).getTime()));
    const [people,joins]=await Promise.all([
     db.from("profiles").select("id,full_name,approval_status,app_role").eq("app_role","student").order("created_at",{ascending:false}),
     db.from("team_join_requests").select("user_id,team_id,status")
@@ -90,6 +104,7 @@ export default function Dashboard(){
    <h1>أهلًا، {profile.full_name}</h1><nav style={{display:"flex",gap:12,flexWrap:"wrap",margin:"18px 0"}}><a href="/sectors" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>🎬 قطاعات فرق العمل · الشات والمهام والملفات</a><a href="/chat" style={{color:"#f5c2d5",padding:12,border:"1px solid #795a70",borderRadius:10}}>💬 شات فريق الفيلم</a><a href="/requests" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>✉️ {profile.app_role==="supervisor"?"طلبات ورسائل الطلاب":"رسالة إلى نوران · طلب محاضرة"}</a></nav><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
    {profile.app_role==="supervisor"?<>
     <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><section style={{...panel,borderColor:"#886277"}}><h2>🎞 متابعة طاقم الفيلم</h2><p>الأعضاء المعتمدون: <strong>{students.filter(s=>s.approval_status==="approved").length}</strong> من العدد المستهدف 18</p><p>طلبات بانتظار الاعتماد: <strong>{visiblePending.length}</strong></p>{students.filter(s=>s.approval_status==="approved").length>=18&&<p>تنبيه: العدد المستهدف اكتمل أو تم تجاوزه؛ راجعي الأسماء قبل الموافقة على حسابات إضافية.</p>}<a href="/crew">عرض بطاقات الطاقم والأدوار</a></section><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>عرض ملفات فرق العمل</a></p>
+    <section className="delivery-register" aria-label="كشف التسليمات"><div className="delivery-register-heading"><div><span>1960 · SUBMISSION REGISTER</span><h2>📋 كشف التسليمات بالأسماء</h2><p>حصر تلقائي لكل الملفات والمساهمات والتكليفات المسجلة في الاستوديو، بدون درجات أو تقييم.</p></div><button type="button" onClick={()=>{const rows=[["الاسم","نوع التسليم","العمل","التاريخ"],...deliveries.map(d=>[students.find(s=>s.id===d.user_id)?.full_name||"عضو غير ظاهر",d.kind,d.title,new Date(d.created_at).toLocaleString("ar-EG")])];const csv="\\uFEFF"+rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\\r\\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="1960-submissions.csv";a.click();URL.revokeObjectURL(url);}}>تنزيل الكشف CSV</button></div><p className="delivery-register-summary">عدد السجلات: <strong>{deliveries.length}</strong> · أسماء المشاركين: <strong>{new Set(deliveries.map(d=>d.user_id)).size}</strong></p><div className="delivery-register-list">{deliveries.length?deliveries.map((d,i)=><article key={d.kind+"-"+d.user_id+"-"+d.created_at+"-"+i}><strong>{students.find(s=>s.id===d.user_id)?.full_name||"عضو غير ظاهر"}</strong><span>{d.kind} · {d.title}</span><time>{new Date(d.created_at).toLocaleString("ar-EG")}</time></article>):<p>مفيش تسليمات مسجلة في الكشف حتى الآن، أو البيانات غير متاحة.</p>}</div><small>الكشف يعرض سجلات التسليم التي تسمح بها صلاحيات حسابك؛ رفع الملف لا يعني اعتماده أو تقييمه.</small></section>
     <div style={{display:"grid",gap:14,marginTop:26}}>
      {visiblePending.map(student=>{
       const own=requests.filter(r=>r.user_id===student.id&&r.status==="pending");
