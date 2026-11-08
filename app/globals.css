@@ -303,3 +303,16 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .cinematic-notebook .notebook-written-content{font-size:11px;color:#695c4e;border:1px solid #e9e1d6;border-radius:8px;padding:8px 10px;background:#fdfbf8;max-height:155px;overflow-y:auto}
 .cinematic-notebook .notebook-written-content summary{font-weight:700;cursor:pointer;color:#715637}
 .cinematic-notebook .notebook-written-content p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;margin:8px 0 0}
+
+
+/* Cinematic landscape journal: restrained animated gold frame */
+.executive-office .cinematic-notebook{position:relative!important;overflow:hidden!important;isolation:isolate;border:2px solid transparent!important;border-radius:20px!important;background:linear-gradient(#faf8f3,#faf8f3) padding-box,linear-gradient(115deg,#9d6e27,#f7e6ad,#bc8c36,#fff4c9,#8e6225) border-box!important;background-size:100% 100%,300% 300%!important;animation:notebook-gold-frame 9s linear infinite!important;box-shadow:0 12px 40px #2e21141a,0 0 20px #e6b85b25!important}
+@keyframes notebook-gold-frame{0%{background-position:0 0,0% 50%}50%{background-position:0 0,100% 50%}100%{background-position:0 0,0% 50%}}
+.cinematic-notebook .notebook-assignment-track,.cinematic-notebook .notebook-file-ledger{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-behavior:smooth!important;scroll-snap-type:x mandatory!important;overscroll-behavior-inline:contain;touch-action:pan-x pan-y;direction:rtl}
+.cinematic-notebook .notebook-assignment-card,.cinematic-notebook .notebook-file-row{scroll-snap-align:start!important;scroll-snap-stop:normal;flex-shrink:0!important}
+.cinematic-notebook .notebook-assignment-card{flex-basis:min(490px,88vw)!important;max-width:490px!important}
+.cinematic-notebook .notebook-file-row{flex-basis:min(325px,82vw)!important}
+.cinematic-notebook .notebook-assignment-track::-webkit-scrollbar,.cinematic-notebook .notebook-file-ledger::-webkit-scrollbar{height:7px}
+.cinematic-notebook .notebook-assignment-track::-webkit-scrollbar-thumb,.cinematic-notebook .notebook-file-ledger::-webkit-scrollbar-thumb{background:#c8a36a;border-radius:10px}
+.cinematic-notebook .notebook-assignment-track::-webkit-scrollbar-track,.cinematic-notebook .notebook-file-ledger::-webkit-scrollbar-track{background:#eee6da;border-radius:10px}
+@media(prefers-reduced-motion:reduce){.executive-office .cinematic-notebook{animation:none!important}.cinematic-notebook .notebook-assignment-track,.cinematic-notebook .notebook-file-ledger{scroll-behavior:auto!important}}
