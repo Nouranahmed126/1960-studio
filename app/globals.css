@@ -363,3 +363,23 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .student-awards-list{display:flex;flex-wrap:wrap;gap:10px}
 .student-award-entry{display:flex;align-items:center;gap:9px;border:1px solid #9b773b77;border-radius:12px;padding:6px 12px;color:#f6e7ce;font-size:13px}
 @media(prefers-reduced-motion:reduce){.notebook-single-star.lit,.notebook-single-star-toggle.lit{animation:none!important}}
+
+
+.notebook-delivery-select select{font-size:11px;background:#fffaf0;color:#75552c;border:1px solid #d9bc86;border-radius:7px;padding:5px;margin:4px 0}
+.notebook-missing-panel{margin:8px 12px;padding:9px 11px;background:#fff8f5;border:1px solid #e6c7bd;border-radius:9px;color:#923c2e;font-size:12px}
+.notebook-missing-panel summary{cursor:pointer;font-weight:750}
+.notebook-missing-panel div{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.notebook-missing-panel span{padding:4px 7px;border-radius:7px;background:#fff0e9}
+.student-public-scoreboard{padding:18px;margin:20px 0;border:1px solid #9b7845;border-radius:17px;background:linear-gradient(130deg,#28201e,#382a27)}
+.student-public-scoreboard h2{font-size:20px;color:#f6d9a3;margin:0 0 8px}
+.student-public-scoreboard p{font-size:12px;color:#e1d0bc}
+.scoreboard-assignment{margin-top:15px;border-top:1px solid #8b7058;padding-top:10px}
+.scoreboard-assignment h3{font-size:15px;color:#f5e6cf}
+.scoreboard-assignment h3 small{font-size:11px;color:#c9b59c}
+.scoreboard-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.scoreboard-person{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid #856e56;border-radius:10px;background:#ffffff0a;font-size:12px}
+.scoreboard-person strong{flex:1;min-width:95px;color:#fff0d9}
+.scoreboard-person>span:not(.notebook-single-star){color:#e2c9a8}
+.scoreboard-person.is-warning{border-color:#df5353;background:#742a2a55}
+.scoreboard-person.is-warning>span:not(.notebook-single-star){color:#ff8d8d;font-weight:800}
+.scoreboard-person .notebook-single-star{font-size:25px!important;min-width:28px!important;min-height:28px!important}
