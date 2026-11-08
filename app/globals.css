@@ -447,3 +447,5 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-single-star-toggle.lit .star-state-label{color:#68420c!important;-webkit-text-fill-color:#68420c!important}
 .executive-office .cinematic-notebook .notebook-single-star-toggle:focus-visible{outline:3px solid #e1a52e!important;outline-offset:3px!important}
 @media(prefers-reduced-motion:reduce){.executive-office .cinematic-notebook .notebook-single-star-toggle.lit{animation:none!important}}
+
+.notebook-self-initiative{display:inline-block;margin-inline-start:7px;padding:3px 7px;border:1px solid #91b6a0;border-radius:16px;background:#e7f5e9;color:#326b48;font-size:10px;font-weight:800;white-space:nowrap}
