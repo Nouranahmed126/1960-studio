@@ -689,3 +689,23 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
  .executive-office .cinematic-notebook .notebook-assignment-head{padding:7px 9px!important}
  .executive-office .cinematic-notebook .notebook-assignment-head h3{font-size:15px!important}
 }
+
+/* Fix dark delivery-status dropdown text in notebook */
+.executive-office .cinematic-notebook .notebook-roster-table select,
+.executive-office .cinematic-notebook .notebook-roster-table select:focus,
+.executive-office .cinematic-notebook .notebook-roster-table select:active{
+ color:#fff9ee!important;
+ -webkit-text-fill-color:#fff9ee!important;
+ background-color:#2c1c2d!important;
+ font-weight:700!important;
+ opacity:1!important;
+ text-shadow:none!important;
+ max-width:104px!important;
+ min-width:90px!important;
+ padding-inline:5px!important;
+}
+.executive-office .cinematic-notebook .notebook-roster-table select option{
+ color:#231825!important;
+ background:#fff9ee!important;
+ -webkit-text-fill-color:#231825!important;
+}
