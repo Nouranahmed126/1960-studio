@@ -576,3 +576,33 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
     max-height:none!important;overflow:visible!important;
   }
 }
+
+/* Practical supervisor notebook redesign */
+.executive-office .cinematic-notebook .notebook-cover-title{padding:12px 14px!important;margin:0!important}
+.executive-office .cinematic-notebook .notebook-cover-title h2{font-size:clamp(22px,4vw,32px)!important;margin:3px 0!important}
+.executive-office .cinematic-notebook .notebook-cover-subtitle{font-size:12px!important;margin:3px 0!important}
+.executive-office .cinematic-notebook .notebook-quickbar{margin:12px 10px;padding:14px;background:#fffaf1;border:1px solid #d9c49d;border-radius:14px;display:grid;gap:7px;color:#342719}
+.executive-office .cinematic-notebook .notebook-quickbar label{font-size:14px;font-weight:850}
+.executive-office .cinematic-notebook .notebook-quickbar input{width:100%;box-sizing:border-box;min-height:44px;border-radius:9px;border:1px solid #c8af86;background:#fff;color:#241d18;padding:10px 13px;font:inherit;font-size:15px}
+.executive-office .cinematic-notebook .notebook-quickbar small{font-size:12px;line-height:1.6;color:#6e5b45}
+.executive-office .cinematic-notebook .notebook-tabs{display:flex!important;gap:8px!important;margin:10px!important}
+.executive-office .cinematic-notebook .notebook-tabs button{flex:1!important;min-height:44px!important;font-size:14px!important;font-weight:850!important;border-radius:10px!important}
+.executive-office .cinematic-notebook .notebook-assignment-track{scroll-snap-type:x mandatory!important}
+.executive-office .cinematic-notebook .notebook-assignment-card{border-radius:15px!important;background:#fffdf9!important;border:1px solid #dbc8a7!important;box-shadow:0 3px 12px #30211512!important}
+.executive-office .cinematic-notebook .notebook-assignment-head{padding:14px!important;background:#f6eddc!important;border-bottom:1px solid #e1d1b5!important}
+.executive-office .cinematic-notebook .notebook-assignment-head h3{font-size:18px!important;line-height:1.5!important;color:#32251a!important}
+.executive-office .cinematic-notebook .notebook-assignment-count{font-size:12px!important;white-space:normal!important}
+.executive-office .cinematic-notebook .notebook-student-entry{background:#fff!important;border:1px solid #e7ddd0!important;border-radius:12px!important;padding:12px!important;margin:8px 0!important}
+.executive-office .cinematic-notebook .notebook-student-name strong{font-size:16px!important;line-height:1.65!important;color:#30251d!important}
+.executive-office .cinematic-notebook .notebook-student-name small{font-size:11px!important;line-height:1.65!important}
+.executive-office .cinematic-notebook .notebook-received{min-height:43px!important;min-width:95px!important;border-radius:9px!important;font-size:13px!important}
+.executive-office .cinematic-notebook .notebook-delivery-select{margin-top:8px!important}
+.executive-office .cinematic-notebook .notebook-delivery-select select{min-height:39px!important;font-size:13px!important}
+.executive-office .cinematic-notebook .notebook-single-star-toggle{min-width:50px!important;min-height:45px!important}
+.executive-office .cinematic-notebook .notebook-supervisor-controls{margin:8px 10px!important}
+@media(max-width:700px){
+.executive-office .cinematic-notebook .notebook-assignment-card{flex:0 0 94%!important;width:94%!important;max-width:94%!important}
+.executive-office .cinematic-notebook .notebook-assignment-people{padding:8px!important}
+.executive-office .cinematic-notebook .notebook-student-entry{padding:10px!important}
+.executive-office .cinematic-notebook .notebook-quickbar{margin:9px 5px!important}
+}
