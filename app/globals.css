@@ -612,3 +612,21 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .notebook-save-toast.is-error{background:#552626;border-color:#ffb1a4;color:#fff7f3}
 .notebook-save-toast button{flex-shrink:0;min-width:36px;min-height:36px;border:1px solid currentColor;border-radius:9px;background:transparent;color:inherit;font-size:18px;cursor:pointer}
 @media(min-width:800px){.notebook-save-toast{bottom:26px}}
+
+/* Notebook roster: one row per student, actions in columns */
+.executive-office .cinematic-notebook .notebook-table-scroll{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;padding:8px;box-sizing:border-box}
+.executive-office .cinematic-notebook .notebook-roster-table{width:100%;min-width:490px;border-collapse:separate;border-spacing:0;text-align:right;color:#34291e;font-size:13px}
+.executive-office .cinematic-notebook .notebook-roster-table th{position:sticky;top:0;background:#e9dac1;color:#35271b;padding:12px 8px;font-size:12px;white-space:nowrap;border-bottom:2px solid #cbb28c}
+.executive-office .cinematic-notebook .notebook-roster-table td{padding:10px 7px;vertical-align:middle;border-bottom:1px solid #eadfce;background:#fffdfa}
+.executive-office .cinematic-notebook .notebook-roster-table tr:nth-child(even) td{background:#f8f2e8}
+.executive-office .cinematic-notebook .notebook-roster-name{min-width:130px;max-width:220px}
+.executive-office .cinematic-notebook .notebook-roster-name strong{display:block;font-size:14px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.executive-office .cinematic-notebook .notebook-roster-name small{display:block;font-size:11px;color:#7b6a58}
+.executive-office .cinematic-notebook .notebook-roster-table .notebook-received{min-width:82px!important;min-height:38px!important;padding:7px!important;font-size:12px!important}
+.executive-office .cinematic-notebook .notebook-roster-table select{max-width:120px;min-height:38px;border:1px solid #c8b89e;border-radius:8px;background:white;color:#30271e;padding:5px;font-size:12px}
+.executive-office .cinematic-notebook .notebook-roster-table .notebook-single-star-toggle{min-width:38px!important;min-height:38px!important;font-size:26px!important}
+.executive-office .cinematic-notebook .notebook-roster-details{min-width:70px}
+.executive-office .cinematic-notebook .notebook-roster-details summary{cursor:pointer;color:#72512c;font-weight:800;white-space:nowrap}
+.executive-office .cinematic-notebook .notebook-roster-details button{display:block;margin:6px 0;max-width:210px;white-space:normal;overflow-wrap:anywhere}
+.executive-office .cinematic-notebook .notebook-roster-details p{max-width:220px;white-space:pre-wrap}
+@media(max-width:700px){.executive-office .cinematic-notebook .notebook-assignment-card{flex:0 0 96%!important;width:96%!important;max-width:96%!important}.executive-office .cinematic-notebook .notebook-table-scroll{padding:5px}.executive-office .cinematic-notebook .notebook-roster-table{font-size:12px}}
