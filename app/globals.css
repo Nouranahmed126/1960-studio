@@ -649,3 +649,16 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .student-public-scoreboard .notebook-roster-table tr:nth-child(even) td{background:#f2e8d9}
 .student-public-scoreboard .notebook-roster-name strong{font-size:11px;line-height:1.5;overflow-wrap:anywhere}
 .student-public-scoreboard .notebook-single-star{font-size:21px}
+
+/* Contrast fix: student names must stay legible on light notebook rows */
+.executive-office .cinematic-notebook .notebook-roster-table td.notebook-roster-name,
+.executive-office .cinematic-notebook .notebook-roster-table td.notebook-roster-name strong,
+.executive-office .cinematic-notebook .notebook-roster-table td.notebook-roster-name small{
+ color:#34251a!important;
+ -webkit-text-fill-color:#34251a!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+.executive-office .cinematic-notebook .notebook-roster-table td.notebook-roster-name strong{font-weight:800!important;font-size:12px!important;letter-spacing:0!important}
+.executive-office .cinematic-notebook .notebook-roster-table td.notebook-roster-name small{color:#6b5644!important;-webkit-text-fill-color:#6b5644!important;font-weight:600!important}
+.executive-office .cinematic-notebook .notebook-roster-table td{color:#34251a!important;-webkit-text-fill-color:#34251a!important}
