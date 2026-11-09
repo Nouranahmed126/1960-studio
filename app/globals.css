@@ -606,3 +606,9 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-student-entry{padding:10px!important}
 .executive-office .cinematic-notebook .notebook-quickbar{margin:9px 5px!important}
 }
+
+/* Always-visible notebook save feedback */
+.notebook-save-toast{position:fixed;z-index:99999;bottom:calc(86px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 30px));box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;direction:rtl;padding:14px 16px;border-radius:14px;background:#173b2c;color:#f4fff6;border:2px solid #85d7a5;box-shadow:0 8px 32px #0008;font-size:15px;font-weight:750;line-height:1.6}
+.notebook-save-toast.is-error{background:#552626;border-color:#ffb1a4;color:#fff7f3}
+.notebook-save-toast button{flex-shrink:0;min-width:36px;min-height:36px;border:1px solid currentColor;border-radius:9px;background:transparent;color:inherit;font-size:18px;cursor:pointer}
+@media(min-width:800px){.notebook-save-toast{bottom:26px}}
