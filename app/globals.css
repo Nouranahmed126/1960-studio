@@ -536,3 +536,43 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
   }
   .executive-office .cinematic-notebook .notebook-control-guide p{font-size:13px!important}
 }
+
+/* Notebook: restore horizontal assignment carousel without clipping names */
+.executive-office .cinematic-notebook .notebook-assignment-track,
+.executive-office .cinematic-notebook .notebook-file-ledger{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  align-items:stretch!important;gap:16px!important;
+  scroll-snap-type:x proximity!important;scroll-padding-inline:10px!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding:12px 8px 24px!important;width:100%!important;max-width:100%!important;
+}
+.executive-office .cinematic-notebook .notebook-assignment-card{
+  flex:0 0 min(540px,88%)!important;width:min(540px,88%)!important;
+  min-width:0!important;max-width:none!important;scroll-snap-align:start!important;
+  height:auto!important;min-height:340px!important;max-height:none!important;
+  overflow:visible!important;
+}
+.executive-office .cinematic-notebook .notebook-file-row{
+  flex:0 0 min(540px,88%)!important;width:min(540px,88%)!important;
+  min-width:0!important;max-width:none!important;scroll-snap-align:start!important;
+  height:auto!important;max-height:none!important;overflow:visible!important;
+}
+.executive-office .cinematic-notebook .notebook-assignment-people{
+  height:auto!important;max-height:none!important;min-height:160px!important;
+  overflow:visible!important;
+}
+@media(max-width:700px){
+  .executive-office .cinematic-notebook .notebook-assignment-track,
+  .executive-office .cinematic-notebook .notebook-file-ledger{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    gap:12px!important;padding:10px 5px 20px!important;
+  }
+  .executive-office .cinematic-notebook .notebook-assignment-card,
+  .executive-office .cinematic-notebook .notebook-file-row{
+    flex:0 0 91%!important;width:91%!important;min-width:0!important;
+    max-width:91%!important;min-height:0!important;height:auto!important;
+    max-height:none!important;overflow:visible!important;
+  }
+}
