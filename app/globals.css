@@ -630,3 +630,22 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-roster-details button{display:block;margin:6px 0;max-width:210px;white-space:normal;overflow-wrap:anywhere}
 .executive-office .cinematic-notebook .notebook-roster-details p{max-width:220px;white-space:pre-wrap}
 @media(max-width:700px){.executive-office .cinematic-notebook .notebook-assignment-card{flex:0 0 96%!important;width:96%!important;max-width:96%!important}.executive-office .cinematic-notebook .notebook-table-scroll{padding:5px}.executive-office .cinematic-notebook .notebook-roster-table{font-size:12px}}
+
+/* Compact scrollable notebook tables for supervisor and published student view */
+.executive-office .cinematic-notebook .notebook-table-scroll{max-height:520px!important;overflow:auto!important;overscroll-behavior:contain!important;scrollbar-width:thin!important}
+.executive-office .cinematic-notebook .notebook-roster-table{font-size:11px!important;min-width:440px!important}
+.executive-office .cinematic-notebook .notebook-roster-table th{font-size:11px!important;padding:7px 6px!important}
+.executive-office .cinematic-notebook .notebook-roster-table td{font-size:11px!important;padding:6px 5px!important}
+.executive-office .cinematic-notebook .notebook-roster-name{min-width:105px!important;max-width:155px!important}
+.executive-office .cinematic-notebook .notebook-roster-name strong{font-size:11px!important;line-height:1.5!important}
+.executive-office .cinematic-notebook .notebook-roster-name small{font-size:10px!important}
+.executive-office .cinematic-notebook .notebook-roster-table .notebook-received{min-width:70px!important;min-height:31px!important;font-size:11px!important;padding:4px!important}
+.executive-office .cinematic-notebook .notebook-roster-table select{max-width:95px!important;min-height:31px!important;font-size:11px!important}
+.executive-office .cinematic-notebook .notebook-roster-table .notebook-single-star-toggle{min-width:32px!important;min-height:32px!important;font-size:22px!important}
+.student-public-scoreboard .notebook-public-table-scroll{max-height:480px;overflow:auto;scrollbar-width:thin;border:1px solid #635569;border-radius:12px;margin-top:10px}
+.student-public-scoreboard .notebook-roster-table{width:100%;min-width:370px;border-collapse:collapse;text-align:right;font-size:11px;color:#30251b}
+.student-public-scoreboard .notebook-roster-table th{position:sticky;top:0;z-index:1;background:#e7d3b5;padding:9px 7px;font-size:11px}
+.student-public-scoreboard .notebook-roster-table td{padding:8px 7px;border-bottom:1px solid #ded2c3;background:#fffaf1;font-size:11px}
+.student-public-scoreboard .notebook-roster-table tr:nth-child(even) td{background:#f2e8d9}
+.student-public-scoreboard .notebook-roster-name strong{font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.student-public-scoreboard .notebook-single-star{font-size:21px}
