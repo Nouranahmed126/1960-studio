@@ -729,3 +729,11 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .film-command-hint{text-align:center;margin:7px 0 0}
 #film-followup-notebook{scroll-margin-top:18px}
 @media(max-width:700px){.film-command-room{margin:14px 0 20px;padding:13px 6px;border-radius:14px}.film-command-heading{align-items:flex-start;padding:0 7px 10px}.film-command-heading>a{font-size:10px;padding:7px}.film-command-heading h2{font-size:21px}.film-command-heading p{font-size:11px}.film-command-card{flex-basis:78%;min-height:185px;padding:14px}.film-command-card>strong{font-size:32px}}
+
+/* Director desk: pending submission previews */
+.film-command-card:has(.film-command-pending-list){flex-basis:clamp(250px,38vw,340px)}
+.film-command-pending-list{display:flex;flex-direction:column;gap:5px;width:100%;max-height:180px;overflow-y:auto;margin:10px 0 0}
+.film-command-pending-item{display:flex;flex-direction:column;gap:2px;padding:7px 9px;border:1px solid #d9c6a7;background:#fff9ec;border-radius:8px;min-width:0}
+.film-command-pending-item b{font-size:11px;color:#4b3023;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.film-command-pending-item small{font-size:10px;color:#795e46;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:700px){.film-command-card:has(.film-command-pending-list){flex-basis:85%}}
