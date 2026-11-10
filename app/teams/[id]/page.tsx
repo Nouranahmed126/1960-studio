@@ -47,9 +47,9 @@ export default function TeamRoom(){
    db.from("assignment_receipts").select("assignment_id,student_id,received,delivery_status"),
    db.from("attachments").select("id,uploaded_by,file_name,storage_path,file_type,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
    db.from("work_submissions").select("id,student_id,title,body,category,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
-   isSupervisor?db.from("attachment_reviews").select("attachment_id,stars,received"):Promise.resolve({data:[],error:null}),
-   isSupervisor?db.from("written_submission_reviews").select("source_type,source_id,stars,received"):Promise.resolve({data:[],error:null}),
-   isSupervisor?db.from("submission_feedback_notes").select("source_type,source_id,note"):Promise.resolve({data:[],error:null})
+   db.from("attachment_reviews").select("attachment_id,stars,received"),
+   db.from("written_submission_reviews").select("source_type,source_id,stars,received"),
+   db.from("submission_feedback_notes").select("source_type,source_id,note")
   ]);
   if(t.error||m.error||a.error){setError("تعذر تحميل مساحة الفريق. تحققي من الصلاحيات.");return;}
   const approved=new Set((p.data??[]).map((x:any)=>x.id));
@@ -58,7 +58,7 @@ export default function TeamRoom(){
   setTeam(t.data);setAllTeams((teams.data??[]) as Team[]);setTeamCounts(Object.fromEntries((teams.data??[]).map((x:any)=>[x.id,new Set((allMemberships.data??[]).filter((m:any)=>m.team_id===x.id).map((m:any)=>m.user_id)).size])));setMembers(roster);setNames(Object.fromEntries((p.data??[]).map((x:any)=>[x.id,x.full_name])));
   setAssignments((a.data??[]) as Assignment[]);setReceipts(((r.data??[]) as Receipt[]).filter(x=>assignmentIds.has(x.assignment_id)&&approved.has(x.student_id)));
   setUploads((u.data??[]) as Upload[]);setWritten((w.data??[]) as Written[]);setSupervisor(isSupervisor);
-  if(isSupervisor){
+  {
    const nextStars:Record<string,number>={},nextReceived:Record<string,boolean>={},nextNotes:Record<string,string>={};
    for(const x of ar.data??[]){nextStars["file:"+x.attachment_id]=x.stars??0;nextReceived["file:"+x.attachment_id]=!!x.received;}
    for(const x of wr.data??[]){nextStars[x.source_type+":"+x.source_id]=x.stars??0;nextReceived[x.source_type+":"+x.source_id]=!!x.received;}
