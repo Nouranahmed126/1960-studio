@@ -1022,3 +1022,38 @@ body .cinema-team-member strong{color:#fff7ea}
 @media(min-width:1050px){body .cinema-team-assignments{grid-template-columns:repeat(2,minmax(0,1fr))}body .cinema-team-deliveries{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){body .cinema-team-room{width:100%!important;padding-inline:13px!important}body .cinema-team-hero{padding:23px 17px!important}body .cinema-team-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(prefers-reduced-motion:no-preference){body .cinema-team-hero{animation:cinema-entrance .6s ease-out both}body .cinema-team-stats>div{animation:cinema-entrance .5s ease-out both}body .cinema-team-stats>div:nth-child(2){animation-delay:.08s}body .cinema-team-stats>div:nth-child(3){animation-delay:.16s}body .cinema-team-stats>div:nth-child(4){animation-delay:.24s}}
+
+
+/* Palette consistency: mobile menu, gallery composer, bottom navigation */
+body .site-menu-panel{background:linear-gradient(160deg,#1b304d,#101f35)!important;border-color:#bba17b!important;box-shadow:-12px 0 42px #0612239c!important}
+body .site-menu-panel>a,body .site-menu-panel a{background:#263f5b!important;color:#fff4e4!important;border:1px solid #536d85!important;box-shadow:none!important}
+body .site-menu-panel a:hover,body .site-menu-panel a:focus-visible{background:#355675!important;border-color:#d8bc91!important}
+body .site-menu-panel a[aria-current="page"]{background:#42617c!important;border-color:#e0c59d!important;color:#fff8ed!important}
+body .site-menu-panel>button{background:linear-gradient(145deg,#e7d0a9,#c7a777)!important;color:#15263d!important;border:1px solid #fff2d9!important}
+body .site-menu-shade{background:#06101baf!important}
+body .site-bottom-nav{background:#14263ef5!important;border-top:1px solid #7d8fa3!important}
+body .site-bottom-scroll{justify-content:flex-start!important}
+body .site-bottom-scroll a{color:#f3e9db!important}
+body .site-bottom-scroll a[aria-current="page"]{background:#355675!important;outline:1px solid #bfa77e!important}
+body .gallery-shell{color:#f9f0e5!important}
+body .gallery-intro h1,body .gallery-intro h1 em{color:#fff2de!important}
+body .gallery-intro p,body .gallery-header{color:#d7e0e8!important}
+body .gallery-upload{background:linear-gradient(150deg,#213c59,#142942)!important;border:1px solid #a68e70!important;box-shadow:0 16px 45px #06132470!important}
+body .gallery-upload h2,body .gallery-upload strong{color:#fff3df!important}
+body .gallery-upload label,body .gallery-upload p,body .gallery-upload span{color:#f3e9db!important}
+body .gallery-upload input:not([type="file"]),body .gallery-upload textarea,body .gallery-upload select{background:#12263e!important;color:#fff9f0!important;border:1px solid #8ea2b6!important;border-radius:12px!important;min-height:46px}
+body .gallery-upload input::placeholder,body .gallery-upload textarea::placeholder{color:#b8c4d0!important;opacity:1}
+body .gallery-upload input:focus-visible,body .gallery-upload textarea:focus-visible,body .gallery-upload select:focus-visible{outline:2px solid #e1c49a!important;outline-offset:2px}
+body .gallery-upload label[for="gallery-file"]{background:#2e4c69!important;color:#fff5e7!important;border:2px dashed #e1c49a!important;border-radius:14px!important;transition:background .2s}
+body .gallery-upload label[for="gallery-file"]:hover{background:#3b5d7c!important}
+body .gallery-upload button{background:#dfc397!important;color:#172a42!important;border:1px solid #f3dfbd!important;border-radius:10px!important;font-weight:800!important}
+body .gallery-upload button:disabled{opacity:.55!important;cursor:not-allowed}
+body .gallery-upload div[draggable="true"]{background:#294660!important;border-color:#8397aa!important}
+body .gallery-filters button{background:#243f5b!important;color:#f6ead9!important;border:1px solid #8294a6!important}
+body .gallery-filters button[aria-pressed="true"]{background:#dfc397!important;color:#172a42!important;border-color:#f1d9b4!important}
+body .gallery-card{background:#203a58!important;border:1px solid #8295a9!important}
+body .gallery-media{background:#101e32!important}
+body .gallery-info h2{color:#fff5e7!important}
+body .gallery-info span,body .gallery-status,body .gallery-empty{color:#e6cba2!important}
+body .gallery-info p{color:#dbe2e9!important}
+@media(max-width:650px){body .gallery-upload{padding:20px 16px!important}body .site-menu-panel{max-width:min(88vw,390px)!important}body .gallery-upload label[for="gallery-file"]{padding:18px 10px!important}}
