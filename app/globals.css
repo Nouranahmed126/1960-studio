@@ -1057,3 +1057,63 @@ body .gallery-info h2{color:#fff5e7!important}
 body .gallery-info span,body .gallery-status,body .gallery-empty{color:#e6cba2!important}
 body .gallery-info p{color:#dbe2e9!important}
 @media(max-width:650px){body .gallery-upload{padding:20px 16px!important}body .site-menu-panel{max-width:min(88vw,390px)!important}body .gallery-upload label[for="gallery-file"]{padding:18px 10px!important}}
+
+
+/* Compact dark-beige executive notebook with animated champagne-gold trim */
+body .executive-office .cinematic-notebook.delivery-register{
+ width:min(92%,920px)!important;max-width:920px!important;margin:18px auto 26px!important;
+ padding:16px 18px!important;min-height:0!important;
+ background:linear-gradient(145deg,#8c7658 0%,#756044 48%,#594833 100%)!important;
+ border:2px solid #c9a96d!important;border-left:8px solid #4c3d2b!important;
+ border-radius:16px!important;color:#fff5e4!important;
+ box-shadow:0 12px 28px #101b2a42,inset 0 1px 0 #fff5,inset 0 0 28px #3d2e1d55!important;
+}
+body .executive-office .cinematic-notebook:before{
+ opacity:1!important;inset:-1px!important;padding:2px!important;
+ background:conic-gradient(from var(--notebook-angle,0deg),transparent 0 30%,#f7e5b0 38%,#bd8c3c 44%,#fff1c8 50%,transparent 60% 100%)!important;
+ animation:notebook-gold-orbit 7s linear infinite!important;z-index:5!important;
+}
+body .executive-office .cinematic-notebook:after{opacity:.3!important}
+body .executive-office .cinematic-notebook .notebook-spine{display:flex!important;left:-8px!important;top:22px!important;bottom:22px!important;width:17px!important}
+body .executive-office .cinematic-notebook .notebook-spine i{width:19px!important;height:9px!important;border-width:2px!important}
+body .executive-office .cinematic-notebook .notebook-corner-stamp{display:flex!important;width:44px!important;height:44px!important;top:8px!important;right:10px!important;font-size:18px!important}
+body .executive-office .cinematic-notebook .notebook-cover-title{padding:0 4px 10px!important;margin:0!important;text-align:center!important;border-bottom:1px solid #e0c58e77!important}
+body .executive-office .cinematic-notebook .notebook-cover-title>span{display:block!important;color:#f3dfb6!important;font-size:8px!important;letter-spacing:1.4px!important}
+body .executive-office .cinematic-notebook .notebook-cover-title h2{color:#fff2d8!important;font-size:clamp(18px,2.3vw,24px)!important;margin:4px 0!important;text-shadow:0 2px 8px #3a291c!important}
+body .executive-office .cinematic-notebook .notebook-cover-subtitle{color:#f0dfc3!important;font-size:10px!important}
+body .executive-office .cinematic-notebook .notebook-quickbar{background:#382e2266!important;border-color:#e4c78e88!important;padding:7px!important}
+body .executive-office .cinematic-notebook .notebook-quickbar label,
+body .executive-office .cinematic-notebook .notebook-quickbar small{color:#fff1d9!important}
+body .executive-office .cinematic-notebook .notebook-quickbar input{background:#f6eddd!important;color:#403321!important;border:1px solid #d4b77f!important;border-radius:9px!important}
+body .executive-office .cinematic-notebook .notebook-tabs button{background:#66543d!important;color:#fff0d2!important;border:1px solid #d9bd88!important;border-radius:9px!important}
+body .executive-office .cinematic-notebook .notebook-tabs button.active{background:linear-gradient(135deg,#f0d7a6,#c29a5a)!important;color:#392b1c!important;border-color:#fff0c7!important}
+body .executive-office .cinematic-notebook .notebook-assignment-track,
+body .executive-office .cinematic-notebook .notebook-file-ledger{gap:9px!important;padding:6px 4px 12px!important;scrollbar-color:#e0c18a #65523a!important}
+body .executive-office .cinematic-notebook .notebook-assignment-card,
+body .executive-office .cinematic-notebook .notebook-file-row{
+ flex:0 0 clamp(210px,29vw,275px)!important;width:clamp(210px,29vw,275px)!important;
+ height:205px!important;min-height:205px!important;max-height:205px!important;
+ background:linear-gradient(145deg,#f4e8d2,#dfc9a5)!important;
+ border:1px solid #b18b53!important;border-radius:12px!important;
+ box-shadow:0 5px 13px #30231533!important;
+}
+body .executive-office .cinematic-notebook .notebook-assignment-head{padding:8px 9px!important;border-bottom:1px solid #c6ad82!important}
+body .executive-office .cinematic-notebook .notebook-assignment-head h3{font-size:13px!important;color:#493821!important}
+body .executive-office .cinematic-notebook .notebook-assignment-head small,
+body .executive-office .cinematic-notebook .notebook-assignment-count{color:#80633b!important}
+body .executive-office .cinematic-notebook .notebook-assignment-people,
+body .executive-office .cinematic-notebook .notebook-table-scroll{padding:4px!important}
+body .executive-office .cinematic-notebook .notebook-assignment-people,
+body .executive-office .cinematic-notebook .notebook-assignment-people *{color:#493a28}
+body .executive-office .cinematic-notebook .notebook-file-details strong{color:#493821!important}
+body .executive-office .cinematic-notebook .notebook-file-details span,
+body .executive-office .cinematic-notebook .notebook-file-details small{color:#796346!important}
+body .executive-office .cinematic-notebook .notebook-navigation{color:#fff0d4!important;padding:10px 0!important}
+body .executive-office .cinematic-notebook .notebook-navigation button:not(:disabled){background:linear-gradient(135deg,#f0d7a6,#bd9251)!important;color:#392b1c!important;border:1px solid #ffedc3!important;box-shadow:0 3px 0 #75552d!important}
+@media(max-width:700px){
+ body .executive-office .cinematic-notebook.delivery-register{width:94%!important;padding:12px 11px!important;margin:14px auto 20px!important}
+ body .executive-office .cinematic-notebook .notebook-assignment-card,
+ body .executive-office .cinematic-notebook .notebook-file-row{flex:0 0 225px!important;width:225px!important;height:195px!important;min-height:195px!important;max-height:195px!important}
+ body .executive-office .cinematic-notebook .notebook-corner-stamp{width:36px!important;height:36px!important;font-size:15px!important}
+}
+@media(prefers-reduced-motion:reduce){body .executive-office .cinematic-notebook:before{animation:none!important}}
