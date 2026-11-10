@@ -11,6 +11,7 @@ type Upload={id:number;uploaded_by:string;file_name:string;storage_path:string|n
 type Written={id:number;student_id:string;title:string;body:string;category:string;created_at:string};
 type ReviewItem={kind:"work"|"file";id:number;studentId:string;title:string;body?:string;path?:string|null;fileType?:string|null;createdAt:string;assignmentId?:number};
 type ReviewNote={source_type:string;source_id:number;note:string};
+type GoldenStamp={stamp_status:string|null;stamp_at:string|null;stamp_by:string|null};
 type StarReview={source_type?:string;source_id?:number;attachment_id?:number;assignment_id?:number;student_id?:string;stars:number;received?:boolean};
 
 const identity:Record<number,{icon:string;english:string;description:string;vibe:string}>={
@@ -26,6 +27,7 @@ export default function TeamRoom(){
  const params=useParams();const id=Number(params.id);
  const [team,setTeam]=useState<Team|null>(null),[allTeams,setAllTeams]=useState<Team[]>([]),[teamCounts,setTeamCounts]=useState<Record<number,number>>({}),[members,setMembers]=useState<Member[]>([]),[names,setNames]=useState<Record<string,string>>({});
  const [assignments,setAssignments]=useState<Assignment[]>([]),[receipts,setReceipts]=useState<Receipt[]>([]),[uploads,setUploads]=useState<Upload[]>([]),[written,setWritten]=useState<Written[]>([]);
+ const [stamps,setStamps]=useState<Record<string,GoldenStamp>>({}),[stampChoice,setStampChoice]=useState<"approved"|"revise"|"reviewing">("reviewing");
  const [notes,setNotes]=useState<Record<string,string>>({}),[stars,setStars]=useState<Record<string,number>>({}),[received,setReceived]=useState<Record<string,boolean>>({});
  const [supervisor,setSupervisor]=useState(false),[error,setError]=useState("جارٍ تحميل غرفة الفريق..."),[liveAt,setLiveAt]=useState<Date|null>(null);
  const [active,setActive]=useState<"overview"|"tasks"|"members">("overview"),[selected,setSelected]=useState<ReviewItem|null>(null),[reviewNote,setReviewNote]=useState(""),[reviewStars,setReviewStars]=useState(0),[reviewBusy,setReviewBusy]=useState(false),[previewUrl,setPreviewUrl]=useState("");
@@ -47,8 +49,8 @@ export default function TeamRoom(){
    db.from("assignment_receipts").select("assignment_id,student_id,received,delivery_status"),
    db.from("attachments").select("id,uploaded_by,file_name,storage_path,file_type,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
    db.from("work_submissions").select("id,student_id,title,body,category,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
-   db.from("attachment_reviews").select("attachment_id,stars,received"),
-   db.from("written_submission_reviews").select("source_type,source_id,stars,received"),
+   db.from("attachment_reviews").select("attachment_id,stars,received,stamp_status,stamp_at,stamp_by"),
+   db.from("written_submission_reviews").select("source_type,source_id,stars,received,stamp_status,stamp_at,stamp_by"),
    db.from("submission_feedback_notes").select("source_type,source_id,note")
   ]);
   if(t.error||m.error||a.error){setError("تعذر تحميل مساحة الفريق. تحققي من الصلاحيات.");return;}
@@ -59,11 +61,11 @@ export default function TeamRoom(){
   setAssignments((a.data??[]) as Assignment[]);setReceipts(((r.data??[]) as Receipt[]).filter(x=>assignmentIds.has(x.assignment_id)&&approved.has(x.student_id)));
   setUploads((u.data??[]) as Upload[]);setWritten((w.data??[]) as Written[]);setSupervisor(isSupervisor);
   {
-   const nextStars:Record<string,number>={},nextReceived:Record<string,boolean>={},nextNotes:Record<string,string>={};
-   for(const x of ar.data??[]){nextStars["file:"+x.attachment_id]=x.stars??0;nextReceived["file:"+x.attachment_id]=!!x.received;}
-   for(const x of wr.data??[]){nextStars[x.source_type+":"+x.source_id]=x.stars??0;nextReceived[x.source_type+":"+x.source_id]=!!x.received;}
+   const nextStars:Record<string,number>={},nextReceived:Record<string,boolean>={},nextNotes:Record<string,string>={},nextStamps:Record<string,GoldenStamp>={};
+   for(const x of ar.data??[]){nextStars["file:"+x.attachment_id]=x.stars??0;nextReceived["file:"+x.attachment_id]=!!x.received;nextStamps["file:"+x.attachment_id]={stamp_status:x.stamp_status,stamp_at:x.stamp_at,stamp_by:x.stamp_by};}
+   for(const x of wr.data??[]){nextStars[x.source_type+":"+x.source_id]=x.stars??0;nextReceived[x.source_type+":"+x.source_id]=!!x.received;nextStamps[x.source_type+":"+x.source_id]={stamp_status:x.stamp_status,stamp_at:x.stamp_at,stamp_by:x.stamp_by};}
    for(const x of fb.data??[])nextNotes[x.source_type+":"+x.source_id]=x.note??"";
-   setStars(nextStars);setReceived(nextReceived);setNotes(nextNotes);
+   setStars(nextStars);setReceived(nextReceived);setNotes(nextNotes);setStamps(nextStamps);
   }
   setError("");
  }
@@ -88,22 +90,23 @@ export default function TeamRoom(){
  const pending=members.length-completed;
 
  async function openReview(item:ReviewItem){
-  setSelected(item);setReviewNote(notes[keyFor(item.kind,item.id)]??"");setReviewStars(stars[keyFor(item.kind,item.id)]??0);setPreviewUrl("");
+  setStampChoice((stamps[keyFor(item.kind,item.id)]?.stamp_status as "approved"|"revise"|"reviewing")||"reviewing");setSelected(item);setReviewNote(notes[keyFor(item.kind,item.id)]??"");setReviewStars(stars[keyFor(item.kind,item.id)]??0);setPreviewUrl("");
   if(item.kind==="file"&&item.path){const db=getSupabase();if(db){const signed=await db.storage.from("studio-files").createSignedUrl(item.path,60);if(signed.data?.signedUrl)setPreviewUrl(signed.data.signedUrl);}}
  }
  async function saveReview(){
   if(!selected||!supervisor)return;const db=getSupabase();if(!db)return;setReviewBusy(true);
   const sourceType=selected.kind==="file"?"file":"work";const k=keyFor(sourceType,selected.id);
+  const reviewer=(await db.auth.getUser()).data.user?.id??null;const stampFields={stamp_status:stampChoice,stamp_at:new Date().toISOString(),stamp_by:reviewer};
   const noteResult=await db.from("submission_feedback_notes").upsert({source_type:sourceType,source_id:selected.id,note:reviewNote.trim(),updated_by:(await db.auth.getUser()).data.user?.id??null},{onConflict:"source_type,source_id"});
   let ratingError:any=null;
   if(selected.kind==="file"){
-   const r=await db.from("attachment_reviews").upsert({attachment_id:selected.id,stars:reviewStars,received:true,reviewed_by:(await db.auth.getUser()).data.user?.id??null},{onConflict:"attachment_id"});ratingError=r.error;
+   const r=await db.from("attachment_reviews").upsert({attachment_id:selected.id,stars:reviewStars,received:true,reviewed_by:reviewer,...stampFields},{onConflict:"attachment_id"});ratingError=r.error;
   }else{
-   const r=await db.from("written_submission_reviews").upsert({source_type:"work",source_id:selected.id,stars:reviewStars,received:true,reviewed_by:(await db.auth.getUser()).data.user?.id??null},{onConflict:"source_type,source_id"});ratingError=r.error;
+   const r=await db.from("written_submission_reviews").upsert({source_type:"work",source_id:selected.id,stars:reviewStars,received:true,reviewed_by:reviewer,...stampFields},{onConflict:"source_type,source_id"});ratingError=r.error;
   }
   setReviewBusy(false);
   if(noteResult.error||ratingError){setError("تعذر حفظ المراجعة: "+(noteResult.error?.message??ratingError?.message));return;}
-  setNotes(v=>({...v,[k]:reviewNote.trim()}));setStars(v=>({...v,[k]:reviewStars}));setReceived(v=>({...v,[k]:true}));setSelected(null);setError("تم حفظ التعليق والتقييم بنجاح ✓");
+  setNotes(v=>({...v,[k]:reviewNote.trim()}));setStars(v=>({...v,[k]:reviewStars}));setReceived(v=>({...v,[k]:true}));setStamps(v=>({...v,[k]:stampFields}));setSelected(null);setError("تم حفظ ختم د/ نوران أحمد والتقييم بنجاح ✓");
  }
  async function openFile(path:string){const db=getSupabase();if(!db)return;const r=await db.storage.from("studio-files").createSignedUrl(path,60);if(r.data?.signedUrl)window.open(r.data.signedUrl,"_blank","noopener,noreferrer");else setError("تعذر فتح الملف.");}
  async function sendQuickText(){
@@ -139,13 +142,13 @@ export default function TeamRoom(){
     <div className="studio-dock-foot"><span>{quickNotice||"20 حرفًا على الأقل للنص السريع"}</span><a href={"/submissions?team="+id}>كل خيارات الرفع والتسجيل ↗</a></div>
    </section>
    <section className="studio-panel studio-deliveries-panel"><div className="studio-panel-heading"><div><small>RECENT MATERIALS</small><h2>أحدث التسليمات</h2></div><span>{reviewItems.length} عنصر</span></div>
-    <div className="studio-delivery-list">{myItems.slice(0,6).map(item=><button className="studio-delivery-row" key={item.kind+item.id} onClick={()=>void openReview(item)}><span className="studio-delivery-icon">{item.kind==="file"?"📎":"✍️"}</span><span className="studio-delivery-info"><b>{item.title}</b><small>{names[item.studentId]??"عضو الفريق"} · {new Date(item.createdAt).toLocaleDateString("ar-EG")}</small></span><span className="studio-delivery-rating">{stars[keyFor(item.kind,item.id)]? "★ "+stars[keyFor(item.kind,item.id)]+"/5":"عرض ↗"}</span></button>)}</div>
+    <div className="studio-delivery-list">{myItems.slice(0,6).map(item=><button className="studio-delivery-row" key={item.kind+item.id} onClick={()=>void openReview(item)}><span className="studio-delivery-icon">{item.kind==="file"?"📎":"✍️"}</span><span className="studio-delivery-info"><b>{item.title}</b><small>{names[item.studentId]??"عضو الفريق"} · {new Date(item.createdAt).toLocaleDateString("ar-EG")}</small></span><span className="studio-delivery-rating">{stamps[keyFor(item.kind,item.id)]?.stamp_status?<span className={"gold-stamp-mini gold-stamp-"+stamps[keyFor(item.kind,item.id)].stamp_status}>{stamps[keyFor(item.kind,item.id)].stamp_status==="approved"?"✦ معتمد":stamps[keyFor(item.kind,item.id)].stamp_status==="revise"?"🎬 تعديل بسيط":"◷ قيد المراجعة"}</span>:stars[keyFor(item.kind,item.id)]? "★ "+stars[keyFor(item.kind,item.id)]+"/5":"عرض ↗"}</span></button>)}</div>
     {!reviewItems.length&&<p className="studio-empty">أول ما يوصل تسليم هيظهر هنا.</p>}
    </section>
   </div>}
   {active==="tasks"&&<section className="studio-panel studio-full-panel"><div className="studio-panel-heading"><div><small>MISSION BOARD</small><h2>تكليفات {teamName}</h2></div><span>{assignments.length} تكليفات</span></div>{assignments.map(a=><article className="studio-task-expanded" key={a.id}><div><b>{a.title}</b><small>{a.due_at?"آخر موعد: "+new Date(a.due_at).toLocaleString("ar-EG",{timeZone:"Africa/Cairo"}):"موعد غير محدد"}</small></div>{a.description&&<p>{a.description}</p>}<span>{receipts.filter(r=>r.assignment_id===a.id&&r.received).length} تأكيدات استلام من {members.length}</span></article>)}{!assignments.length&&<p className="studio-empty">لا توجد تكليفات لهذا الفريق.</p>}</section>}
   {active==="members"&&<section className="studio-panel studio-full-panel"><div className="studio-panel-heading"><div><small>THE CREW</small><h2>أعضاء {teamName}</h2></div><span>{members.length} أعضاء</span></div><div className="studio-member-grid">{members.map(m=><article className="studio-member-tile" key={m.user_id}><span className="studio-status-dot is-pending"/><div className="studio-member-copy"><b>{names[m.user_id]??"عضو الفريق"}</b><small>{reviewItems.filter(x=>x.studentId===m.user_id).length} تسليمات مسجلة</small></div></article>)}</div></section>}
   </>}
-  {selected&&<div className="studio-review-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}}><section className="studio-review-modal" role="dialog" aria-modal="true" aria-labelledby="studio-review-title" dir="rtl"><header><div><small>DIRECTOR'S REVIEW WINDOW</small><h2 id="studio-review-title">مراجعة التسليم</h2></div><button onClick={()=>setSelected(null)} aria-label="إغلاق">×</button></header><div className="studio-review-meta"><b>{selected.title}</b><span>{names[selected.studentId]??"عضو الفريق"} · {new Date(selected.createdAt).toLocaleString("ar-EG")}</span></div><div className="studio-review-preview">{selected.kind==="work"?selected.body:previewUrl?(selected.fileType?.startsWith("image/")?<img src={previewUrl} alt={selected.title}/>:selected.fileType?.startsWith("video/")?<video controls src={previewUrl}/>:selected.fileType?.startsWith("audio/")?<audio controls src={previewUrl}/>:<a href={previewUrl} target="_blank" rel="noreferrer">فتح الملف في نافذة جديدة ↗</a>):<span>جارٍ تجهيز معاينة الملف…</span>}</div>{supervisor?<><label className="studio-review-label">تقييم المشرفة</label><div className="studio-review-stars" aria-label="التقييم من خمسة">{[1,2,3,4,5].map(n=><button key={n} className={reviewStars>=n?"selected":""} onClick={()=>setReviewStars(n)} aria-label={n+" نجوم"}>★</button>)}</div><label className="studio-review-label" htmlFor="studio-review-note">تعليق وتوجيه للطالب</label><textarea id="studio-review-note" maxLength={500} rows={3} value={reviewNote} onChange={e=>setReviewNote(e.target.value)} placeholder="اكتبي ملاحظاتك أو المطلوب تعديله..."/><button className="studio-review-save" disabled={reviewBusy} onClick={()=>void saveReview()}>{reviewBusy?"جارٍ الحفظ…":"حفظ التقييم والتعليق"}</button></>:<div className="studio-student-feedback"><b>ملاحظات المشرفة</b><p>{notes[keyFor(selected.kind,selected.id)]||"لا توجد ملاحظات مسجلة على هذا التسليم بعد."}</p><span>{stars[keyFor(selected.kind,selected.id)]? "التقييم: "+stars[keyFor(selected.kind,selected.id)]+"/5":"لم يتم التقييم بعد"}</span></div>}</section></div>}
+  {selected&&<div className="studio-review-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}}><section className="studio-review-modal" role="dialog" aria-modal="true" aria-labelledby="studio-review-title" dir="rtl"><header><div><small>DIRECTOR'S REVIEW WINDOW</small><h2 id="studio-review-title">مراجعة التسليم</h2></div><button onClick={()=>setSelected(null)} aria-label="إغلاق">×</button></header><div className="studio-review-meta"><b>{selected.title}</b><span>{names[selected.studentId]??"عضو الفريق"} · {new Date(selected.createdAt).toLocaleString("ar-EG")}</span></div><div className="studio-review-preview">{selected.kind==="work"?selected.body:previewUrl?(selected.fileType?.startsWith("image/")?<img src={previewUrl} alt={selected.title}/>:selected.fileType?.startsWith("video/")?<video controls src={previewUrl}/>:selected.fileType?.startsWith("audio/")?<audio controls src={previewUrl}/>:<a href={previewUrl} target="_blank" rel="noreferrer">فتح الملف في نافذة جديدة ↗</a>):<span>جارٍ تجهيز معاينة الملف…</span>}</div>{supervisor?<><label className="studio-review-label">ختم د/ نوران أحمد</label><div className="gold-stamp-options">{([["approved","✦ معتمد"],["revise","🎬 تعديل بسيط"],["reviewing","◷ قيد المراجعة"]] as const).map(([value,label])=><button key={value} type="button" className={stampChoice===value?"chosen":""} onClick={()=>setStampChoice(value)}>{label}</button>)}</div><small className="gold-stamp-hint">اختيار الختم لا يغير التقييم القديم إلا بعد الضغط على حفظ.</small><label className="studio-review-label">تقييم المشرفة بالنجوم</label><div className="studio-review-stars" aria-label="التقييم من خمسة">{[1,2,3,4,5].map(n=><button key={n} className={reviewStars>=n?"selected":""} onClick={()=>setReviewStars(n)} aria-label={n+" نجوم"}>★</button>)}</div><label className="studio-review-label" htmlFor="studio-review-note">تعليق وتوجيه للطالب</label><textarea id="studio-review-note" maxLength={500} rows={3} value={reviewNote} onChange={e=>setReviewNote(e.target.value)} placeholder="اكتبي ملاحظاتك أو المطلوب تعديله..."/><button className="studio-review-save" disabled={reviewBusy} onClick={()=>void saveReview()}>{reviewBusy?"جارٍ الحفظ…":"حفظ التقييم والتعليق"}</button></>:<div className="studio-student-feedback"><b>ملاحظات المشرفة</b>{stamps[keyFor(selected.kind,selected.id)]?.stamp_status&&<div className="gold-stamp-receipt"><strong>{stamps[keyFor(selected.kind,selected.id)].stamp_status==="approved"?"✦ معتمد — تقييم إيجابي":stamps[keyFor(selected.kind,selected.id)].stamp_status==="revise"?"🎬 تعديل بسيط":"◷ قيد المراجعة"}</strong><small>د/ نوران أحمد · {stamps[keyFor(selected.kind,selected.id)].stamp_at?new Date(stamps[keyFor(selected.kind,selected.id)].stamp_at!).toLocaleDateString("ar-EG",{timeZone:"Africa/Cairo"}):""}</small></div>}<p>{notes[keyFor(selected.kind,selected.id)]||"لا توجد ملاحظات مسجلة على هذا التسليم بعد."}</p><span>{stars[keyFor(selected.kind,selected.id)]? "التقييم: "+stars[keyFor(selected.kind,selected.id)]+"/5":"لم يتم التقييم بعد"}</span></div>}</section></div>}
  </main>;
 }
