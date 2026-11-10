@@ -24,7 +24,7 @@ const teamLinks=[{id:5,label:"الكتابة والسيناريو",icon:"✍️"
 
 export default function TeamRoom(){
  const params=useParams();const id=Number(params.id);
- const [team,setTeam]=useState<Team|null>(null),[allTeams,setAllTeams]=useState<Team[]>([]),[members,setMembers]=useState<Member[]>([]),[names,setNames]=useState<Record<string,string>>({});
+ const [team,setTeam]=useState<Team|null>(null),[allTeams,setAllTeams]=useState<Team[]>([]),[teamCounts,setTeamCounts]=useState<Record<number,number>>({}),[members,setMembers]=useState<Member[]>([]),[names,setNames]=useState<Record<string,string>>({});
  const [assignments,setAssignments]=useState<Assignment[]>([]),[receipts,setReceipts]=useState<Receipt[]>([]),[uploads,setUploads]=useState<Upload[]>([]),[written,setWritten]=useState<Written[]>([]);
  const [notes,setNotes]=useState<Record<string,string>>({}),[stars,setStars]=useState<Record<string,number>>({}),[received,setReceived]=useState<Record<string,boolean>>({});
  const [supervisor,setSupervisor]=useState(false),[error,setError]=useState("جارٍ تحميل غرفة الفريق..."),[liveAt,setLiveAt]=useState<Date|null>(null);
@@ -36,7 +36,7 @@ export default function TeamRoom(){
  async function load(){
   const db=getSupabase();if(!db){setError("الاتصال غير متاح.");return;}
   const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
-  const [profile,membership,teams]=await Promise.all([db.from("profiles").select("app_role,approval_status").eq("id",user.id).single(),db.from("team_members").select("team_id").eq("user_id",user.id).eq("team_id",id),db.from("teams").select("id,name").order("id")]);
+  const [profile,membership,teams,allMemberships]=await Promise.all([db.from("profiles").select("app_role,approval_status").eq("id",user.id).single(),db.from("team_members").select("team_id").eq("user_id",user.id).eq("team_id",id),db.from("teams").select("id,name").order("id"),db.from("team_members").select("team_id,user_id")]);
   const isSupervisor=profile.data?.app_role==="supervisor";
   if(!isSupervisor&&(profile.data?.approval_status!=="approved"||!membership.data?.length)){setError("هذه المساحة مخصصة لأعضاء الفريق والمشرفة فقط.");return;}
   const [t,m,a,p,r,u,w,ar,wr,fb]=await Promise.all([
@@ -55,7 +55,7 @@ export default function TeamRoom(){
   const approved=new Set((p.data??[]).map((x:any)=>x.id));
   const roster=(m.data??[]).filter((x:Member)=>approved.has(x.user_id));
   const assignmentIds=new Set((a.data??[]).map((x:any)=>x.id));
-  setTeam(t.data);setAllTeams((teams.data??[]) as Team[]);setMembers(roster);setNames(Object.fromEntries((p.data??[]).map((x:any)=>[x.id,x.full_name])));
+  setTeam(t.data);setAllTeams((teams.data??[]) as Team[]);setTeamCounts(Object.fromEntries((teams.data??[]).map((x:any)=>[x.id,new Set((allMemberships.data??[]).filter((m:any)=>m.team_id===x.id).map((m:any)=>m.user_id)).size])));setMembers(roster);setNames(Object.fromEntries((p.data??[]).map((x:any)=>[x.id,x.full_name])));
   setAssignments((a.data??[]) as Assignment[]);setReceipts(((r.data??[]) as Receipt[]).filter(x=>assignmentIds.has(x.assignment_id)&&approved.has(x.student_id)));
   setUploads((u.data??[]) as Upload[]);setWritten((w.data??[]) as Written[]);setSupervisor(isSupervisor);
   if(isSupervisor){
@@ -115,7 +115,7 @@ export default function TeamRoom(){
  return <main className={"cinema-team-room mini-studio-room vibe-"+look.vibe} dir="rtl">
   <div className="studio-room-topline"><a href="/sectors">← كل الفرق</a><span className="cinema-live-status"><i/> {liveAt?"متصل · مباشر":"غرفة الفريق"}</span><span className="studio-room-brand">1960 / STUDIO HUB</span></div>
   <header className="studio-room-hero"><div><small>{look.english}</small><h1>{look.icon} {teamName}</h1><p>{look.description}</p></div><div className="studio-room-hero-mark">{String(id).padStart(2,"0")}<span>DEPT.</span></div></header>
-  <nav className="studio-team-switcher" aria-label="الفرق الخمسة">{teamLinks.map(t=><a key={t.id} href={"/teams/"+t.id} aria-current={id===t.id?"page":undefined}><span>{t.icon}</span><b>{t.label}</b><small>{allTeams.find(x=>x.id===t.id)?.name?members.length&&id===t.id?members.length+" طالب": "القسم": "القسم"}</small></a>)}</nav>
+  <nav className="studio-team-switcher" aria-label="الفرق الخمسة">{teamLinks.map(t=><a key={t.id} href={"/teams/"+t.id} aria-current={id===t.id?"page":undefined}><span>{t.icon}</span><b>{t.label}</b><small>{(teamCounts[t.id]??0)+" طلاب"}</small></a>)}</nav>
   {error&&<p className="studio-room-message" role="status">{error}</p>}
   {team&&<><section className="studio-room-metrics">
    <div><small>أعضاء الفريق</small><strong>{members.length}</strong><span>TEAM MEMBERS</span></div>
@@ -135,7 +135,7 @@ export default function TeamRoom(){
     {!members.length&&<p className="studio-empty">لا يوجد أعضاء معتمدون في هذا الفريق.</p>}
    </section>
    <section className="studio-panel studio-submission-panel"><div className="studio-panel-heading"><div><small>UNIFIED MEDIA DOCK</small><h2>كبسولة التسليم السريع</h2></div><span>TEXT / MEDIA</span></div>
-    <div className="studio-submit-dock"><textarea aria-label="نص التسليم" rows={2} value={quickText} onChange={e=>setQuickText(e.target.value)} placeholder="اكتبي تحديثًا أو تسليمًا سريعًا للفريق..."/><div className="studio-dock-actions"><a href={"/submissions?team="+id} title="رفع ملف أو مستند" aria-label="رفع ملف">📄</a><a href={"/submissions?team="+id} title="رفع صورة أو فيديو" aria-label="رفع صورة أو فيديو">🎬</a><a href={"/submissions?team="+id} title="إضافة رابط" aria-label="إضافة رابط">🔗</a><a href={"/submissions?team="+id} title="تسجيل صوتي" aria-label="تسجيل صوتي">🎙️</a><button disabled={quickBusy||quickText.trim().length<20} onClick={()=>void sendQuickText()} title="إرسال النص" aria-label="إرسال النص">{quickBusy?"…":"➤"}</button></div></div>
+    <div className="studio-submit-dock"><textarea aria-label="نص التسليم" rows={2} value={quickText} onChange={e=>setQuickText(e.target.value)} placeholder="اكتبي تحديثًا أو تسليمًا سريعًا للفريق..."/><div className="studio-dock-actions"><a href={"/submissions?team="+id+"&kind=file"} title="رفع ملف أو مستند" aria-label="رفع ملف">📄</a><a href={"/submissions?team="+id+"&kind=media"} title="رفع صورة أو فيديو" aria-label="رفع صورة أو فيديو">🎬</a><a href={"/submissions?team="+id+"&kind=link"} title="إضافة رابط" aria-label="إضافة رابط">🔗</a><a href={"/submissions?team="+id+"&kind=voice"} title="تسجيل صوتي" aria-label="تسجيل صوتي">🎙️</a><button disabled={quickBusy||quickText.trim().length<20} onClick={()=>void sendQuickText()} title="إرسال النص" aria-label="إرسال النص">{quickBusy?"…":"➤"}</button></div></div>
     <div className="studio-dock-foot"><span>{quickNotice||"20 حرفًا على الأقل للنص السريع"}</span><a href={"/submissions?team="+id}>كل خيارات الرفع والتسجيل ↗</a></div>
    </section>
    <section className="studio-panel studio-deliveries-panel"><div className="studio-panel-heading"><div><small>RECENT MATERIALS</small><h2>أحدث التسليمات</h2></div><span>{reviewItems.length} عنصر</span></div>
