@@ -43,7 +43,7 @@ export default function TeamRoom(){
    db.from("teams").select("id,name").eq("id",id).single(),
    db.from("team_members").select("user_id").eq("team_id",id),
    db.from("assignments").select("id,title,description,due_at,assignment_teams!inner(team_id)").eq("assignment_teams.team_id",id).is("archived_at",null).order("created_at",{ascending:false}),
-   db.from("profiles").select("id,full_name,approval_status").eq("approval_status","approved"),
+   db.from("profiles").select("id,full_name,approval_status,app_role").eq("approval_status","approved").eq("app_role","student"),
    db.from("assignment_receipts").select("assignment_id,student_id,received,delivery_status"),
    db.from("attachments").select("id,uploaded_by,file_name,storage_path,file_type,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
    db.from("work_submissions").select("id,student_id,title,body,category,created_at").eq("team_id",id).order("created_at",{ascending:false}).limit(150),
@@ -55,7 +55,7 @@ export default function TeamRoom(){
   const approved=new Set((p.data??[]).map((x:any)=>x.id));
   const roster=(m.data??[]).filter((x:Member)=>approved.has(x.user_id));
   const assignmentIds=new Set((a.data??[]).map((x:any)=>x.id));
-  setTeam(t.data);setAllTeams((teams.data??[]) as Team[]);setTeamCounts(Object.fromEntries((teams.data??[]).map((x:any)=>[x.id,new Set((allMemberships.data??[]).filter((m:any)=>m.team_id===x.id).map((m:any)=>m.user_id)).size])));setMembers(roster);setNames(Object.fromEntries((p.data??[]).map((x:any)=>[x.id,x.full_name])));
+  setTeam(t.data);setAllTeams((teams.data??[]) as Team[]);setTeamCounts(Object.fromEntries((teams.data??[]).map((x:any)=>[x.id,new Set((allMemberships.data??[]).filter((m:any)=>m.team_id===x.id&&approved.has(m.user_id)).map((m:any)=>m.user_id)).size])));setMembers(roster);setNames(Object.fromEntries((p.data??[]).map((x:any)=>[x.id,x.full_name])));
   setAssignments((a.data??[]) as Assignment[]);setReceipts(((r.data??[]) as Receipt[]).filter(x=>assignmentIds.has(x.assignment_id)&&approved.has(x.student_id)));
   setUploads((u.data??[]) as Upload[]);setWritten((w.data??[]) as Written[]);setSupervisor(isSupervisor);
   {
