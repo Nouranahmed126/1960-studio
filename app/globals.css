@@ -1117,3 +1117,16 @@ body .executive-office .cinematic-notebook .notebook-navigation button:not(:disa
  body .executive-office .cinematic-notebook .notebook-corner-stamp{width:36px!important;height:36px!important;font-size:15px!important}
 }
 @media(prefers-reduced-motion:reduce){body .executive-office .cinematic-notebook:before{animation:none!important}}
+
+
+/* Final burgundy removal: homepage feature cards and crew stars */
+body .studio-shell .studio-section a.studio-feature-card{background:linear-gradient(145deg,#806b4b,#594832)!important;border:1px solid #c6a56f!important;color:#fff5e4!important;box-shadow:0 10px 26px #06162935!important}
+body .studio-shell .studio-section a.studio-feature-card h3{color:#fff4df!important}
+body .studio-shell .studio-section a.studio-feature-card p{color:#eadcc5!important}
+body .studio-shell .studio-honor-banner{background:linear-gradient(135deg,#806b4b,#594832)!important;border:1px solid #d2b47e!important;color:#fff2d9!important}
+body .cinema-home-stars-frame{background:linear-gradient(145deg,#79664a,#57452f)!important;border:1px solid #c6a56f!important}
+body .cinema-home-stars .cinema-home-star-card{background:linear-gradient(145deg,#806b4b,#594832)!important;border:1px solid #d0b27a!important;color:#fff5e4!important;box-shadow:0 5px 16px #06162944!important}
+body .cinema-home-stars .cinema-home-star-card strong{color:#fff5e4!important}
+body .cinema-home-stars .cinema-home-star-card img{border:1px solid #d7bd8d!important}
+body .cinema-home-stars .cinema-stars-group>div{background:linear-gradient(145deg,#b99b69,#80643f)!important}
+@media(prefers-reduced-motion:reduce){body .cinema-stars-moving-track{animation:none!important}}
