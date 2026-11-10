@@ -763,3 +763,44 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
 .executive-office .cinematic-notebook .notebook-roster-table{min-width:350px!important;width:100%!important}
 .executive-office .cinematic-notebook .notebook-roster-table th,.executive-office .cinematic-notebook .notebook-roster-table td{font-size:10px!important}
 @media(max-width:700px){.executive-office .cinematic-notebook.delivery-register{padding:13px 6px!important;border-radius:14px!important}.executive-office .cinematic-notebook .notebook-assignment-card,.executive-office .cinematic-notebook .notebook-file-row{flex:0 0 85%!important;width:85%!important;max-width:85%!important;height:245px!important;min-height:245px!important;max-height:245px!important}.executive-office .cinematic-notebook .notebook-cover-title h2{font-size:21px!important}}
+
+
+/* 1960 Studio — cinematic animated department frames */
+.film-departments-grid{align-items:stretch}
+.film-departments-page .film-department-card{
+ position:relative;isolation:isolate;overflow:hidden;
+ min-height:222px!important;padding:21px!important;gap:12px!important;
+ border:1px solid transparent!important;
+ background:linear-gradient(145deg,#352a38,#211d29) padding-box,
+ conic-gradient(from var(--department-angle,0deg),#725268,#e9bb80,#594458,#d7a873,#725268) border-box!important;
+ transition:transform .25s ease,box-shadow .25s ease;
+ animation:department-frame-turn 7s linear infinite;
+}
+@property --department-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes department-frame-turn{to{--department-angle:360deg}}
+.film-departments-page .film-department-card::before{
+ content:"";position:absolute;inset:5px;border:1px solid rgba(221,174,120,.13);border-radius:14px;pointer-events:none;
+}
+.film-departments-page .film-department-card::after{
+ content:"";position:absolute;width:110px;height:110px;left:-65px;top:-65px;
+ background:radial-gradient(circle,rgba(235,186,118,.22),transparent 70%);
+ transition:transform .35s ease;pointer-events:none;
+}
+.film-departments-page .film-department-card:hover,.film-departments-page .film-department-card:focus-visible{
+ transform:translateY(-5px);box-shadow:0 15px 38px rgba(0,0,0,.36),0 0 20px rgba(218,169,108,.16);
+ outline:none;
+}
+.film-departments-page .film-department-card:hover::after{transform:translate(50px,50px)}
+.film-departments-page .film-department-icon{
+ display:grid;place-items:center;width:37px;height:37px;flex-shrink:0;
+ font-size:19px;line-height:1;border:1px solid rgba(233,187,128,.44);
+ border-radius:11px;background:rgba(225,179,121,.10);
+ box-shadow:inset 0 0 12px rgba(222,172,110,.06);
+ transition:transform .3s ease,background .3s ease;
+}
+.film-departments-page .film-department-card:hover .film-department-icon{transform:rotate(-8deg) scale(1.08);background:rgba(225,179,121,.2)}
+@media(max-width:680px){.film-departments-page .film-department-card{min-height:195px!important;padding:18px!important}}
+@media(prefers-reduced-motion:reduce){
+ .film-departments-page .film-department-card{animation:none!important;transition:none!important}
+ .film-departments-page .film-department-icon{transition:none!important}
+}
