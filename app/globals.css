@@ -922,3 +922,27 @@ body .cinema-home-star-card strong{color:#233850!important}
 body .cinema-home-star-card>div[style*="background"]{background:#e0cba9!important}
 body .cinema-home-star-card img{border:1px solid #cfb38a}
 @media(prefers-reduced-motion:reduce){body .cinema-stars-moving-track{animation:none!important}body .cinema-stars-group[aria-hidden="true"]{display:none}}
+
+
+/* 1960 — unify the executive dashboard with cinematic navy */
+body .executive-office{background:linear-gradient(135deg,#101f36,#213d5b 58%,#0c1c31)!important;border-color:#bda074!important;color:#f8edda!important;box-shadow:0 22px 60px #06132666!important}
+body .executive-office-art{background:radial-gradient(ellipse at 50% 15%,#e2bb7c38,transparent 55%),linear-gradient(120deg,#0c1d34,#31516e 48%,#10243d)!important}
+body .executive-office-light{background:#e5c68d!important}
+body .executive-office-window{border-color:#c4a77b!important}
+body .executive-office-desk{background:linear-gradient(120deg,#18314d,#39536a)!important;border-color:#c6a477!important}
+body .executive-office-plaque,body .executive-office-script{color:#e8c894!important;border-color:#c6a477!important}
+body .executive-office-content{background:linear-gradient(135deg,#152b45,#223e5b)!important;color:#f9f0e5!important}
+body .executive-office-content h1,body .executive-office-content h2,body .executive-office-content h3,body .executive-office-content strong{color:#fff4e3!important}
+body .executive-office-content p{color:#dce2e8!important}
+body .executive-office-links a,body .executive-office-link{background:#2b4866!important;border-color:#c8ab7c!important;color:#f8e8cc!important}
+body .film-command-room{background:linear-gradient(135deg,#142841,#264460 60%,#10243b)!important;border-color:#bda074!important;color:#f8ecdc!important}
+body .film-command-card{background:linear-gradient(145deg,#fdf8ef,#e9dcc6)!important;border-color:#c8ac80!important;color:#233951!important}
+body .film-command-card h3,body .film-command-card strong{color:#203752!important}
+body .film-command-card p,body .film-command-card small{color:#49617a!important}
+body .film-command-heading,body .film-command-heading h2{color:#f9eddb!important}
+body .executive-office .cinematic-notebook{background:repeating-linear-gradient(0deg,#fffaf0 0px,#fffaf0 32px,#eadbc4 33px,#fffaf0 34px)!important;border-color:#dfc7a0!important;border-left-color:#b59a70!important;color:#243b54!important}
+body .executive-office .cinematic-notebook h2,body .executive-office .cinematic-notebook h3{color:#233b54!important}
+body .executive-office .cinematic-notebook p{color:#4b6076!important}
+body .site-bottom-scroll a{min-width:100px;flex-basis:100px}
+body .site-bottom-scroll a[aria-current="page"]{background:#365879!important}
+@media(max-width:600px){body .site-bottom-scroll a{min-width:92px;flex-basis:92px}}
