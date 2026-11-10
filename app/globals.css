@@ -1143,3 +1143,31 @@ body .executive-office .cinematic-notebook.delivery-register{background:linear-g
 body .executive-office .cinematic-notebook .notebook-assignment-card,
 body .executive-office .cinematic-notebook .notebook-file-row{background:linear-gradient(145deg,#fbf2e3,#ead9bb)!important;border-color:#c3a16a!important}
 body .executive-office .cinematic-notebook .notebook-tabs button{background:#8a7656!important;color:#fff8e9!important}
+
+
+/* Champagne-gold animated shimmer — subtle cinematic motion */
+@keyframes champagneGoldShimmer{
+  0%{background-position:0% 50%;box-shadow:0 5px 18px #b9935140,0 0 0 1px #e5ce9b55}
+  50%{background-position:100% 50%;box-shadow:0 7px 24px #d5b67566,0 0 13px #e8d3a477}
+  100%{background-position:0% 50%;box-shadow:0 5px 18px #b9935140,0 0 0 1px #e5ce9b55}
+}
+@keyframes champagneGoldEdge{
+  0%,100%{border-color:#c6a36c}
+  50%{border-color:#f0d9a7}
+}
+body .studio-shell .studio-section a.studio-feature-card,
+body .studio-shell .studio-honor-banner,
+body .cinema-home-stars .cinema-home-star-card,
+body .executive-office .cinematic-notebook{
+  background-size:220% 220%!important;
+  animation:champagneGoldShimmer 8s ease-in-out infinite,champagneGoldEdge 5s ease-in-out infinite!important;
+}
+body .cinema-home-stars .cinema-home-star-card{background-image:linear-gradient(120deg,#b9a582 0%,#e2d0aa 30%,#a88f68 55%,#d9c49b 78%,#b9a582 100%)!important}
+body .studio-shell .studio-section a.studio-feature-card{background-image:linear-gradient(120deg,#a89576 0%,#d8c49e 32%,#927d5c 58%,#d2bd93 80%,#a89576 100%)!important}
+body .studio-shell .studio-honor-banner{background-image:linear-gradient(120deg,#a89576 0%,#e1cea6 35%,#8e7958 60%,#d9c49b 82%,#a89576 100%)!important}
+@media(prefers-reduced-motion:reduce){
+ body .studio-shell .studio-section a.studio-feature-card,
+ body .studio-shell .studio-honor-banner,
+ body .cinema-home-stars .cinema-home-star-card,
+ body .executive-office .cinematic-notebook{animation:none!important;background-position:50% 50%!important}
+}
