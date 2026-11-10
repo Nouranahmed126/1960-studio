@@ -990,3 +990,35 @@ body .film-command-room .film-command-card{background:linear-gradient(145deg,#ff
 body .film-command-room .film-command-card *{text-shadow:none}
 body .film-departments-page .film-department-card{background:linear-gradient(145deg,#25425f,#172c46) padding-box,conic-gradient(from var(--department-angle,0deg),#54708a,#f0d5a9,#3d5a78,#d9b98b,#54708a) border-box!important}
 @media(prefers-reduced-motion:reduce){body *{scroll-behavior:auto!important}}
+
+
+/* Five dedicated premium department workspaces */
+body .cinema-team-room{max-width:1560px!important;width:min(96%,1560px)!important}
+body .cinema-team-hero{position:relative;overflow:hidden;background:radial-gradient(ellipse at 10% 0%,#496c8b88,transparent 55%),linear-gradient(115deg,#294b6b,#11243d 65%)!important;border:1px solid #bfa47d!important;box-shadow:0 18px 48px #0614264d!important;isolation:isolate}
+body .cinema-team-hero:before{content:"1960";position:absolute;left:22px;bottom:-35px;font-size:clamp(100px,17vw,240px);font-weight:900;letter-spacing:-12px;color:#fff8ec09;pointer-events:none;z-index:-1}
+body .cinema-team-hero small{color:#e5c79c!important}
+body .cinema-team-hero h1{color:#fff8ed!important}
+body .cinema-team-hero p{color:#e1e5ea!important;line-height:1.8}
+body .cinema-team-hero-note{font-size:13px;letter-spacing:.2px;color:#e6cda9!important}
+body .cinema-team-hero a{display:inline-flex;align-items:center;padding:9px 13px;border:1px solid #bfa47d!important;border-radius:10px;background:#ffffff12!important;color:#f5dfbc!important;text-decoration:none!important}
+body .cinema-team-hero a:hover{background:#ffffff24!important}
+body .cinema-team-stats>div{background:linear-gradient(140deg,#fdf8ef,#e9ddc9)!important;border:1px solid #c6ad87!important;color:#203a58!important;box-shadow:0 8px 25px #07162930!important}
+body .cinema-team-stats>div strong{color:#203a58!important}
+body .cinema-team-tabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:thin;padding:5px 2px 12px;gap:10px!important}
+body .cinema-team-tabs button{flex:0 0 auto;border:1px solid #d3b88e!important;border-radius:12px!important;padding:13px 19px!important;font-weight:800!important}
+body .cinema-team-panel,body .cinema-team-assignments article,body .cinema-team-deliveries>div{background:linear-gradient(145deg,#24415f,#172c47)!important;border:1px solid #7990a6!important;color:#f8f0e5!important;box-shadow:0 10px 28px #07162935}
+body .cinema-team-room h2,body .cinema-team-room h3{color:#f8ecda!important}
+body .cinema-team-room table{border-collapse:collapse;min-width:760px}
+body .cinema-team-room th{background:#355574;color:#fff3df;font-size:13px}
+body .cinema-team-room td{color:#f5e9d8;font-size:13px}
+body .cinema-team-room tbody tr:nth-child(even){background:#ffffff0b}
+body .cinema-team-room tbody tr:hover{background:#ffffff16}
+body .cinema-team-room details{padding:10px 0}
+body .cinema-team-room summary{cursor:pointer;color:#e5c99d}
+body .cinema-team-members{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+body .cinema-team-member{display:flex;align-items:center;gap:13px;padding:16px;border:1px solid #8195a9;border-radius:13px;background:#ffffff0c}
+body .cinema-team-member span{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#dfc397;color:#172c47;font-weight:900;font-size:12px}
+body .cinema-team-member strong{color:#fff7ea}
+@media(min-width:1050px){body .cinema-team-assignments{grid-template-columns:repeat(2,minmax(0,1fr))}body .cinema-team-deliveries{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body .cinema-team-room{width:100%!important;padding-inline:13px!important}body .cinema-team-hero{padding:23px 17px!important}body .cinema-team-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(prefers-reduced-motion:no-preference){body .cinema-team-hero{animation:cinema-entrance .6s ease-out both}body .cinema-team-stats>div{animation:cinema-entrance .5s ease-out both}body .cinema-team-stats>div:nth-child(2){animation-delay:.08s}body .cinema-team-stats>div:nth-child(3){animation-delay:.16s}body .cinema-team-stats>div:nth-child(4){animation-delay:.24s}}
