@@ -946,3 +946,47 @@ body .executive-office .cinematic-notebook p{color:#4b6076!important}
 body .site-bottom-scroll a{min-width:100px;flex-basis:100px}
 body .site-bottom-scroll a[aria-current="page"]{background:#365879!important}
 @media(max-width:600px){body .site-bottom-scroll a{min-width:92px;flex-basis:92px}}
+
+
+/* Unified site palette v2 — navy, ivory, champagne; all routes */
+:root{
+ --studio-navy-950:#0c1a2e;--studio-navy-900:#142842;--studio-navy-800:#203a58;
+ --studio-navy-700:#315371;--studio-ivory:#fffaf1;--studio-beige:#f2e6d4;
+ --studio-champagne:#dfc397;--studio-line:#8a9aab;
+ --rose:#dfc397;--rose-deep:#c6a777;--ink:#fff8ed;--muted:#d7dce3;
+ --cream:#142842;--blush:#203a58;--line:#71849a;
+}
+body{color:#fff8ed!important}
+body main>header:not(.studio-nav){border-color:#71849a!important}
+body main h1,body main h2,body main h3{color:#fff5e7}
+body main a:not(.cinema-home-star-card){text-decoration-color:#dfc397}
+body main section[style*="background:#"],body main article[style*="background:#"],
+body main div[style*="background:#493440"],body main div[style*="background:#39202e"],
+body main div[style*="background:#302a34"]{
+ background:#203a58!important;border-color:#7289a1!important;
+}
+body main a[style*="background:#493440"],body main a[style*="background:#343039"],
+body main a[style*="background:#413440"],body main a[style*="background:#302a34"]{
+ background:#274462!important;border-color:#71869d!important;
+}
+body main [style*="border:1px solid #685260"],
+body main [style*="border:1px solid #a77b91"],
+body main [style*="border:1px solid #956c82"]{border-color:#8495a8!important}
+body main p[style*="color:#e9afc2"],body main span[style*="color:#e9afc2"],
+body main p[style*="color:#c4b8c1"]{color:#e8d3b3!important}
+body .studio-nav{border-color:#71849a!important}
+body .studio-logo{color:#f6e9d6!important}
+body .studio-feature,body .gallery-card{background:#203a58!important;border-color:#71869d!important}
+body .gallery-header,body .gallery-intro,body .gallery-shell{color:#f6e9d6}
+body .site-menu-panel a{color:#f6e9d6!important}
+body .site-menu-panel a:hover,body .site-bottom-scroll a:hover{background:#315371!important}
+body .studio-shell .cinema-home-stars-frame{background:linear-gradient(120deg,#fffaf1,#f2e6d4)!important;border-color:#d2b88d!important}
+body .studio-shell .cinema-home-star-card{background:linear-gradient(145deg,#fffdf8,#e9d8bb)!important;color:#203a58!important}
+body .studio-shell .cinema-home-star-card strong{color:#203a58!important}
+body .cinematic-notebook,body .executive-office .cinematic-notebook{--ink:#203a58;--muted:#536b80}
+body .cinematic-notebook table,body .cinematic-notebook th,body .cinematic-notebook td{border-color:#b7a38a!important}
+body .cinematic-notebook input,body .cinematic-notebook select{border-color:#8b9bad!important}
+body .film-command-room .film-command-card{background:linear-gradient(145deg,#fffaf1,#eee1cd)!important;color:#203a58!important}
+body .film-command-room .film-command-card *{text-shadow:none}
+body .film-departments-page .film-department-card{background:linear-gradient(145deg,#25425f,#172c46) padding-box,conic-gradient(from var(--department-angle,0deg),#54708a,#f0d5a9,#3d5a78,#d9b98b,#54708a) border-box!important}
+@media(prefers-reduced-motion:reduce){body *{scroll-behavior:auto!important}}
