@@ -4,7 +4,24 @@ import {getSupabase} from "../lib/supabase-browser";
 type Member={id:string;full_name:string};
 type Detail={user_id:string;photo_path:string|null};
 export default function HomeCrewStrip(){
- const [members,setMembers]=useState<Member[]>([]),[photos,setPhotos]=useState<Record<string,string>>({}),[logged,setLogged]=useState(false);
- useEffect(()=>{let active=true;async function load(){const db=getSupabase();if(!db)return;const {data:{user}}=await db.auth.getUser();if(!active||!user)return;setLogged(true);const [crew,details]=await Promise.all([db.rpc("list_approved_crew"),db.from("crew_profiles").select("user_id,photo_path")]);if(!active||crew.error)return;const list=(crew.data??[]) as Member[];const paths=(details.data??[]) as Detail[];const photoOwners=new Set(paths.filter(d=>!!d.photo_path).map(d=>d.user_id));const unique=new Map<string,Member>();for(const member of list){const key=member.full_name.trim().replace(/\s+/g," ").toLocaleLowerCase("ar");const existing=unique.get(key);if(!existing||(!photoOwners.has(existing.id)&&photoOwners.has(member.id)))unique.set(key,member);}setMembers([...unique.values()]);const urls:Record<string,string>={};for(const d of paths){if(d.photo_path)urls[d.user_id]=db.storage.from("crew-photos").getPublicUrl(d.photo_path).data.publicUrl;}setPhotos(urls)}void load();return()=>{active=false}},[]);
- return <section className="cinema-home-stars" aria-label="نجوم 1960" style={{margin:"12px 0 12px"}}><div className="cinema-home-stars-frame film-light-reel" style={{borderRadius:14,border:"1px solid #D6C7B266",background:"rgba(13,27,42,.75)",height:148,position:"relative"}}>{members.length?<><div className="home-stars film-reel-right" tabIndex={0} aria-label="نجوم الفريق، مرري أفقيًا لاستعراض الصور">{[...members,...members].map((m,i)=><a className="cinema-home-star-card" key={m.id+"-"+i} href="/crew">{photos[m.id]?<img src={photos[m.id]} alt={m.full_name}/>:<div className="cinema-star-placeholder">🎬</div>}</a>)}</div></>:<div style={{height:"100%",display:"grid",placeItems:"center",textAlign:"center",padding:14,color:"#ead8b8"}}>{logged?"بطاقات النجوم بتظهر هنا بعد تحميل بيانات الفريق":"سجّل دخولك علشان تشوف صور ونجوم فريق 1960"}<a href={logged?"/crew":"/login"} style={{display:"block",fontSize:13}}>افتح بطاقات النجوم ←</a></div>}</div><small className="film-reel-caption">FILM STARS • 1960</small></section>;
+ const [members,setMembers]=useState<Member[]>([]);
+ const [photos,setPhotos]=useState<Record<string,string>>({});
+ const [status,setStatus]=useState<"loading"|"ready"|"login"|"empty">("loading");
+ useEffect(()=>{let active=true;(async()=>{const db=getSupabase();if(!db){setStatus("empty");return}
+ const [crew,details]=await Promise.all([db.rpc("list_approved_crew"),db.from("crew_profiles").select("user_id,photo_path")]);
+ if(!active)return;
+ if(crew.error){setStatus("login");return}
+ const paths=(details.data??[]) as Detail[];
+ const urls:Record<string,string>={};
+ for(const d of paths)if(d.photo_path)urls[d.user_id]=db.storage.from("crew-photos").getPublicUrl(d.photo_path).data.publicUrl;
+ const photoOwners=new Set(Object.keys(urls));
+ const unique=new Map<string,Member>();
+ for(const m of (crew.data??[]) as Member[]){const key=m.full_name.trim().replace(/\s+/g," ").toLocaleLowerCase("ar");const prev=unique.get(key);if(!prev||(!photoOwners.has(prev.id)&&photoOwners.has(m.id)))unique.set(key,m)}
+ setMembers([...unique.values()]);setPhotos(urls);setStatus(unique.size?"ready":"empty");
+ })();return()=>{active=false}},[]);
+ const entries=members.map(m=><a className="cinema-home-star-card" key={m.id} href="/crew" aria-label={m.full_name} title={m.full_name}>{photos[m.id]?<img src={photos[m.id]} alt={m.full_name} loading="lazy"/>:<span className="cinema-star-placeholder" aria-label={m.full_name}>🎬</span>}</a>);
+ return <section className="cinema-home-stars cinema-loop-section" aria-label="نجوم 1960">
+ <div className="cinema-loop-window" aria-label="شريط صور نجوم 1960">
+ {status==="ready"?<div className="cinema-loop-track cinema-loop-right" dir="ltr"><div className="cinema-loop-group">{entries}</div><div className="cinema-loop-group" aria-hidden="true">{members.map(m=><span className="cinema-home-star-card" key={m.id}>{photos[m.id]?<img src={photos[m.id]} alt="" loading="lazy"/>:<span className="cinema-star-placeholder">🎬</span>}</span>)}</div></div>:<div className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور نجوم 1960…":status==="login"?<>صور النجوم متاحة بعد <a href="/login">تسجيل الدخول</a></>:"صور النجوم هتظهر هنا بمجرد توفرها"}</div>}
+ </div><small className="film-reel-caption">FILM STARS • 1960</small></section>
 }
