@@ -1344,7 +1344,7 @@ body :is(.cinema-team-room .cinema-team-stats>div,.cinema-team-room .cinema-team
 
 
 /* 1960 Mini Studio Hubs — compact navy glass workspace */
-.cinema-team-room.mini-studio-room{
+main.cinema-team-room.mini-studio-room{
  --hub-bg:#050A14;--hub-navy:#0D1B2A;--hub-deep:#16263B;--hub-cream:#F2EFE9;--hub-gold:#D6C7B2;
  max-width:1180px!important;margin:0 auto!important;padding:18px 16px 112px!important;color:var(--hub-cream)!important;
  background:radial-gradient(ellipse at 90% 0%,#243a512e,transparent 38%),linear-gradient(145deg,#050A14,#0D1B2A 55%,#16263B)!important;
