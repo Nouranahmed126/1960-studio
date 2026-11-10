@@ -836,3 +836,54 @@ body .film-departments-page .film-department-card span[style*="background"]{back
 body .film-departments-page .film-department-icon{background:#355473!important;border-color:#d9b98b88!important}
 body .film-departments-page .film-department-card span[style*="color"]{color:#f0d2a4!important}
 @media(prefers-reduced-motion:reduce){body .film-departments-page .film-department-card{animation:none!important}}
+
+
+/* 1960 STUDIO — Widescreen cinematic luxury system */
+:root{--cinema-navy:#0c1a2e;--cinema-blue:#213a59;--cinema-beige:#f5e9d6;--cinema-gold:#d9b98b;--cinema-ivory:#fffaf2}
+html{scroll-behavior:smooth}
+body{
+ background:radial-gradient(ellipse 65% 55% at 3% 8%,#36567988,transparent 70%),
+ radial-gradient(ellipse 55% 60% at 95% 48%,#2a466b80,transparent 72%),
+ linear-gradient(120deg,#0b192c,#142944 48%,#0c1c33)!important;
+ background-attachment:fixed!important;
+}
+@media(min-width:1100px){
+ body main:not(.login-page):not(.auth-page){width:min(96%,1680px)!important;max-width:1680px!important;margin-inline:auto!important}
+ body .studio-shell,body .gallery-shell{max-width:1580px!important;width:min(96%,1580px)!important}
+ body .film-departments-page{max-width:1600px!important}
+ body .film-departments-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:16px!important}
+ body .film-departments-page .film-department-card{min-width:0!important}
+}
+@media(min-width:850px) and (max-width:1099px){
+ body .film-departments-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:849px){body .film-departments-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))!important}}
+/* Decorative moving cinema lights, with no overlay blocking controls */
+body main>header,body .studio-hero{position:relative;isolation:isolate}
+body main>header::after,body .studio-hero::after{
+ content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+ background:linear-gradient(112deg,transparent 0%,transparent 37%,rgba(246,222,177,.075) 49%,transparent 62%,transparent 100%);
+ background-size:240% 100%;animation:cinema-light-sweep 15s ease-in-out infinite;
+}
+@keyframes cinema-light-sweep{0%,15%{background-position:130% 0}65%,100%{background-position:-130% 0}}
+@keyframes cinema-entrance{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cinema-gold-glow{0%,100%{box-shadow:0 8px 26px #0613222b}50%{box-shadow:0 10px 30px #06132238,0 0 15px #d9b98b26}}
+body .film-departments-page .film-department-card{animation:department-frame-turn 7s linear infinite,cinema-entrance .6s ease-out both!important}
+body .film-departments-page .film-department-card:nth-child(2){animation-delay:0s,.09s!important}
+body .film-departments-page .film-department-card:nth-child(3){animation-delay:0s,.18s!important}
+body .film-departments-page .film-department-card:nth-child(4){animation-delay:0s,.27s!important}
+body .film-departments-page .film-department-card:nth-child(5){animation-delay:0s,.36s!important}
+body .studio-feature{animation:cinema-entrance .65s ease-out both}
+body .studio-feature:nth-child(2){animation-delay:.1s}
+body .studio-feature:nth-child(3){animation-delay:.2s}
+body .studio-feature:nth-child(4){animation-delay:.3s}
+body a,body button{transition:filter .22s ease,transform .22s ease,box-shadow .22s ease}
+body a:focus-visible,body button:focus-visible{outline:2px solid #f0cf9a!important;outline-offset:3px}
+body .studio-primary:hover,body .studio-nav-link:hover{filter:brightness(1.08);transform:translateY(-2px)}
+body .film-departments-page .film-department-card:hover{transform:translateY(-6px)!important}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ body main>header::after,body .studio-hero::after{animation:none!important}
+ body .film-departments-page .film-department-card,body .studio-feature{animation:none!important}
+ body a,body button{transition:none!important}
+}
