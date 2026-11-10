@@ -906,3 +906,19 @@ body .studio-shell .studio-section a[style*="background"] p{color:#d2deeb!import
 body .site-bottom-scroll a[aria-current="page"],body .site-menu-panel a[aria-current="page"]{background:#385a7a!important;color:#fff3df!important}
 body .site-bottom-scroll a{color:#e8dccb!important}
 @media(prefers-reduced-motion:reduce){body .cinema-home-star-card{transition:none!important}}
+
+
+/* Cream cinema stars: seamless moving marquee */
+body .cinema-home-stars-frame{background:linear-gradient(120deg,#fffaf1,#f1e3cc)!important;border:1px solid #d2b88d!important;box-shadow:0 12px 30px #06132225!important}
+body .cinema-home-stars .home-stars{overflow-x:auto!important;overflow-y:hidden;scroll-snap-type:none!important;padding:8px 0!important;scrollbar-width:none}
+body .cinema-home-stars .home-stars::-webkit-scrollbar{display:none}
+body .cinema-stars-moving-track{display:flex;width:max-content;min-width:100%;height:100%;animation:cinema-stars-marquee 48s linear infinite;will-change:transform}
+body .cinema-stars-group{display:flex;flex:none;align-items:center;gap:12px;padding-inline:6px;height:100%}
+@keyframes cinema-stars-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+body .cinema-home-stars .home-stars:hover .cinema-stars-moving-track,
+body .cinema-home-stars .home-stars:focus-within .cinema-stars-moving-track{animation-play-state:paused}
+body .cinema-home-star-card{background:linear-gradient(145deg,#fffdf8,#e9d8bb)!important;border:1px solid #d0b58a!important;color:#24374e!important;box-shadow:0 4px 12px #2035521a!important}
+body .cinema-home-star-card strong{color:#233850!important}
+body .cinema-home-star-card>div[style*="background"]{background:#e0cba9!important}
+body .cinema-home-star-card img{border:1px solid #cfb38a}
+@media(prefers-reduced-motion:reduce){body .cinema-stars-moving-track{animation:none!important}body .cinema-stars-group[aria-hidden="true"]{display:none}}
