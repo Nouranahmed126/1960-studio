@@ -887,3 +887,22 @@ body .film-departments-page .film-department-card:hover{transform:translateY(-6p
  body .film-departments-page .film-department-card,body .studio-feature{animation:none!important}
  body a,body button{transition:none!important}
 }
+
+
+/* Home palette consistency: replace remaining burgundy and rose accents */
+body .cinema-home-stars-frame{background:linear-gradient(120deg,#1a304c,#243e5b)!important;border:1px solid #b69a74!important;box-shadow:0 12px 32px #07142644!important}
+body .cinema-home-star-card{background:linear-gradient(145deg,#304d6a,#203750)!important;border:1px solid #617c94!important;color:#f8f0e3!important;transition:transform .25s ease,box-shadow .25s ease!important}
+body .cinema-home-star-card:hover,body .cinema-home-star-card:focus-visible{transform:translateY(-3px);box-shadow:0 8px 22px #07142666!important}
+body .cinema-home-star-card strong{color:#fff6e8!important}
+body .cinema-home-star-card>div[style*="background"]{background:#395673!important}
+body .cinema-home-stars h2{color:#f5e9d6!important}
+body .studio-eyebrow{color:#e7c594!important}
+body .studio-shell>section:first-of-type>p[style*="color"]{color:#e8d4b5!important}
+body .studio-kicker{color:#e3c18f!important}
+body .studio-shell>a[href="/honor-board"]{background:linear-gradient(110deg,#254360,#182d47)!important;border:1px solid #c4a477!important;color:#f6e8d1!important;box-shadow:0 9px 26px #06132238}
+body .studio-shell .studio-section a[style*="background"]{background:linear-gradient(145deg,#2b4867,#1c334f)!important;border-color:#627b91!important;color:#f6e9d9!important}
+body .studio-shell .studio-section a[style*="background"] h3{color:#fff7e9!important}
+body .studio-shell .studio-section a[style*="background"] p{color:#d2deeb!important}
+body .site-bottom-scroll a[aria-current="page"],body .site-menu-panel a[aria-current="page"]{background:#385a7a!important;color:#fff3df!important}
+body .site-bottom-scroll a{color:#e8dccb!important}
+@media(prefers-reduced-motion:reduce){body .cinema-home-star-card{transition:none!important}}
