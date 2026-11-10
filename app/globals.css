@@ -804,3 +804,35 @@ p[style*="color"],small[style*="color"],span[style*="color"]{color:#D0BDC0!impor
  .film-departments-page .film-department-card{animation:none!important;transition:none!important}
  .film-departments-page .film-department-icon{transition:none!important}
 }
+
+
+/* 1960 Studio — Cinematic Navy & Warm Beige, November 2026 */
+:root{--rose:#c4a477;--rose-deep:#a78658;--ink:#f8f1e6;--muted:#d0c7b9;--cream:#12243b;--blush:#1e3550;--line:#51657a;--cinema-navy:#101e35;--cinema-blue:#203552;--cinema-beige:#f4e9d8;--cinema-gold:#d9b98b}
+html{background:#101e35!important}
+body{background:radial-gradient(ellipse at 6% 0%,#304c6d 0%,transparent 43%),radial-gradient(ellipse at 98% 45%,#213a59 0%,transparent 43%),#101e35!important;color:#f8f1e6!important}
+body a,body a[style*="color"]{color:#e9cda5!important}
+body input:not([type="checkbox"]),body textarea,body select{background:#142943!important;color:#faf3e8!important;border-color:#718097!important;outline-color:#d9b98b!important}
+body button:not(:disabled),body button[type="submit"]:not(:disabled){background:linear-gradient(135deg,#e8d0a7,#c4a174)!important;color:#14243a!important;box-shadow:0 7px 22px #06132233}
+body button:disabled{background:#66788c!important;color:#f4e9d8!important}
+body main section[style*="background"],body main article[style*="background"]{background:#203552!important;border-color:#60758a!important;box-shadow:0 10px 32px #07132229}
+body fieldset{background:#203552!important;border-color:#60758a!important}
+body .studio-feature{background:linear-gradient(145deg,#274361,#192e49)!important;border-color:#58708b!important}
+body .studio-feature-icon{background:#385371!important;color:#f4d7a9!important}
+body .studio-feature-line{background:linear-gradient(90deg,#d9b98b,transparent)!important}
+body .studio-primary,body .studio-nav-link{background:linear-gradient(135deg,#e8d0a7,#c4a174)!important;color:#14243a!important}
+body .studio-hero h1 em,body .gallery-intro h1 em{color:#e8c796!important}
+body .studio-hero:before{color:#f4e9d80a!important}
+body .site-menu-panel,body .site-bottom-nav{background:#14263e!important;border-color:#6b7c90!important}
+body .film-departments-page>header{background:linear-gradient(115deg,#274565,#12243b)!important;border-color:#73869b!important}
+body .film-departments-page .film-department-card{
+ background:linear-gradient(145deg,#25425f,#172c46) padding-box,
+ conic-gradient(from var(--department-angle,0deg),#54708a,#f0d5a9,#3d5a78,#d9b98b,#54708a) border-box!important;
+ color:#fff8ef!important;box-shadow:0 10px 30px #06132230!important;
+}
+body .film-departments-page .film-department-card:hover{box-shadow:0 18px 40px #06132266,0 0 20px #d9b98b33!important}
+body .film-departments-page .film-department-card h2{color:#fff8ef!important}
+body .film-departments-page .film-department-card p{color:#d8dfeb!important}
+body .film-departments-page .film-department-card span[style*="background"]{background:#34526f!important;color:#f6ebdc!important}
+body .film-departments-page .film-department-icon{background:#355473!important;border-color:#d9b98b88!important}
+body .film-departments-page .film-department-card span[style*="color"]{color:#f0d2a4!important}
+@media(prefers-reduced-motion:reduce){body .film-departments-page .film-department-card{animation:none!important}}
