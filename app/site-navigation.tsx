@@ -5,7 +5,7 @@ import {usePathname} from "next/navigation";
 const groups=[
 {title:"الإدارة والقيادة",links:[["/","الرئيسية","⌂"],["/dashboard","حسابي","👤"],["/honor-board","الشرف","🏆"],["/crew","النجوم","⭐"],["/meetings","الاجتماعات","📅"]]},
 {title:"أقسام الفيلم",links:[["/teams/5","الكتابة والسيناريو","✍️"],["/teams/3","التصوير والإخراج","🎥"],["/teams/4","المونتاج","🎞️"],["/teams/1","التصميم والصوت","🎨"],["/teams/2","الإنتاج والممثلين","🎬"]]},
-{title:"الأرشيف والتواصل",links:[["/props","المقتنيات","📦"],["/decor-studio","الديكور","🏠"],["/gallery","الكواليس","📸"],["/chat","الشات","💬"],["/requests","الرسائل","✉️"],["/production-hub","الإنتاج","🎬"],["/submissions","التسليمات","📥"]]}
+{title:"الأرشيف والتواصل",links:[["/museum","متحف 1960","📻"],["/gallery","الكواليس","📸"],["/chat","الشات","💬"],["/requests","الرسائل","✉️"],["/production-hub","الإنتاج","🎬"],["/submissions","التسليمات","📥"]]}
 ] as const;
 const quick=[["/","الرئيسية","⌂"],["/sectors","الفرق","🎬"],["/dashboard","حسابي","👤"],["/gallery","الكواليس","📸"],["/chat","الشات","💬"]] as const;
 export default function SiteNavigation(){
