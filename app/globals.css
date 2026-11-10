@@ -1130,3 +1130,16 @@ body .cinema-home-stars .cinema-home-star-card strong{color:#fff5e4!important}
 body .cinema-home-stars .cinema-home-star-card img{border:1px solid #d7bd8d!important}
 body .cinema-home-stars .cinema-stars-group>div{background:linear-gradient(145deg,#b99b69,#80643f)!important}
 @media(prefers-reduced-motion:reduce){body .cinema-stars-moving-track{animation:none!important}}
+
+
+/* Lighter warm beige / champagne pass */
+body .studio-shell .studio-section a.studio-feature-card{background:linear-gradient(145deg,#a89576,#887454)!important;border-color:#d8bd8c!important}
+body .studio-shell .studio-section a.studio-feature-card h3{color:#fffaf0!important}
+body .studio-shell .studio-section a.studio-feature-card p{color:#fff0d8!important}
+body .studio-shell .studio-honor-banner{background:linear-gradient(135deg,#a89576,#887454)!important;border-color:#e0c99f!important}
+body .cinema-home-stars-frame{background:linear-gradient(145deg,#a89576,#887454)!important;border-color:#d8bd8c!important}
+body .cinema-home-stars .cinema-home-star-card{background:linear-gradient(145deg,#b5a080,#907a58)!important;border-color:#e1c99c!important;color:#fffaf0!important}
+body .executive-office .cinematic-notebook.delivery-register{background:linear-gradient(145deg,#aa9674 0%,#927c58 52%,#786342 100%)!important;border-color:#dfc18a!important}
+body .executive-office .cinematic-notebook .notebook-assignment-card,
+body .executive-office .cinematic-notebook .notebook-file-row{background:linear-gradient(145deg,#fbf2e3,#ead9bb)!important;border-color:#c3a16a!important}
+body .executive-office .cinematic-notebook .notebook-tabs button{background:#8a7656!important;color:#fff8e9!important}
