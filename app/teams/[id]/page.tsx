@@ -90,6 +90,7 @@ export default function TeamRoom(){
  const pending=members.length-completed;
 
  async function openReview(item:ReviewItem){
+  if(supervisor){const db=getSupabase();if(db){const {data:{user}}=await db.auth.getUser();if(user){const r=await db.from("supervisor_submission_views").upsert({source_type:item.kind,source_id:item.id,supervisor_id:user.id},{onConflict:"source_type,source_id,supervisor_id",ignoreDuplicates:true});if(r.error)setError("تعذر حفظ حالة المشاهدة: "+r.error.message);}}}
   setStampChoice((stamps[keyFor(item.kind,item.id)]?.stamp_status as "approved"|"revise"|"reviewing")||"reviewing");setSelected(item);setReviewNote(notes[keyFor(item.kind,item.id)]??"");setReviewStars(stars[keyFor(item.kind,item.id)]??0);setPreviewUrl("");
   if(item.kind==="file"&&item.path){const db=getSupabase();if(db){const signed=await db.storage.from("studio-files").createSignedUrl(item.path,60);if(signed.data?.signedUrl)setPreviewUrl(signed.data.signedUrl);}}
  }
