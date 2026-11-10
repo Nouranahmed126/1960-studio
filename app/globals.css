@@ -1187,3 +1187,157 @@ body .studio-shell .studio-honor-banner{background-image:linear-gradient(120deg,
 .cinema-team-room button,.cinema-team-room a{transition:transform .2s ease,filter .2s ease,box-shadow .2s ease}
 .cinema-team-room button:hover,.cinema-team-room a:hover{filter:brightness(1.12);transform:translateY(-2px)}
 @media(prefers-reduced-motion:reduce){.cinema-team-room *,.cinema-live-dot{animation:none!important;transition:none!important}}
+
+
+/* 1960 Studio — exact cinematic navy / warm off-white system */
+:root{
+ --studio-night:#050A14;
+ --studio-navy:#0D1B2A;
+ --studio-blue:#16263B;
+ --studio-ivory:#F2EFE9;
+ --studio-champagne:#D6C7B2;
+ --studio-glass:rgba(13,27,42,.75);
+ --studio-glass-border:rgba(214,199,178,.34);
+}
+html{background:#050A14!important}
+body{
+ color:#F2EFE9!important;
+ background:
+  radial-gradient(ellipse at 14% 0%,rgba(35,61,87,.62) 0%,transparent 43%),
+  radial-gradient(ellipse at 92% 22%,rgba(22,38,59,.72) 0%,transparent 48%),
+  linear-gradient(135deg,#050A14 0%,#0D1B2A 52%,#16263B 100%)!important;
+ background-attachment:fixed!important;
+}
+body :is(h1,h2,h3,h4,h5,strong,b){color:#F2EFE9}
+body :is(p,small,label,figcaption,.muted){color:#D6C7B2}
+body :is(a,button,input,select,textarea){accent-color:#D6C7B2}
+body :is(input,select,textarea){
+ color:#F2EFE9!important;background:rgba(5,10,20,.72)!important;
+ border:1px solid rgba(214,199,178,.42)!important;border-radius:9px;
+}
+body :is(input,select,textarea)::placeholder{color:rgba(214,199,178,.68)!important}
+body :is(button,[role="button"]){transition:transform .2s ease,filter .2s ease,box-shadow .25s ease}
+body :is(button,[role="button"]):hover{filter:brightness(1.12);transform:translateY(-1px)}
+/* Unified glass surfaces; remove solid beige slabs */
+body :is(.studio-feature-card,.studio-honor-banner,.cinema-home-stars-frame,
+ .cinema-home-star-card,.cinema-team-stats>div,.cinema-team-panel,
+ .cinema-team-assignments article,.cinema-team-deliveries>div,
+ .executive-office .cinematic-notebook,.executive-special-grid article,
+ .executive-office-link,.student-discussion-panel,.student-public-scoreboard,
+ .scoreboard-assignment,.notebook-missing-panel,.notebook-assignment-card,
+ .notebook-file-row){
+ background:linear-gradient(145deg,rgba(22,38,59,.88),rgba(13,27,42,.76))!important;
+ color:#F2EFE9!important;
+ border:1px solid var(--studio-glass-border)!important;
+ box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(242,239,233,.045)!important;
+ backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
+}
+body :is(.studio-feature-card,.studio-honor-banner,.cinema-home-star-card){background-size:100% 100%!important;animation:none!important}
+body :is(.studio-feature-card p,.studio-honor-banner p,.cinema-home-star-card span,
+ .executive-office .notebook-file-details span,.executive-office .notebook-file-details small){color:#D6C7B2!important}
+body :is(.studio-feature-card h3,.cinema-home-star-card strong){color:#F2EFE9!important}
+body .cinema-team-room{width:min(100% - 24px,1160px)!important;padding:18px 0 84px!important;color:#F2EFE9!important}
+body .cinema-team-room .cinema-team-hero{
+ background:linear-gradient(115deg,rgba(5,10,20,.96),rgba(13,27,42,.91),rgba(22,38,59,.94))!important;
+ border:1px solid rgba(214,199,178,.48)!important;box-shadow:0 16px 36px #0005!important;
+}
+body .cinema-team-room .cinema-team-hero small,
+body .cinema-team-room .cinema-team-hero a,
+body .cinema-team-room .cinema-live-status{color:#D6C7B2!important}
+body .cinema-team-room .cinema-team-stats>div,
+body .cinema-team-room .cinema-team-panel,
+body .cinema-team-room .cinema-team-assignments article,
+body .cinema-team-room .cinema-team-deliveries>div{
+ background:var(--studio-glass)!important;border-color:var(--studio-glass-border)!important;
+ color:#F2EFE9!important;backdrop-filter:blur(12px)!important;
+}
+body .cinema-team-room .cinema-team-stats>div strong{font-size:22px!important;color:#F2EFE9!important}
+body .cinema-team-room .cinema-team-tabs button{
+ padding:8px 12px!important;font-size:12px!important;
+ background:rgba(13,27,42,.9)!important;color:#D6C7B2!important;
+ border:1px solid rgba(214,199,178,.42)!important;
+}
+body .cinema-team-room .cinema-team-tabs button:focus,
+body .cinema-team-room .cinema-team-tabs button:hover{border-color:#D6C7B2!important}
+body .cinema-team-room .cinema-team-tabs button[aria-current="page"]{background:#D6C7B2!important;color:#0D1B2A!important}
+/* Notebook roster: one compact readable row, no clipped names or task labels */
+body .cinema-team-room .cinema-team-panel>div{max-width:100%}
+body .cinema-team-room .cinema-team-panel table{
+ width:100%!important;min-width:0!important;table-layout:auto!important;
+ border-collapse:separate!important;border-spacing:0 3px!important;
+}
+body .cinema-team-room .cinema-team-panel th,
+body .cinema-team-room .cinema-team-panel td{
+ padding:6px 7px!important;font-size:11px!important;line-height:1.35!important;
+ color:#F2EFE9!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ border-bottom:1px solid rgba(214,199,178,.16)!important;vertical-align:middle!important;
+}
+body .cinema-team-room .cinema-team-panel th{color:#D6C7B2!important;font-weight:700!important}
+body .cinema-team-room .cinema-team-panel td:first-child{font-weight:700;min-width:90px}
+body .cinema-team-room .cinema-team-panel td:nth-child(2){min-width:105px}
+body .cinema-team-room .cinema-team-panel>div[style*="overflow"]{overflow-x:auto!important;overscroll-behavior-inline:contain}
+body .cinema-team-room .cinema-team-member{min-width:0!important;display:flex;align-items:center;gap:8px;padding:7px 9px!important;background:rgba(22,38,59,.56)!important;border:1px solid rgba(214,199,178,.18);border-radius:9px}
+body .cinema-team-room .cinema-team-member strong{font-size:12px!important;overflow-wrap:anywhere}
+body .cinema-team-room .cinema-team-member span{color:#D6C7B2!important;font-size:10px!important}
+body .executive-office .cinematic-notebook.delivery-register{
+ background:linear-gradient(145deg,rgba(22,38,59,.94),rgba(13,27,42,.92))!important;
+ border:1px solid #D6C7B2!important;color:#F2EFE9!important;
+}
+body .executive-office .cinematic-notebook .notebook-assignment-card,
+body .executive-office .cinematic-notebook .notebook-file-row{
+ background:rgba(13,27,42,.82)!important;border:1px solid rgba(214,199,178,.36)!important;
+ color:#F2EFE9!important;height:auto!important;min-height:0!important;max-height:none!important;
+}
+body .executive-office .cinematic-notebook .notebook-assignment-head h3,
+body .executive-office .cinematic-notebook .notebook-file-details strong{color:#F2EFE9!important}
+body .executive-office .cinematic-notebook .notebook-assignment-head small,
+body .executive-office .cinematic-notebook .notebook-assignment-count{color:#D6C7B2!important}
+body .executive-office .cinematic-notebook .notebook-tabs button{background:rgba(22,38,59,.9)!important;color:#F2EFE9!important;border-color:#D6C7B2!important}
+body .executive-office .cinematic-notebook .notebook-quickbar{background:rgba(5,10,20,.52)!important;border-color:#D6C7B2!important}
+body .executive-office .cinematic-notebook .notebook-quickbar label,
+body .executive-office .cinematic-notebook .notebook-quickbar small{color:#D6C7B2!important}
+body .executive-office .cinematic-notebook .notebook-quickbar input{background:#16263B!important;color:#F2EFE9!important}
+body .executive-office .cinematic-notebook .notebook-assignment-people,
+body .executive-office .cinematic-notebook .notebook-assignment-people *{color:#F2EFE9!important}
+body .executive-office .cinematic-notebook .notebook-assignment-track,
+body .executive-office .cinematic-notebook .notebook-file-ledger{gap:7px!important}
+body .executive-office .cinematic-notebook .notebook-assignment-card,
+body .executive-office .cinematic-notebook .notebook-file-row{flex-basis:clamp(190px,24vw,235px)!important;width:clamp(190px,24vw,235px)!important}
+body .executive-office .cinematic-notebook .notebook-roster-table th,
+body .executive-office .cinematic-notebook .notebook-roster-table td{font-size:11px!important;padding:5px 6px!important}
+body .executive-office .cinematic-notebook .notebook-roster-name strong{font-size:12px!important;white-space:normal!important;overflow-wrap:anywhere}
+body .executive-office .cinematic-notebook .notebook-roster-name small{font-size:10px!important;color:#D6C7B2!important}
+/* Restrained animated champagne beam — only on active/focus surfaces */
+@keyframes studioBorderBeam{to{--studio-beam-angle:360deg}}
+body .cinema-team-room .cinema-team-hero,
+body .cinema-team-room .cinema-team-tabs button:focus-visible,
+body .executive-office .cinematic-notebook .notebook-tabs button.active{
+ outline:1px solid rgba(214,199,178,.72)!important;
+ box-shadow:0 0 0 1px rgba(214,199,178,.12),0 0 18px rgba(214,199,178,.13)!important;
+}
+body :is(.cinema-team-room .cinema-team-stats>div,.cinema-team-room .cinema-team-panel,
+ .cinema-team-room .cinema-team-assignments article,.cinema-team-room .cinema-team-deliveries>div,
+ .executive-office-link){transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important}
+body :is(.cinema-team-room .cinema-team-stats>div,.cinema-team-room .cinema-team-assignments article,
+ .executive-office-link):hover{transform:translateY(-2px)!important;border-color:#D6C7B2!important;box-shadow:0 12px 26px #0005,0 0 12px #D6C7B222!important}
+@media(max-width:700px){
+ body .cinema-team-room{width:calc(100% - 20px)!important;padding:12px 0 76px!important}
+ body .cinema-team-room .cinema-team-hero{padding:17px 14px!important;margin:12px 0!important;border-radius:15px!important}
+ body .cinema-team-room .cinema-team-hero h1{font-size:20px!important}
+ body .cinema-team-room .cinema-team-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+ body .cinema-team-room .cinema-team-stats>div{padding:10px!important;border-radius:11px!important;font-size:11px!important}
+ body .cinema-team-room .cinema-team-stats>div strong{font-size:19px!important}
+ body .cinema-team-room .cinema-team-tabs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin:12px 0!important}
+ body .cinema-team-room .cinema-team-tabs button{padding:8px 5px!important;font-size:11px!important}
+ body .cinema-team-room .cinema-team-panel{padding:11px!important;border-radius:12px!important}
+ body .cinema-team-room .cinema-team-panel h2{font-size:15px!important}
+ body .cinema-team-room .cinema-team-panel>p{font-size:11px!important;line-height:1.55!important}
+ body .cinema-team-room .cinema-team-panel th,
+ body .cinema-team-room .cinema-team-panel td{padding:5px 4px!important;font-size:10px!important}
+ body .executive-office .cinematic-notebook.delivery-register{width:calc(100% - 16px)!important;padding:10px!important}
+ body .executive-office .cinematic-notebook .notebook-assignment-card,
+ body .executive-office .cinematic-notebook .notebook-file-row{flex-basis:190px!important;width:190px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body *,body *:before,body *:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
