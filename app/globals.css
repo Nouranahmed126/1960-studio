@@ -1684,3 +1684,17 @@ body .cinema-broadcast-home .cinema-loop-window .cinema-home-star-card,body .cin
 .gold-tv-program .gold-tv-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:.78!important;filter:sepia(.65) contrast(1.08)!important;z-index:0!important}
 .gold-tv-program-copy{position:relative!important;z-index:2!important;text-shadow:0 2px 8px #000,0 1px 2px #000!important}
 .gold-tv-program{position:relative!important;overflow:hidden!important}
+
+/* Mobile performance: transform-only reels, touch-first scrolling */
+@media (hover:none) and (pointer:coarse){
+ .gold-tv-body{touch-action:pan-y!important}
+ .cinema-broadcast-home .cinema-loop-window{touch-action:pan-y!important}
+ .cinema-broadcast-home .cinema-loop-window .cinema-loop-track{pointer-events:none}
+ .cinema-broadcast-home .cinema-loop-window .cinema-loop-track a{pointer-events:auto}
+}
+.cinema-broadcast-home .cinema-loop-window .cinema-loop-track{backface-visibility:hidden!important;transform-style:flat!important}
+.cinema-broadcast-home .cinema-loop-window .cinema-loop-group img{content-visibility:auto}
+@media(prefers-reduced-motion:reduce){
+ body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-right,
+ body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-left{animation:none!important;transform:none!important}
+}
