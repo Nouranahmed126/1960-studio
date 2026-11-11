@@ -22,6 +22,6 @@ export default function HomeCrewStrip(){
  const entries=members.map(m=><a className="cinema-home-star-card" key={m.id} href="/crew" aria-label={m.full_name} title={m.full_name}>{photos[m.id]?<img src={photos[m.id]} alt={m.full_name} loading="lazy"/>:<span className="cinema-star-placeholder" aria-label={m.full_name}>🎬</span>}</a>);
  return <section className="cinema-home-stars cinema-loop-section" aria-label="نجوم 1960">
  <div className="cinema-loop-window cinema-stars-scroll-window" aria-label="شريط صور نجوم 1960، اسحب أفقيًا لاستعراض الصور" tabIndex={0}>
- {status==="ready"?<div className="cinema-loop-track cinema-stars-static-track" dir="ltr"><div className="cinema-loop-group">{entries}</div></div>:<div className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور نجوم 1960…":status==="login"?<>صور النجوم متاحة بعد <a href="/login">تسجيل الدخول</a></>:"صور النجوم هتظهر هنا بمجرد توفرها"}</div>}
+ {status==="ready"?<div className="cinema-loop-track cinema-loop-right" dir="ltr"><div className="cinema-loop-group">{entries}</div><div className="cinema-loop-group" aria-hidden="true">{entries}</div></div>:<div className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور نجوم 1960…":status==="login"?<>صور النجوم متاحة بعد <a href="/login">تسجيل الدخول</a></>:"صور النجوم هتظهر هنا بمجرد توفرها"}</div>}
  </div><small className="film-reel-caption">FILM STARS • 1960</small></section>
 }
