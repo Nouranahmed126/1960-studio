@@ -1673,3 +1673,14 @@ body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-stars-static-tra
 body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-loop-group{gap:10px!important}
 body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-home-star-card{scroll-snap-align:start!important}
 body .cinema-broadcast-home .cinema-stars-scroll-window:focus-visible{outline:2px solid #d2aa65!important;outline-offset:2px!important}
+
+/* Restore animated twin reels after static-gallery overrides */
+body .cinema-broadcast-home .cinema-stars-scroll-window{overflow:hidden!important}
+body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-loop-track.cinema-loop-right{display:flex!important;width:max-content!important;min-width:0!important;max-width:none!important;transform:translate3d(-50%,0,0);animation:cinemaLoopRight 55s linear infinite!important;will-change:transform!important;overflow:visible!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-left{animation:cinemaLoopLeft 42s linear infinite!important;will-change:transform!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-group{flex:0 0 auto!important;min-width:0!important;width:max-content!important;display:flex!important;align-items:center!important;gap:10px!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-group img{display:block!important;opacity:1!important;visibility:visible!important;object-fit:cover!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-home-star-card,body .cinema-broadcast-home .cinema-loop-window .museum-teaser-card{opacity:1!important;visibility:visible!important;background:#d9c8a5!important}
+.gold-tv-program .gold-tv-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:.78!important;filter:sepia(.65) contrast(1.08)!important;z-index:0!important}
+.gold-tv-program-copy{position:relative!important;z-index:2!important;text-shadow:0 2px 8px #000,0 1px 2px #000!important}
+.gold-tv-program{position:relative!important;overflow:hidden!important}
