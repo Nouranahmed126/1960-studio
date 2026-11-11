@@ -1736,3 +1736,13 @@ body .cinema-broadcast-home .js-reel .js-reel-group{display:flex!important;flex:
 body .cinema-broadcast-home .js-reel{direction:ltr!important;overflow:hidden!important;position:relative!important}
 body .cinema-broadcast-home .js-reel .marquee-item{display:flex!important;align-items:center!important;justify-content:center!important}
 body .cinema-broadcast-home .cinema-loop-message{color:#0d1b2a!important;font-size:11px!important}
+
+/* Mobile-first collapsible navigation and safe access to supervisor review actions */
+body .site-bottom-nav.site-bottom-collapsible{transform:translate3d(0,calc(100% + 16px),0)!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:transform .2s ease,opacity .2s ease,visibility .2s ease!important}
+body .site-bottom-nav.site-bottom-collapsible.is-expanded{transform:translate3d(0,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+body .site-bottom-toggle{position:fixed!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;left:10px!important;z-index:2147483000!important;width:34px!important;height:34px!important;border:1.5px solid #D4AF37!important;border-radius:12px!important;background:#F7F4EB!important;color:#06101E!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:24px!important;font-weight:800!important;line-height:1!important;box-shadow:0 3px 12px #0005!important;cursor:pointer!important}
+body .site-bottom-toggle.is-expanded{bottom:calc(102px + env(safe-area-inset-bottom,0px))!important}
+body:has(.site-bottom-collapsible) main{padding-bottom:max(90px,calc(64px + env(safe-area-inset-bottom,0px)))!important}
+body:has(.site-bottom-collapsible) textarea{scroll-margin-bottom:170px}
+body:has(.site-bottom-collapsible) [role="dialog"],body:has(.site-bottom-collapsible) dialog[open]{max-height:min(85dvh,85vh)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;padding-bottom:max(140px,calc(100px + env(safe-area-inset-bottom,0px)))!important}
+@media(prefers-reduced-motion:reduce){body .site-bottom-nav.site-bottom-collapsible{transition:none!important}}
