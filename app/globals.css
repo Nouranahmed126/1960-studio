@@ -1655,3 +1655,21 @@ body .site-bottom-nav .site-bottom-scroll a small{font-size:clamp(8px,2.3vw,11px
 .executive-office .director-roster-row small{color:#26394e!important;opacity:1!important}
 .executive-office .director-roster-row a{display:inline-flex!important;align-items:center;justify-content:center;background:#0d1b2a!important;color:#f7f4eb!important;font-size:11px!important;font-weight:700!important;border-radius:999px!important;padding:6px 10px!important;text-decoration:none!important;white-space:nowrap}
 @media(max-width:600px){.executive-office .director-roster-row{grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important}.executive-office .director-roster-row strong{grid-column:1!important;grid-row:1!important}.executive-office .director-roster-row small{grid-column:1!important;grid-row:2!important}.executive-office .director-roster-row a{grid-column:2!important;grid-row:1/span 2!important}.executive-office .director-mini-stats a{min-height:48px!important;padding:7px 5px!important}}
+
+
+/* Home stars: no auto-motion, no duplicate loop, swipeable photo strip */
+body .cinema-broadcast-home .cinema-stars-scroll-window{
+ overflow-x:auto!important;overflow-y:hidden!important;
+ overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important;
+ touch-action:pan-x!important;scrollbar-width:thin!important;scrollbar-color:#b28b59 #f7f4eb!important;
+ scroll-snap-type:x proximity!important;justify-content:flex-start!important;
+}
+body .cinema-broadcast-home .cinema-stars-scroll-window::after{display:none!important}
+body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-stars-static-track{
+ width:max-content!important;min-width:100%!important;max-width:none!important;
+ animation:none!important;transform:none!important;will-change:auto!important;
+ scroll-behavior:auto!important;
+}
+body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-loop-group{gap:10px!important}
+body .cinema-broadcast-home .cinema-stars-scroll-window .cinema-home-star-card{scroll-snap-align:start!important}
+body .cinema-broadcast-home .cinema-stars-scroll-window:focus-visible{outline:2px solid #d2aa65!important;outline-offset:2px!important}
