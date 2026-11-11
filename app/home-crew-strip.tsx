@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
+import MovingReel from "./moving-reel";
 type Member={id:string;full_name:string};
 type Detail={user_id:string;photo_path:string|null};
 export default function HomeCrewStrip(){
@@ -21,7 +22,5 @@ export default function HomeCrewStrip(){
  })();return()=>{active=false}},[]);
  const entries=members.map(m=><a className="cinema-home-star-card marquee-item" key={m.id} href="/crew" aria-label={m.full_name} title={m.full_name}>{photos[m.id]?<img src={photos[m.id]} alt={m.full_name} loading="eager" decoding="async"/>:<span className="cinema-star-placeholder" aria-label={m.full_name}>🎬</span>}</a>);
  return <section className="cinema-home-stars cinema-loop-section" aria-label="نجوم 1960">
- <div className="cinema-loop-window cinema-stars-scroll-window marquee-wrapper" aria-label="صور نجوم 1960 تتحرك تلقائيا" tabIndex={0}>
- {status==="ready"?<div className="cinema-loop-track marquee-track scroll-right" dir="ltr"><div className="cinema-loop-group">{entries}</div><div className="cinema-loop-group" aria-hidden="true">{entries}</div></div>:<div className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور نجوم 1960…":status==="login"?<>صور النجوم متاحة بعد <a href="/login">تسجيل الدخول</a></>:"صور النجوم هتظهر هنا بمجرد توفرها"}</div>}
- </div><small className="film-reel-caption">FILM STARS • 1960</small></section>
+ {status==="ready"?<MovingReel direction="right" label="صور نجوم 1960 تتحرك يمينًا">{entries}</MovingReel>:<div className="cinema-loop-window marquee-wrapper"><div className="cinema-loop-group">{Array.from({length:8},(_,i)=><a href="/crew" key={i} className="marquee-item cinema-home-star-card" aria-label="نجوم 1960"><span className="cinema-star-placeholder">🎬</span></a>)}</div><span className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور النجوم…":status==="login"?"سجلي الدخول لعرض صور النجوم":"صور النجوم قيد التجهيز"}</span></div>}<small className="film-reel-caption">FILM STARS • 1960</small></section>
 }
