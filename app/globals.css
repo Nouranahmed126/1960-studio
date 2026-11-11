@@ -1698,3 +1698,21 @@ body .cinema-broadcast-home .cinema-loop-window .cinema-home-star-card,body .cin
  body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-right,
  body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-left{animation:none!important;transform:none!important}
 }
+
+/* 2026-11-11 home reels: isolate LTR coordinate space from Arabic page layout */
+@keyframes reelStarsLTR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes reelMuseumLTR{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+body .cinema-broadcast-home .cinema-loop-window{direction:ltr!important;position:relative!important;overflow:hidden!important;isolation:isolate!important;background:#f7f4eb!important}
+body .cinema-broadcast-home .cinema-loop-window::before,body .cinema-broadcast-home .cinema-loop-window::after{pointer-events:none!important;z-index:3!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track{direction:ltr!important;position:relative!important;z-index:2!important;display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;width:max-content!important;max-width:none!important;min-width:0!important;left:auto!important;right:auto!important;margin:0!important;padding:0!important;inset:auto!important;overflow:visible!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-right{animation:reelStarsLTR 52s linear infinite!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-left{animation:reelMuseumLTR 42s linear infinite!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-loop-group{direction:ltr!important;display:flex!important;flex:0 0 auto!important;width:max-content!important;min-width:0!important;justify-content:flex-start!important;gap:10px!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-home-star-card,body .cinema-broadcast-home .cinema-loop-window .museum-teaser-card{position:relative!important;z-index:2!important;flex:0 0 90px!important;width:90px!important;height:96px!important;opacity:1!important;visibility:visible!important}
+body .cinema-broadcast-home .cinema-loop-window .cinema-home-star-card img,body .cinema-broadcast-home .cinema-loop-window .museum-teaser-card img{width:100%!important;height:86px!important;object-fit:cover!important;opacity:1!important;visibility:visible!important;position:relative!important;z-index:2!important}
+body .gold-tv-screen .gold-tv-program{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;display:block!important;overflow:hidden!important}
+body .gold-tv-screen .gold-tv-program .gold-tv-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;max-height:none!important;opacity:1!important}
+body .gold-tv-screen .gold-tv-program-copy{position:absolute!important;inset:auto 0 0 0!important;width:100%!important;box-sizing:border-box!important;padding:8px 12px!important;background:linear-gradient(transparent,#07111eea)!important;display:flex!important;flex-direction:column!important;gap:2px!important;align-items:center!important;justify-content:flex-end!important;min-height:0!important;text-align:center!important;z-index:4!important}
+body .gold-tv-screen .gold-tv-program-copy strong{font-size:clamp(14px,3vw,21px)!important;line-height:1.2!important;margin:0!important}
+body .gold-tv-screen .gold-tv-program-copy span,body .gold-tv-screen .gold-tv-program-copy small{font-size:10px!important;line-height:1.3!important;margin:0!important}
+@media(prefers-reduced-motion:reduce){body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-right,body .cinema-broadcast-home .cinema-loop-window .cinema-loop-track.cinema-loop-left{animation:none!important;transform:none!important}}
