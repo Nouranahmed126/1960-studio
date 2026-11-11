@@ -10,7 +10,7 @@ export default function CinematicIntro(){
  <div className="cinematic-intro-lens" aria-hidden="true"><span>1960</span></div>
  <p className="cinematic-intro-overline">A CINEMATIC GRADUATION PROJECT</p>
  <h1>STUDIO <em>1960</em></h1><p className="cinematic-intro-subtitle">مشروع التخرج</p>
- <p className="cinematic-intro-supervision">الإشراف الأكاديمي على الفيلم: د/ أحمد عبد المانع</p>
+ <p className="cinematic-intro-supervision">الإشراف الأكاديمي على الفيلم: د/ أحمد عبدالمنعم</p>
  <div className="cinematic-intro-signature"><strong>فكرة وتصميم وتطوير المنصة: نوران أحمد</strong><small>Platform Created & Designed by Nouran Ahmed</small></div>
  <button type="button" className="cinematic-intro-enter" onClick={enter}>🎬 دخول الاستوديو</button>
  <p className="cinematic-intro-note">واجهة افتتاحية تظهر مرة واحدة خلال الجلسة</p>
