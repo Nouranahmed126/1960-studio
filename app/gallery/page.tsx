@@ -15,7 +15,7 @@ export default function Gallery(){
   setSupervisor(p.data.app_role==="supervisor");setCanPost(true);
   const result=await db.from("project_gallery").select("id,title,description,storage_path,mime_type,created_at,category,carousel_id,carousel_position").order("created_at",{ascending:false}).limit(100);
   if(result.error){setMessage("تعذر تحميل المعرض.");return;}
-  const list=(result.data??[]) as Item[];setItems(list);
+  const list=((result.data??[]) as Item[]).filter(item=>item.id!==1);setItems(list);
   const signed=await Promise.all(list.map(async item=>{const {data}=await db.storage.from("studio-gallery").createSignedUrl(item.storage_path,3600);return [item.id,data?.signedUrl??""] as const;}));
   setUrls(Object.fromEntries(signed));setMessage("");
  }
