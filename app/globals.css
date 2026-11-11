@@ -1754,3 +1754,25 @@ body .studio-review-modal .studio-review-actions{position:sticky!important;botto
 body .studio-review-modal .studio-review-actions .studio-review-save{display:block!important;width:100%!important;min-height:48px!important;margin:0!important;background:#d4af37!important;color:#07111e!important;border-radius:10px!important;font-size:14px!important;font-weight:800!important;cursor:pointer!important}
 body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-backdrop) .site-bottom-nav{visibility:hidden!important;pointer-events:none!important}
 @supports not (height:100dvh){body .studio-review-backdrop .studio-review-modal{max-height:calc(100vh - 48px)!important}}
+
+
+/* Studio 1960 opening signature — separate film supervision from platform authorship */
+.cinematic-intro{position:fixed;inset:0;z-index:2147483640;background:radial-gradient(ellipse at 50% 25%,#172c45 0%,#0d1b2a 48%,#050a14 100%);color:#f7f4eb;display:grid;place-items:center;overflow:auto;padding:24px 18px;text-align:center;isolation:isolate}
+.cinematic-intro-beam{position:absolute;inset:0;pointer-events:none;background:conic-gradient(from 235deg at 50% 10%,transparent 0deg,#d4af3717 17deg,transparent 43deg);opacity:.8}
+.cinematic-intro-content{position:relative;z-index:1;width:min(560px,100%);margin:auto}
+.cinematic-intro-lens{width:112px;height:112px;margin:0 auto 22px;border-radius:50%;border:3px solid #d4af37;box-shadow:0 0 0 9px #d4af3715,0 0 0 18px #d4af370a,inset 0 0 25px #d4af3760,0 12px 40px #0008;display:grid;place-items:center;background:radial-gradient(circle,#273b53 10%,#06101e 75%);font:700 22px Georgia,serif;letter-spacing:4px;color:#e8c770}
+.cinematic-intro-overline{font-size:10px;letter-spacing:3px;color:#d4af37}
+.cinematic-intro h1{font:700 clamp(42px,11vw,76px) Georgia,serif;letter-spacing:2px;margin:10px 0;color:#f7f4eb}
+.cinematic-intro h1 em{font-style:normal;color:#d4af37}
+.cinematic-intro-subtitle{font-size:21px;font-weight:800;margin:8px 0}
+.cinematic-intro-supervision{color:#eee0c3;font-size:14px;line-height:1.8}
+.cinematic-intro-signature{border:1px solid #d4af3780;background:#d4af370d;border-radius:16px;padding:16px 10px;margin:25px auto;display:grid;gap:8px;color:#f7f4eb}
+.cinematic-intro-signature strong{font-size:15px}.cinematic-intro-signature small{color:#d4af37;font-size:11px;letter-spacing:.4px}
+.cinematic-intro-enter{background:linear-gradient(135deg,#e8c770,#d4af37);border:1px solid #f7f4eb80;border-radius:30px;padding:14px 34px;color:#06101e;font-weight:900;font-size:17px;cursor:pointer;min-height:52px;box-shadow:0 8px 28px #0006}
+.cinematic-intro-enter:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.cinematic-intro-note{color:#b6b9c2;font-size:11px;margin:14px 0 0}
+.cinematic-home-credit{text-align:center;font-size:12px;line-height:2;color:#d4af37;margin:6px auto 18px;max-width:680px}
+.cinematic-home-credit span{padding:0 8px}
+.cinematic-home-footer{text-align:center;color:#9a7b2c;font-size:11px;letter-spacing:1px;padding:24px 0 110px}
+@media(max-width:420px){.cinematic-intro{padding:16px}.cinematic-intro-lens{width:85px;height:85px;margin-bottom:12px}.cinematic-intro-signature{margin:15px auto}.cinematic-home-credit{font-size:11px}}
+@media(prefers-reduced-motion:no-preference){.cinematic-intro-content{animation:cinematic-arrival .6s ease both}@keyframes cinematic-arrival{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}}
