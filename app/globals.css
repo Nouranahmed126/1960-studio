@@ -1792,3 +1792,11 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 .cinema-team-room .studio-bundle-items{display:grid;gap:9px;max-height:55dvh;overflow-y:auto;padding:8px 2px 20px}
 .cinema-team-room .studio-bundle-items button{display:flex;flex-direction:column;align-items:stretch;gap:5px;text-align:right;min-height:58px;padding:12px;border:1px solid #d4af3766;border-radius:12px;background:#f7f4eb;color:#06101e;font-weight:800;cursor:pointer;overflow-wrap:anywhere}
 .cinema-team-room .studio-bundle-items button small{font-size:11px;color:#374357}
+
+
+/* Home stars: stable swipeable strip; never translate or duplicate cards */
+.cinema-home-stars-static{width:100%;max-width:100%;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:#c6a06d #1a2534;direction:rtl}
+.cinema-home-stars-track{display:flex!important;flex-wrap:nowrap!important;align-items:center;justify-content:flex-start;gap:12px;padding:12px 14px;min-width:max-content;width:max-content;transform:none!important;animation:none!important}
+.cinema-home-stars-track>.cinema-home-star-card{flex:0 0 auto!important;scroll-snap-align:start;transform:none!important;animation:none!important}
+.cinema-home-stars-static:focus-visible{outline:2px solid #e2c28c;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.cinema-home-stars-track,.cinema-home-stars-track>*{animation:none!important;transition:none!important}}
