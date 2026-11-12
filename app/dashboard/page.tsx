@@ -1,16 +1,42 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import SubmissionRadar from "../submission-radar";
+import SupervisorArchive from "../supervisor-archive";
 import { getSupabase } from "../../lib/supabase-browser";
 type Profile={id:string;full_name:string;approval_status:string;app_role:string};
 type Team={id:number;name:string};
+type Star={id:string;full_name:string};
+type StarDetail={user_id:string;film_role:string;photo_path:string|null};
 type Request={user_id:string;team_id:number;status:string};
 type Membership={team_id:number;role:string};
 type Task={id:number;title:string;description:string|null;due_at:string|null};
 export default function Dashboard(){
  const [profile,setProfile]=useState<Profile|null>(null);
  const [teams,setTeams]=useState<Team[]>([]);
+ const [assignmentRegister,setAssignmentRegister]=useState<{id:number;title:string;created_at:string;archived_at:string|null;due_at:string|null}[]>([]);
+ const [notebookPage,setNotebookPage]=useState(0);
+ const [notebookTab,setNotebookTab]=useState<"files"|"tasks">("tasks");const [notebookSearch,setNotebookSearch]=useState("");
+ const [uploadedFiles,setUploadedFiles]=useState<{id:number;uploaded_by:string;file_name:string;storage_path:string|null;external_url:string|null;created_at:string;team_id:number|null;contribution_id:number|null}[]>([]);
+ const [scoreboard,setScoreboard]=useState<{assignment_id:number;assignment_title:string;student_id:string;student_name:string;due_at:string|null;received:boolean;delivery_status:string|null;has_star:boolean}[]>([]);
+ const [teamRoster,setTeamRoster]=useState<{team_id:number;user_id:string}[]>([]);
+ const [publication,setPublication]=useState<{assignment_id:number;team_id:number|null;published:boolean}[]>([]);
+ const [myAwards,setMyAwards]=useState<{award_type:string;award_id:number}[]>([]);
+ const [classifications,setClassifications]=useState<{source_type:string;source_id:number;assignment_id:number|null;team_id:number|null;is_self_initiated:boolean}[]>([]);
+ const [writtenItems,setWrittenItems]=useState<{source_type:"contribution"|"submission"|"work";source_id:number;user_id:string;title:string;content:string;created_at:string;assignment_id:number|null;team_id:number|null}[]>([]);
+ const [writtenReviews,setWrittenReviews]=useState<{source_type:string;source_id:number;stars:number;received:boolean;opened_at:string|null}[]>([]);
+ const [receipts,setReceipts]=useState<{assignment_id:number;student_id:string;received:boolean;delivery_status:string|null}[]>([]);
+ const [fileReviews,setFileReviews]=useState<{attachment_id:number;stars:number;received:boolean;opened_at:string|null}[]>([]);
+ const [reviews,setReviews]=useState<{assignment_id:number;student_id:string;stars:number|null}[]>([]);
+ const [feedbackNotes,setFeedbackNotes]=useState<{source_type:string;source_id:number;note:string;needs_discussion:boolean}[]>([]);
+ const [discussionFlags,setDiscussionFlags]=useState<{source_type:string;source_id:number;submission_title:string}[]>([]);
+ const [noteDrafts,setNoteDrafts]=useState<Record<string,string>>({});
+ const [draftTitles,setDraftTitles]=useState<Record<number,string>>({});
+ const [assignmentDeliveries,setAssignmentDeliveries]=useState<{assignment_id:number;user_id:string;created_at:string}[]>([]);
+ const [stars,setStars]=useState<Star[]>([]);
+ const [starDetails,setStarDetails]=useState<StarDetail[]>([]);
  const [requests,setRequests]=useState<Request[]>([]);
  const [students,setStudents]=useState<Profile[]>([]);
+ const [uploaderProfiles,setUploaderProfiles]=useState<{id:string;full_name:string}[]>([]);
  const [members,setMembers]=useState<Membership[]>([]);
  const [tasks,setTasks]=useState<Task[]>([]);
  const [selected,setSelected]=useState<number[]>([]);
@@ -24,14 +50,53 @@ export default function Dashboard(){
   const p=await db.from("profiles").select("id,full_name,approval_status,app_role").eq("id",user.id).single();
   if(p.error||!p.data){setMessage("تعذر قراءة حسابك. راجعي إعدادات قاعدة البيانات.");return;}
   const current=p.data as Profile;setProfile(current);
+  const discussionResult=await db.rpc("my_discussion_flags");if(!discussionResult.error)setDiscussionFlags(discussionResult.data??[]);
+  const boardResult=await db.rpc("student_assignment_scoreboard");if(!boardResult.error)setScoreboard(boardResult.data??[]);
+  const awardsResult=await db.rpc("my_gold_star_awards");if(!awardsResult.error)setMyAwards(awardsResult.data??[]);
   const teamResult=await db.from("teams").select("id,name").order("id");
   if(!teamResult.error)setTeams((teamResult.data??[]) as Team[]);
   if(current.app_role==="supervisor"){
+   const [crew,crewInfo]=await Promise.all([db.rpc("list_approved_crew"),db.from("crew_profiles").select("user_id,film_role,photo_path")]);
+   if(!crew.error)setStars((crew.data??[]) as Star[]);
+   if(!crewInfo.error)setStarDetails((crewInfo.data??[]) as StarDetail[]);
+   const [assignmentsResult,contributionsResult,submissionsResult,reviewsResult,filesResult,fileReviewsResult,receiptsResult,writtenReviewsResult,uploaderProfilesResult,classificationsResult,publicationResult,rosterResult,feedbackResult,workResult]=await Promise.all([
+    db.from("assignments").select("id,title,created_at,archived_at,due_at").order("id",{ascending:true}).limit(200),
+    db.from("contributions").select("id,assignment_id,team_id,user_id,title,content,created_at").order("created_at",{ascending:false}).limit(1000),
+    db.from("submissions").select("id,assignment_id,team_id,submitted_by,content,submitted_at,created_at").order("created_at",{ascending:false}).limit(1000),
+    db.from("assignment_reviews").select("assignment_id,student_id,stars"),
+    db.from("attachments").select("id,uploaded_by,file_name,storage_path,external_url,created_at,team_id,contribution_id").order("created_at",{ascending:false}).limit(1000),
+    db.from("attachment_reviews").select("attachment_id,stars,received,opened_at"),
+    db.from("assignment_receipts").select("assignment_id,student_id,received,delivery_status"),
+    db.from("written_submission_reviews").select("source_type,source_id,stars,received,opened_at"),
+    db.from("profiles").select("id,full_name"),
+    db.from("submission_classifications").select("source_type,source_id,assignment_id,team_id,is_self_initiated"),
+    db.from("assignment_publication").select("assignment_id,team_id,published"),
+    db.from("team_members").select("team_id,user_id"),
+    db.from("submission_feedback_notes").select("source_type,source_id,note,needs_discussion"),
+    db.from("work_submissions").select("id,student_id,team_id,title,category,body,created_at").order("created_at",{ascending:false}).limit(1000)
+   ]);
+   if(!assignmentsResult.error)setAssignmentRegister(assignmentsResult.data??[]);
+   if(!reviewsResult.error)setReviews(reviewsResult.data??[]);
+   if(!filesResult.error)setUploadedFiles(filesResult.data??[]);else setMessage("تعذر تحميل الملفات: "+filesResult.error.message);
+   if(!fileReviewsResult.error)setFileReviews(fileReviewsResult.data??[]);
+   if(!receiptsResult.error)setReceipts(receiptsResult.data??[]);
+   if(!writtenReviewsResult.error)setWrittenReviews(writtenReviewsResult.data??[]);
+   if(!uploaderProfilesResult.error)setUploaderProfiles(uploaderProfilesResult.data??[]);
+   if(!classificationsResult.error)setClassifications(classificationsResult.data??[]);
+   if(!publicationResult.error)setPublication(publicationResult.data??[]);
+   if(!rosterResult.error)setTeamRoster(rosterResult.data??[]);
+   if(!feedbackResult.error)setFeedbackNotes(feedbackResult.data??[]);
+   if(workResult.error)setMessage("تعذر تحميل التسليمات النصية: "+workResult.error.message);
+   setWrittenItems([...(contributionsResult.data??[]).filter(x=>x.content?.trim()).map(x=>({source_type:"contribution" as const,source_id:x.id,user_id:x.user_id,title:x.title||"مشاركة مكتوبة",content:x.content,created_at:x.created_at,assignment_id:x.assignment_id,team_id:x.team_id})),...(submissionsResult.data??[]).filter(x=>x.content?.trim()).map(x=>({source_type:"submission" as const,source_id:x.id,user_id:x.submitted_by,title:"تسليم مكتوب",content:x.content,created_at:x.submitted_at||x.created_at,assignment_id:x.assignment_id,team_id:x.team_id})),...(workResult.data??[]).map(x=>({source_type:"work" as const,source_id:x.id,user_id:x.student_id,title:x.title||"تسليم نصي · "+x.category,content:x.body||"",created_at:x.created_at,assignment_id:null,team_id:x.team_id}))].sort((a,b)=>new Date(b.created_at).getTime()-new Date(a.created_at).getTime()));
+   const rows:{assignment_id:number;user_id:string;created_at:string}[]=[];
+   for(const item of contributionsResult.data??[])if(item.assignment_id&&item.user_id)rows.push({assignment_id:item.assignment_id,user_id:item.user_id,created_at:item.created_at});
+   for(const item of submissionsResult.data??[])if(item.assignment_id&&item.submitted_by)rows.push({assignment_id:item.assignment_id,user_id:item.submitted_by,created_at:item.submitted_at||item.created_at});
+   setAssignmentDeliveries(rows.sort((x,y)=>new Date(y.created_at).getTime()-new Date(x.created_at).getTime()));
    const [people,joins]=await Promise.all([
     db.from("profiles").select("id,full_name,approval_status,app_role").eq("app_role","student").order("created_at",{ascending:false}),
     db.from("team_join_requests").select("user_id,team_id,status")
    ]);
-   if(people.error||joins.error)setMessage("تعذر تحميل طلبات الطلاب. راجعي سياسات المشرفة.");
+   if(people.error||joins.error)setMessage("تعذر تحميل طلبات الطلاب: "+(people.error?.message||joins.error?.message));
    else{setStudents((people.data??[]) as Profile[]);setRequests((joins.data??[]) as Request[]);setMessage("");}
   }else{
    const [joins,membersResult,taskResult]=await Promise.all([
@@ -39,10 +104,10 @@ export default function Dashboard(){
     db.from("team_members").select("team_id,role").eq("user_id",user.id),
     db.from("assignments").select("id,title,description,due_at").order("created_at",{ascending:false}).limit(30)
    ]);
-   if(!joins.error){setRequests((joins.data??[]) as Request[]);setSelected(((joins.data??[]) as Request[]).map(x=>x.team_id));}
+   if(!joins.error){const existing=(joins.data??[]) as Request[];setRequests(existing);setSelected(existing.map(x=>x.team_id));if(current.approval_status==="pending"&&existing.length===0){const stored=user.user_metadata?.requested_team_ids; if(Array.isArray(stored)&&stored.length>=2&&stored.length<=3&&stored.every((x:unknown)=>typeof x==="number"&&Number.isInteger(x))){const saved=await db.rpc("request_my_teams",{p_team_ids:stored});if(!saved.error){setSelected(stored);setRequests(stored.map((team_id:number)=>({user_id:user.id,team_id,status:"pending"})));}else setMessage("تعذر حفظ الفرق المختارة أثناء التسجيل: "+saved.error.message);}}}
    if(!membersResult.error)setMembers((membersResult.data??[]) as Membership[]);
    if(!taskResult.error)setTasks((taskResult.data??[]) as Task[]);
-   setMessage("");
+   if(joins.error)setMessage("تعذر تحميل اختيارات الفرق: "+joins.error.message);
   }
  },[]);
  useEffect(()=>{void load()},[load]);
@@ -52,32 +117,51 @@ export default function Dashboard(){
   setBusy(true);setMessage("");
   const {error}=await db.rpc("request_my_teams",{p_team_ids:selected});
   setBusy(false);
-  if(error)setMessage("تعذر إرسال الطلب. تأكدي إن تحديث قاعدة البيانات اتنفذ.");
-  else{setMessage("اتسجل طلبك بنجاح، وفي انتظار موافقة المشرفة.");await load();}
+  if(error)setMessage("لم يتم حفظ اختيار الفرق: "+error.message);
+  else{await load();setMessage("تم حفظ اختيار الفرق بنجاح، وفي انتظار موافقة المشرفة.");}
  }
  async function approve(id:string){
   const db=getSupabase();if(!db)return;
   setBusy(true);setMessage("");
   const {error}=await db.rpc("approve_student",{p_user_id:id});
   setBusy(false);
-  if(error)setMessage("الموافقة ما تمتّش. تأكدي إن الطالب اختار فريقين أو ثلاثة وإن دالة الموافقة متفعلة.");
+  if(error)setMessage("الموافقة لم تتم: "+error.message);
   else{await load();setMessage("تمت الموافقة على الطالب وفرق العمل.");}
  }
+ async function toggleDiscussionFlag(source_type:string,source_id:number){const db=getSupabase();if(!db)return;const old=feedbackNotes.find(n=>n.source_type===source_type&&n.source_id===source_id);const next={source_type,source_id,note:old?.note??"",needs_discussion:!old?.needs_discussion,updated_by:profile?.id,updated_at:new Date().toISOString()};setBusy(true);const {error}=await db.from("submission_feedback_notes").upsert(next,{onConflict:"source_type,source_id"});setBusy(false);if(error)setMessage("تعذر تحديث علامة المناقشة: "+error.message);else setFeedbackNotes(prev=>[...prev.filter(n=>n.source_type!==source_type||n.source_id!==source_id),next]);}
+ async function saveFeedbackNote(source_type:string,source_id:number){const db=getSupabase();if(!db)return;const key=source_type+"-"+source_id;const note=(noteDrafts[key]??feedbackNotes.find(x=>x.source_type===source_type&&x.source_id===source_id)?.note??"").trim();setBusy(true);const {error}=await db.from("submission_feedback_notes").upsert({source_type,source_id,note,needs_discussion:feedbackNotes.find(n=>n.source_type===source_type&&n.source_id===source_id)?.needs_discussion??false,updated_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"source_type,source_id"});setBusy(false);if(error)setMessage("تعذر حفظ الملاحظة: "+error.message);else{setFeedbackNotes(prev=>[...prev.filter(x=>x.source_type!==source_type||x.source_id!==source_id),{source_type,source_id,note,needs_discussion:feedbackNotes.find(n=>n.source_type===source_type&&n.source_id===source_id)?.needs_discussion??false}]);setMessage("تم حفظ الملاحظة في دفتر المشرف.");}}
+ async function updateAssignmentPublication(assignment_id:number,patch:{team_id?:number|null;published?:boolean}){const db=getSupabase();if(!db)return;const old=publication.find(x=>x.assignment_id===assignment_id);const next={assignment_id,team_id:patch.team_id!==undefined?patch.team_id:old?.team_id??null,published:patch.published!==undefined?patch.published:old?.published??false};setBusy(true);const r=await db.from("assignment_publication").upsert({...next,updated_at:new Date().toISOString()},{onConflict:"assignment_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ إعدادات النشر: "+r.error.message);else{setPublication(prev=>[...prev.filter(x=>x.assignment_id!==assignment_id),next]);setMessage("✓ تم حفظ إعدادات التكليف بنجاح.");}}
+ async function setDeliveryStatus(assignment_id:number,student_id:string,delivery_status:"on_time"|"late"|null){const db=getSupabase();if(!db)return;setBusy(true);const existing=receipts.find(x=>x.assignment_id===assignment_id&&x.student_id===student_id);const r=await db.from("assignment_receipts").upsert({assignment_id,student_id,received:existing?.received??false,delivery_status,received_by:profile?.id},{onConflict:"assignment_id,student_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ حالة التسليم: "+r.error.message);else{setReceipts(prev=>[...prev.filter(x=>x.assignment_id!==assignment_id||x.student_id!==student_id),{assignment_id,student_id,received:existing?.received??false,delivery_status}]);setScoreboard(prev=>prev.map(x=>x.assignment_id===assignment_id&&x.student_id===student_id?{...x,delivery_status}:x));setMessage("✓ تم حفظ حالة التسليم بنجاح.");}}
+ async function saveReview(assignment_id:number,student_id:string,stars:number|null){const db=getSupabase();if(!db)return;setBusy(true);const r=await db.from("assignment_reviews").upsert({assignment_id,student_id,stars,reviewed_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"assignment_id,student_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ النجوم: "+r.error.message);else{setReviews(prev=>[...prev.filter(x=>x.assignment_id!==assignment_id||x.student_id!==student_id),{assignment_id,student_id,stars}]);setMessage("تم حفظ التقييم.");}}
+ async function saveFileReview(attachment_id:number,stars:number){const db=getSupabase();if(!db)return;setBusy(true);const r=await db.from("attachment_reviews").upsert({attachment_id,stars,reviewed_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"attachment_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ تقييم الملف: "+r.error.message);else{setFileReviews(prev=>[...prev.filter(x=>x.attachment_id!==attachment_id),{attachment_id,stars,received:prev.find(x=>x.attachment_id===attachment_id)?.received??false,opened_at:prev.find(x=>x.attachment_id===attachment_id)?.opened_at??null}]);setMessage("تم حفظ تقييم الملف بنجاح.");}}
+ async function openNotebookFile(path:string|null,url:string|null){if(path){const db=getSupabase();if(!db)return;const r=await db.storage.from("studio-files").createSignedUrl(path,120);if(r.error||!r.data?.signedUrl){setMessage("تعذر فتح الملف: "+(r.error?.message??"رابط غير متاح"));return;}window.open(r.data.signedUrl,"_blank","noopener,noreferrer");}else if(url&&url.startsWith("https://"))window.open(url,"_blank","noopener,noreferrer");else setMessage("لا يوجد رابط صالح لهذا الملف.");}
+ async function toggleReceipt(assignment_id:number,student_id:string,received:boolean){const db=getSupabase();if(!db)return;setBusy(true);const r=await db.from("assignment_receipts").upsert({assignment_id,student_id,received,delivery_status:receipts.find(x=>x.assignment_id===assignment_id&&x.student_id===student_id)?.delivery_status??null,received_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"assignment_id,student_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ الاستلام: "+r.error.message);else{setReceipts(prev=>[...prev.filter(x=>x.assignment_id!==assignment_id||x.student_id!==student_id),{assignment_id,student_id,received,delivery_status:prev.find(x=>x.assignment_id===assignment_id&&x.student_id===student_id)?.delivery_status??null}]);setScoreboard(prev=>prev.map(x=>x.assignment_id===assignment_id&&x.student_id===student_id?{...x,received}:x));setMessage(received?"تم تأكيد الاستلام.":"تم إلغاء تأكيد الاستلام.");}}
+ async function markFileReceived(attachment_id:number,received:boolean){const db=getSupabase();if(!db)return;setBusy(true);const existing=fileReviews.find(r=>r.attachment_id===attachment_id);const r=await db.from("attachment_reviews").upsert({attachment_id,stars:existing?.stars??0,received,reviewed_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"attachment_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ حالة المراجعة: "+r.error.message);else setFileReviews(prev=>[...prev.filter(x=>x.attachment_id!==attachment_id),{attachment_id,stars:existing?.stars??0,received,opened_at:existing?.opened_at??null}]);}
+ async function openTrackedFile(file:{id:number;storage_path:string|null;external_url:string|null}){const db=getSupabase();if(!db)return;await openNotebookFile(file.storage_path,file.external_url);const existing=fileReviews.find(r=>r.attachment_id===file.id);const now=new Date().toISOString();const r=await db.from("attachment_reviews").upsert({attachment_id:file.id,stars:existing?.stars??0,received:existing?.received??false,opened_at:now,reviewed_by:profile?.id,updated_at:now},{onConflict:"attachment_id"});if(!r.error)setFileReviews(prev=>[...prev.filter(x=>x.attachment_id!==file.id),{attachment_id:file.id,stars:existing?.stars??0,received:existing?.received??false,opened_at:now}]);}
+ async function updateWrittenReview(source_type:"contribution"|"submission"|"work",source_id:number,patch:{stars?:number;received?:boolean;opened_at?:string}){const db=getSupabase();if(!db)return;const old=writtenReviews.find(x=>x.source_type===source_type&&x.source_id===source_id);const next={source_type,source_id,stars:patch.stars??old?.stars??0,received:patch.received??old?.received??false,opened_at:patch.opened_at??old?.opened_at??null};setBusy(true);const r=await db.from("written_submission_reviews").upsert({...next,reviewed_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"source_type,source_id"});setBusy(false);if(r.error)setMessage("تعذر حفظ المراجعة: "+r.error.message);else setWrittenReviews(prev=>[...prev.filter(x=>x.source_type!==source_type||x.source_id!==source_id),next]);}
+ async function classifySubmission(source_type:"file"|"contribution"|"submission"|"work",source_id:number,field:"assignment_id"|"team_id",value:string){const db=getSupabase();if(!db)return;const old=classifications.find(x=>x.source_type===source_type&&x.source_id===source_id);const next={source_type,source_id,assignment_id:old?.assignment_id??null,team_id:old?.team_id??null,is_self_initiated:old?.is_self_initiated??false};if(field==="assignment_id"){next.assignment_id=value==="self"?null:value?Number(value):null;next.is_self_initiated=value==="self";}else next.team_id=value?Number(value):null;const r=await db.from("submission_classifications").upsert({...next,updated_by:profile?.id,updated_at:new Date().toISOString()},{onConflict:"source_type,source_id"});if(r.error)setMessage("تعذر حفظ تصنيف التسليم: "+r.error.message);else setClassifications(prev=>[...prev.filter(x=>x.source_type!==source_type||x.source_id!==source_id),next]);}
+ async function saveAssignment(id:number,title:string,archive:boolean){const db=getSupabase();if(!db)return;if(archive&&!window.confirm("أرشفة التكليف وإخفاؤه من القائمة النشطة؟ مش هنمسح أي تسليمات."))return;setBusy(true);const r=await db.rpc("update_assignment_admin",{p_id:id,p_title:title,p_archive:archive});setBusy(false);if(r.error)setMessage("تعذر تعديل التكليف: "+r.error.message);else{await load();setMessage("تم حفظ تعديل التكليف.");}}
  async function logout(){await getSupabase()?.auth.signOut();window.location.replace("/login");}
+ const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));
  const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
- return <main style={{maxWidth:900,margin:"auto",padding:"24px 18px"}}>
+ return <main className="dashboard-shell"><SubmissionRadar/>
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
    <a href="/" style={{color:"#d5a66d",fontWeight:700}}>1960 STUDIO</a>
    <button onClick={logout} style={buttonStyle}>تسجيل خروج</button>
   </header>
-  {profile&&<section style={{marginTop:48}}>
+  {profile&&<section style={{marginTop:48}}>{profile.app_role==="supervisor"&&<section className="executive-office" aria-label="مكتب قيادة استوديو 1960">
+    <div className="executive-office-content"><p className="executive-eyebrow">1960 STUDIO · EXECUTIVE OFFICE</p><h2>أهلاً بحضرتك، د/ نوران أحمد</h2><p>مكتب قيادة الاستوديو — كل مراحل صناعة الفيلم، وكل إبداعات الفريق، في مكان واحد.</p><section className="director-mini-stats"><a href="/crew"><strong>{students.filter(x=>x.approval_status==="approved").length}</strong><small>طالب معتمد</small></a><a href="/sectors"><strong>{teams.length}</strong><small>فرق</small></a><a href="/submissions"><strong>{uploadedFiles.length+writtenItems.length}</strong><small>تسليم</small></a><a href="/assignments/new"><strong>{assignmentRegister.filter(x=>!x.archived_at).length}</strong><small>تكليف نشط</small></a></section><section className="director-roster-compact"><h3>متابعة الطلاب</h3>{students.filter(x=>x.approval_status==="approved").map(x=><div className="director-roster-row" key={x.id}><strong>{x.full_name}</strong><small>{uploadedFiles.filter(f=>f.uploaded_by===x.id).length+writtenItems.filter(w=>w.user_id===x.id).length} تسليم</small><a href="/submissions">فتح ومراجعة ←</a></div>)}</section><SupervisorArchive supervisorId={profile.id} teams={teams} students={students.filter(x=>x.approval_status==="approved")} assignments={assignmentRegister} onSaved={load} rows={[...uploadedFiles.map(f=>({source_type:"file" as const,source_id:f.id,title:f.file_name,student_id:f.uploaded_by,team_id:f.team_id,assignment_id:null})),...writtenItems.map(w=>({source_type:w.source_type,source_id:w.source_id,title:w.title,student_id:w.user_id,team_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.team_id??w.team_id,assignment_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.assignment_id??w.assignment_id}))]}/><div className="executive-office-links">
+    {([{href:"/production-hub",icon:"🎬",name:"غرفة عمليات الإنتاج",sub:"المحطات والتكليفات"},{href:"/director-room",icon:"🎞️",name:"غرفة العرض والإخراج",sub:"السيناريو والتقييم"},{href:"/gallery",icon:"📽️",name:"سينما الكواليس",sub:"الصور والفيديوهات"},{href:"/crew",icon:"🎭",name:"طاقم الفيلم",sub:"أعضاء الفريق وأدوارهم"},{href:"/sectors",icon:"🗂️",name:"قطاعات العمل",sub:"الفرق والمهام والمحادثات"},{href:"/submissions",icon:"📁",name:"التسليمات",sub:"النصوص والملفات والتسجيلات"},{href:"/requests",icon:"✉️",name:"رسائل الفريق",sub:"الطلبات والمراسلات"},{href:"/chat",icon:"💬",name:"غرفة التواصل",sub:"شات فريق الفيلم"},{href:"/assignments/new",icon:"✍️",name:"التكليفات الجديدة",sub:"إدارة أعمال الفرق"}] as const).map(link=><a className="executive-office-link" key={link.href} href={link.href}><span className="executive-office-icon">{link.icon}</span><strong>{link.name}</strong><small>{link.sub}</small></a>)}
+    </div><div className="executive-special"><h3>✦ المساحات الحصرية لمكتب القيادة</h3><div className="executive-special-grid"><article><span>01 · PRIVATE SCREENING</span><h4>غرفة العرض الخاصة</h4><p>مدخل مباشر لمشاهدة الفيديوهات والكواليس المنشورة، ومراجعة مواد الفيلم بصريًا.</p><a href="/gallery">دخول غرفة العرض ←</a></article><article><span>02 · MAKING OF 1960</span><h4>رحلة صناعة الفيلم</h4><p>متابعة مراحل العمل والتكليفات والتقدم من غرفة عمليات الإنتاج.</p><a href="/production-hub">استعراض الرحلة ←</a></article><article><span>03 · CREATIVE ARCHIVE</span><h4>أرشيف الإبداع</h4><p>العودة إلى ملفات الفرق وأعمالهم والتصورات التي طُورت خلال المشروع.</p><a href="/submissions">فتح الأرشيف ←</a></article></div><div className="executive-mentor"><span>THE MENTOR'S LEGACY · بصمة المشرف</span><p>مساحة تقدير لرحلة التعلم والإبداع التي تجمع فريق 1960 بمشرفيه. محتوى الإهداء سيُضاف عند اعتماده، دون عرض رسائل منسوبة للفريق قبل كتابتها.</p></div></div><section className="executive-stars" aria-label="نجوم فيلم 1960"><div className="executive-stars-heading"><div><span>1960 · CAST & CREW</span><h3>✦ نجوم فيلم 1960</h3><p>الناس اللي ورا كل لقطة وكل فكرة — بطاقاتهم الحقيقية بتتحدث من الاستوديو تلقائيًا.</p></div><a href="/crew">كل نجوم الفيلم ←</a></div>{stars.length>0?<div className="executive-stars-viewport" dir="ltr" tabIndex={0} aria-label="شريط متحرك لنجوم الفيلم، يتوقف عند التفاعل معه"><div className="executive-stars-track">{[0,1].map(copy=><div className="executive-stars-set" key={copy} aria-hidden={copy===1}>{stars.map((star,i)=>{const info=starDetails.find(d=>d.user_id===star.id);const photo=info?.photo_path?getSupabase()?.storage.from("crew-photos").getPublicUrl(info.photo_path).data.publicUrl:null;return <a href="/crew" className="executive-star-card" key={star.id} dir="rtl" tabIndex={copy===1?-1:0}><div className="executive-star-portrait">{photo?<img src={photo} alt="" loading="lazy"/>:<span>✦</span>}</div><small>1960 · STAR {String(i+1).padStart(2,"0")}</small><strong>{star.full_name}</strong><span>{info?.film_role||"عضو طاقم الفيلم"}</span></a>})}</div>)}</div></div>:<p className="executive-stars-empty">بطاقات النجوم هتظهر هنا تلقائيًا بمجرد تحميل بيانات الطاقم المعتمد.</p>}</section><p className="executive-office-footer">مساحة مشتركة لإدارة 1960 — نفس الواجهة ونفس الأدوات لكل حساب مشرف معتمد.</p></div>
+   </section>}
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
-   <h1>أهلًا، {profile.full_name}</h1>
+   <h1>أهلًا، {profile.full_name}</h1><nav style={{display:"flex",gap:12,flexWrap:"wrap",margin:"18px 0"}}><a href="/sectors" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>🎬 قطاعات فرق العمل · المهام والملفات</a></nav><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
    {profile.app_role==="supervisor"?<>
-    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>عرض ملفات فرق العمل</a></p>
+    <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><section style={{...panel,borderColor:"#886277"}}><h2>🎞 متابعة طاقم الفيلم</h2><p>الأعضاء المعتمدون: <strong>{students.filter(s=>s.approval_status==="approved").length}</strong> من العدد المستهدف 18</p><p>طلبات بانتظار الاعتماد: <strong>{visiblePending.length}</strong></p>{students.filter(s=>s.approval_status==="approved").length>=18&&<p>تنبيه: العدد المستهدف اكتمل أو تم تجاوزه؛ راجعي الأسماء قبل الموافقة على حسابات إضافية.</p>}<a href="/crew">عرض بطاقات الطاقم والأدوار</a></section><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/submissions" style={{color:"#d5a66d"}}>عرض التسليمات</a></p>
+    
     <div style={{display:"grid",gap:14,marginTop:26}}>
-     {students.filter(p=>p.approval_status==="pending").map(student=>{
+     {visiblePending.map(student=>{
       const own=requests.filter(r=>r.user_id===student.id&&r.status==="pending");
       return <article key={student.id} style={panel}>
        <h2 style={{marginTop:0,fontSize:19}}>{student.full_name}</h2>
@@ -85,7 +169,7 @@ export default function Dashboard(){
        <button style={buttonStyle} disabled={busy||own.length<2||own.length>3} onClick={()=>void approve(student.id)}>الموافقة على الطالب والفرق</button>
       </article>;
      })}
-     {!students.some(p=>p.approval_status==="pending")&&<p>مفيش طلبات جديدة حاليًا.</p>}
+     {visiblePending.length===0&&<p>مفيش طلبات جديدة حاليًا.</p>}
     </div>
    </>:profile.approval_status!=="approved"?<>
     <p style={{color:"#b7c0ce"}}>حسابك لسه في انتظار موافقة المشرفة. ملفات الفرق مش متاحة قبل الموافقة.</p>
@@ -96,18 +180,20 @@ export default function Dashboard(){
      <button style={buttonStyle} disabled={busy||teams.length===0} onClick={()=>void sendTeams()}>حفظ طلب الفرق ({selected.length})</button>
     </section>
    </>:<>
+    {discussionFlags.length>0&&<section className="student-discussion-panel"><h2>❔ تكليفات تحتاج مناقشة</h2><p>لديك ملاحظة على التكليف التالي. يُرجى مراجعة المشرف لمناقشتها.</p>{discussionFlags.map(flag=><div key={flag.source_type+"-"+flag.source_id} className="student-discussion-entry"><span className="student-discussion-symbol">❔</span><strong>{flag.submission_title||"تسليم كتابي"}</strong><details><summary>عرض التنبيه</summary><p>يرجى مراجعة المشرف لمناقشة ملاحظته على هذا التسليم.</p></details></div>)}</section>}
+    <section className="student-public-scoreboard"><h2>جدول متابعة التكليفات</h2><p>التقييمات المعتمدة من المشرفة فقط، دون عرض ملفات أو نصوص الطلاب.</p>{[...new Set(scoreboard.map(x=>x.assignment_id))].map(aid=>{const rows=scoreboard.filter(x=>x.assignment_id===aid);const first=rows[0];return <div className="scoreboard-assignment" key={aid}><h3>{first.assignment_title}{first.due_at&&<small> · آخر موعد {new Date(first.due_at).toLocaleDateString("ar-EG")}</small>}</h3><div className="notebook-table-scroll notebook-public-table-scroll"><table className="notebook-roster-table"><thead><tr><th>الطالب</th><th>الاستلام</th><th>الموعد</th><th>التقييم</th></tr></thead><tbody>{rows.map(x=>{const overdue=!!x.due_at&&new Date(x.due_at).getTime()<Date.now();const status=x.delivery_status==="late"?"متأخر":x.delivery_status==="on_time"?"في الموعد":x.received?"تم الاستلام":overdue?"لم يسلم":"بانتظار التسليم";return <tr key={x.student_id}><td className="notebook-roster-name"><strong>{x.student_name}</strong></td><td>{x.received?"✓ مستلم":"لم يستلم"}</td><td>{status}</td><td>{x.has_star?<span className="notebook-single-star lit" aria-label="نجمة التميز">★</span>:"—"}</td></tr>})}</tbody></table></div></div>})}</section>
     <section style={panel}><h2>فرقي</h2>
      {members.length?members.map(m=><p key={m.team_id}>{teamName(m.team_id)} — {m.role==="leader"?"قائد الفريق":"عضو"}</p>):<p>مفيش فرق ظاهرة حاليًا.</p>}
     </section>
-    <p><a href="/contributions/new" style={{color:"#d5a66d"}}>+ إضافة مساهمة في تكليفات الفريق</a></p><p><a href="/files" style={{color:"#d5a66d"}}>+ رفع الملفات والصور والفيديوهات للفريق</a></p><section style={panel}><h2>التكليفات</h2>
+    <p><a href="/contributions/new" style={{color:"#d5a66d"}}>+ إضافة مساهمة في تكليفات الفريق</a></p><p><a href="/submissions" style={{color:"#d5a66d"}}>+ تسليم نص أو ملف أو تسجيل صوتي</a></p><section style={panel}><h2>التكليفات</h2>
      {tasks.length?tasks.map(t=><article key={t.id} style={{borderTop:"1px solid #343a49",padding:"12px 0"}}>
       <strong>{t.title}</strong><p style={{whiteSpace:"pre-wrap",color:"#b7c0ce"}}>{t.description}</p>
       {t.due_at&&<small>آخر موعد: {new Date(t.due_at).toLocaleDateString("ar-EG")}</small>}
-     </article>):<p>مفيش تكليفات ظاهرة ليكي حاليًا.</p>}
+     </article>):<p>لا توجد تكليفات متاحة لك حاليًا.</p>}
     </section>
    </>}
   </section>}
-  {message&&<p role="status" style={{color:"#ffca9f",lineHeight:1.8}}>{message}</p>}
+  {message&&<p role="status" style={{color:"#ffca9f",lineHeight:1.8}}>{message}</p>}{profile?.app_role==="supervisor"&&message&&message!=="جارٍ تحميل حسابك..."&&<div className={"notebook-save-toast "+(/تعذر|فشل|خطأ|غير مكتملة/.test(message)?"is-error":"is-success")} role="status" aria-live="polite"><span>{/تعذر|فشل|خطأ|غير مكتملة/.test(message)?"⚠️":"✓"} {message}</span><button type="button" aria-label="إغلاق إشعار الحفظ" onClick={()=>setMessage("")}>✕</button></div>}
  </main>;
 }
 const panel={padding:22,background:"#191e2a",border:"1px solid #343a49",borderRadius:16,marginBottom:18};

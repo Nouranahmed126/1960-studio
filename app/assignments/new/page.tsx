@@ -6,8 +6,8 @@ export default function NewAssignment(){
  const [teams,setTeams]=useState<Team[]>([]);
  const [selected,setSelected]=useState<number[]>([]);
  const [allowed,setAllowed]=useState(false);
- const [title,setTitle]=useState("");
- const [description,setDescription]=useState("");
+ const [title,setTitle]=useState("التكليف الأول – المعالجة الفنية للمشهد الأول");
+ const [description,setDescription]=useState("مادة خام للمشهد الأول\nوصف المشهد:\n\nتجلس فريدة على الكرسي المفضل لجدها في غرفة المعيشة، مرتدية نظارته الكبيرة التي تبدو أوسع من وجهها، وتمسك جريدة مفتوحة بالمقلوب.\n\nتحاول تقليد طريقة جلوس جدها وحركاته أثناء قراءة الجريدة، وتتصرف بجدية مبالغ فيها.\n\nيدخل حسن إلى الغرفة ويلمح فريدة جالسة مكانه.\n\nحسن: صباح الخير يا ست هانم… إيه آخر الأخبار؟\n\nفريدة: الأخبار مش مطمّنة يا حسن بيه!\n\nحسن: خير يا رب… حصل إيه؟\n\nفريدة: البسكويت خلص، ومحدش جاب غيره!\n\nيتفاعل حسن مع الخبر، ثم يلاحظ أن فريدة تمسك الجريدة بالمقلوب.\n\nحسن: وإنتِ بتقري الجورنال بالمقلوب ليه؟\n\nفريدة: بشوف الأخبار من وجهة نظر تانية!\n\nيستعيد حسن نظارته من فريدة ويرتديها، ثم يأخذ الجريدة ويجلس على كرسي آخر بجوارها.\n\nيبدأ في تصفح الجريدة، وأثناء القراءة يلفت انتباهه أحد الأخبار، فيتوقف عنده ويتغير تركيزه.\n\nتلاحظ فريدة انشغاله وتسأله عما يقرأ.\n\nوقبل أن يستكمل الحديث معها، يُسمع صوت جرس الباب.\n\nفريدة: ده أكيد عمر!\n\nحسن: طب افتحي لأخوكي يا فرفورة.\n\nتتحرك فريدة لفتح الباب.\n\nنهاية المادة الخام للمشهد.\n\nملحوظة: المشهد لم تُحدد فيه المعالجة الإخراجية أو الموسيقى أو تصميم الصوت أو الديكور أو الملابس أو التفاصيل الفنية والتنفيذية…الخ المطلوب من كل فريق إضافة هذه العناصر بحسب اختصاصه.");
  const [due,setDue]=useState("");
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState("جارٍ التحقق من صلاحية المشرفة...");
@@ -20,7 +20,7 @@ export default function NewAssignment(){
   setAllowed(true);setMessage("");
   const t=await db.from("teams").select("id,name").order("id");
   if(t.error)setMessage("تعذر تحميل الفرق.");
-  else setTeams((t.data??[]) as Team[]);
+  else {setTeams((t.data??[]) as Team[]);setSelected((t.data??[]).map(x=>x.id));}
  })()},[]);
  async function save(e:FormEvent<HTMLFormElement>){
   e.preventDefault();
