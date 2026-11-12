@@ -14,7 +14,7 @@ export async function POST(req:NextRequest){
  const user=await check.json() as {id?:string};
  const profile=await fetch(url+"/rest/v1/profiles?id=eq."+encodeURIComponent(user.id??"")+"&select=app_role,approval_status",{headers:{apikey:anon,Authorization:"Bearer "+token},cache:"no-store"});
  const rows=await profile.json() as {app_role:string;approval_status:string}[];
- if(!profile.ok||!rows.some(p=>p.app_role==="supervisor"))return NextResponse.json({error:"الوكيل متاح للمشرفة فقط"},{status:403});
+ if(!profile.ok||!rows.some(p=>p.app_role==="supervisor"&&p.approval_status==="approved"))return NextResponse.json({error:"الوكيل متاح للمشرفة فقط"},{status:403});
  const form=(req.headers.get("content-type")??"").includes("multipart/form-data")?await req.formData():null;
  const input=(form?{provider:form.get("provider"),scene:form.get("scene"),request:form.get("request")}:await req.json()) as {provider?:string;scene?:string;request?:string};
  const file=form?.get("file");let media:{mimeType:string;data:string}|null=null;

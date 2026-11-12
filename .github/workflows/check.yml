@@ -15,10 +15,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      # Temporary fallback while package-lock.json is absent.
-      # Replace with npm ci and npm cache once an audited lockfile is committed.
+          cache: npm
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
+      - name: Assignment grouping regression tests
+        run: npm test
+      - name: Dependency security audit
+        run: npm audit --audit-level=high
       - name: TypeScript check
         run: npx tsc --noEmit
       - name: Next.js production build

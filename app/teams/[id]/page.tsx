@@ -1,4 +1,5 @@
 "use client";
+import { assignmentLabel } from "../../../lib/assignment-label";
 import {useEffect,useMemo,useState} from "react";
 import {useParams} from "next/navigation";
 import {getSupabase} from "../../../lib/supabase-browser";
@@ -87,7 +88,7 @@ export default function TeamRoom(){
   ...uploads.map(x=>({kind:"file" as const,id:x.id,studentId:x.uploaded_by,title:x.file_name,path:x.storage_path,fileType:x.file_type,createdAt:x.created_at}))
  ].sort((a,b)=>new Date(b.createdAt).getTime()-new Date(a.createdAt).getTime()),[written,uploads]);
  const myItems=supervisor?reviewItems:reviewItems.filter(x=>members.some(m=>m.user_id===x.studentId));
- const assignmentLabel=(item:ReviewItem)=>{const text=item.title.replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).replace(/[۰-۹]/g,d=>String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));const m=text.match(/(?:التكليف|تكليف|assignment|task)\\s*(?:رقم\\s*)?[#№:.\- ]*([0-9]+)/i);return m?"التكليف "+m[1]:text.replace(/\\.[a-z0-9]{2,5}$/i,"").replace(/[\s_-]*\\(?\\d+\\)?$/,"").trim().slice(0,85)||"تسليم بدون عنوان";};
+
  const bundles=useMemo(()=>{const groups=new Map<string,{label:string;studentId:string;items:ReviewItem[];createdAt:string}>();for(const item of myItems){const label=assignmentLabel(item);const key=item.studentId+"|"+label.toLocaleLowerCase("ar");const group=groups.get(key);if(group)group.items.push(item);else groups.set(key,{label,studentId:item.studentId,items:[item],createdAt:item.createdAt});}return [...groups.values()];},[myItems]);
  const filteredBundles=bundles.filter(b=>(deliveryStudent==="all"||b.studentId===deliveryStudent)&&(deliveryFilter==="all"||b.label.includes("التكليف "+deliveryFilter)));
  const completed=members.filter(m=>reviewItems.some(x=>x.studentId===m.user_id)).length;
