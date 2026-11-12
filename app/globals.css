@@ -1866,3 +1866,10 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 .honor-cinematic-page .honor-gold-seal .honor-seal-signature{font-family:"Brush Script MT","Segoe Script","Snell Roundhand","Apple Chancery",cursive!important;font-style:italic;font-size:clamp(19px,4vw,24px)!important;line-height:1.05!important;font-weight:900!important;letter-spacing:-.6px;color:#59230b!important;text-shadow:0 1px 0 #fff4bb,0 0 2px #ffffffaa;white-space:nowrap;transform:rotate(-4deg);display:block}
 .honor-cinematic-page .honor-gold-seal .honor-seal-role{font-family:Georgia,serif!important;font-size:8px!important;font-weight:900;letter-spacing:.8px;color:#663c0b!important}
 @media(max-width:380px){.honor-cinematic-page .honor-gold-seal{width:112px!important;height:112px!important;flex-basis:112px!important}.honor-cinematic-page .honor-gold-seal .honor-seal-signature{font-size:19px!important}}
+
+/* Refined seal: controlled handwritten flourish with a subtle signature glint */
+.honor-cinematic-page .honor-gold-seal{position:relative;isolation:isolate;overflow:visible}
+.honor-cinematic-page .honor-gold-seal .honor-seal-signature{position:relative;z-index:1;max-width:calc(100% + 24px);font-size:clamp(18px,3.5vw,22px)!important;letter-spacing:-.9px;transform:rotate(-4deg) translateX(-2px);text-shadow:0 1px 0 #fff4bb,0 0 3px #fff9d0,0 2px 3px #6c310a66;animation:honor-signature-glint 7s ease-in-out infinite}
+@keyframes honor-signature-glint{0%,76%,100%{filter:brightness(1)}83%{filter:brightness(1.35) drop-shadow(0 0 3px #fff0a6)}90%{filter:brightness(1.08)}}
+@media(max-width:380px){.honor-cinematic-page .honor-gold-seal .honor-seal-signature{font-size:18px!important;max-width:calc(100% + 18px)}}
+@media(prefers-reduced-motion:reduce){.honor-cinematic-page .honor-gold-seal .honor-seal-signature{animation:none}}
