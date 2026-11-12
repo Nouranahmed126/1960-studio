@@ -1,7 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
-import MovingReel from "./moving-reel";
 type Member={id:string;full_name:string};
 type Detail={user_id:string;photo_path:string|null};
 export default function HomeCrewStrip(){
@@ -22,5 +21,5 @@ export default function HomeCrewStrip(){
  })();return()=>{active=false}},[]);
  const entries=members.map(m=><a className="cinema-home-star-card marquee-item" key={m.id} href="/crew" aria-label={m.full_name} title={m.full_name}>{photos[m.id]?<img src={photos[m.id]} alt={m.full_name} loading="eager" decoding="async"/>:<span className="cinema-star-placeholder" aria-label={m.full_name}>🎬</span>}</a>);
  return <section className="cinema-home-stars cinema-loop-section" aria-label="نجوم 1960">
- {status==="ready"?<MovingReel direction="right" label="صور نجوم 1960 تتحرك يمينًا">{entries}</MovingReel>:<div className="cinema-loop-window marquee-wrapper"><div className="cinema-loop-group">{Array.from({length:8},(_,i)=><a href="/crew" key={i} className="marquee-item cinema-home-star-card" aria-label="نجوم 1960"><span className="cinema-star-placeholder">🎬</span></a>)}</div><span className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور النجوم…":status==="login"?"سجلي الدخول لعرض صور النجوم":"صور النجوم قيد التجهيز"}</span></div>}<small className="film-reel-caption">FILM STARS • 1960</small></section>
+ {status==="ready"?<div className="cinema-home-stars-static" role="region" aria-label="صور نجوم 1960 — اسحبي أفقيًا للتصفح" tabIndex={0}><div className="cinema-home-stars-track">{entries}</div></div>:<div className="cinema-loop-window marquee-wrapper"><div className="cinema-loop-group">{Array.from({length:8},(_,i)=><a href="/crew" key={i} className="marquee-item cinema-home-star-card" aria-label="نجوم 1960"><span className="cinema-star-placeholder">🎬</span></a>)}</div><span className="cinema-loop-message">{status==="loading"?"جارٍ تحميل صور النجوم…":status==="login"?"سجلي الدخول لعرض صور النجوم":"صور النجوم قيد التجهيز"}</span></div>}<small className="film-reel-caption">FILM STARS • 1960</small></section>
 }
