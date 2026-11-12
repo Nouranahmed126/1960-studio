@@ -1800,3 +1800,10 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 .cinema-home-stars-track>.cinema-home-star-card{flex:0 0 auto!important;scroll-snap-align:start;transform:none!important;animation:none!important}
 .cinema-home-stars-static:focus-visible{outline:2px solid #e2c28c;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.cinema-home-stars-track,.cinema-home-stars-track>*{animation:none!important;transition:none!important}}
+
+
+/* Supervisor-only task archiving and additional weak review status */
+.cinema-team-room .studio-archive-assignment{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 11px;border:1px solid #d4af37;border-radius:9px;background:#f7f4eb;color:#06101e;font-size:12px;font-weight:800;cursor:pointer;white-space:normal}
+.cinema-team-room .gold-stamp-options{display:flex;flex-wrap:wrap;gap:8px}
+.cinema-team-room .gold-stamp-options button{flex:1 1 42%;min-height:42px}
+.cinema-team-room .gold-stamp-weak,.cinema-team-room .gold-stamp-mini.gold-stamp-weak{color:#fff!important;background:#713b20!important;border-color:#d4af37!important}
