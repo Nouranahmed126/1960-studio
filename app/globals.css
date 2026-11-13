@@ -1901,3 +1901,31 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 @keyframes honor-frame-shimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.06)}}
 @media(max-width:600px){.home-honor-coverflow{height:540px}.home-honor-slide .honor-certificate{width:min(100%,350px)}.home-honor-slide .honor-certificate-inner{min-height:470px}.home-honor-stage{gap:2px}.home-honor-arrow{min-width:30px;padding:3px}.home-honor-spotlight-card .honor-certificate-inner{min-height:330px;padding:15px}.home-honor-spotlight-panel{padding:10px}.home-honor-spotlight-card .honor-card-note{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.home-honor-sparks,.home-honor-showcase .honor-gold-seal,.home-honor-showcase .honor-certificate{animation:none}.home-honor-slide{transition:none}}
+
+/* Jewel-foil honor stage, responsive controls and 3D reverse */
+.home-honor-showcase{--honor-ambient:#3269c0;background:radial-gradient(ellipse at 50% 42%,color-mix(in srgb,var(--honor-ambient) 38%,transparent),transparent 68%),linear-gradient(155deg,#0a1728,#101c2f)!important;transition:background 1s ease;overflow:hidden;padding-bottom:32px!important}
+.home-honor-showcase::before{content:"✦  ·  ✧  ·  ✦";position:absolute;inset:80px 0 auto;color:#f5cf7a77;font-size:28px;letter-spacing:30px;pointer-events:none;animation:honor-sparkle 5s ease-in-out infinite}
+.home-honor-stage{margin-bottom:0!important}.home-honor-coverflow{height:550px}
+.home-honor-flip{width:min(100%,390px);height:530px;position:relative;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.2,.75,.2,1)}
+.home-honor-flip.is-flipped{transform:rotateY(180deg)}
+.home-honor-front,.home-honor-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.home-honor-front .honor-certificate{height:100%;max-height:none;box-sizing:border-box}
+.home-honor-front .honor-certificate-inner{min-height:100%;box-sizing:border-box}
+.home-honor-back{transform:rotateY(180deg);border:3px double #f3d17a;border-radius:24px;padding:26px 20px;box-sizing:border-box;background:radial-gradient(ellipse at top,#a17d3c44,transparent 70%),#10243b;color:#fff4d6;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;overflow-y:auto;box-shadow:inset 0 0 0 7px #d5ad5040}
+.home-honor-back h3{color:#ffdc84}.home-honor-back strong{font-size:25px}.home-honor-back p,.home-honor-back blockquote{line-height:1.7;margin:0}.home-honor-private-note{font-size:11px;opacity:.75}
+.home-honor-back button,.home-honor-controls button{border:1px solid #f4d17b;border-radius:12px;background:linear-gradient(120deg,#ffe9a1,#c38c31);color:#192337;padding:11px 15px;font-weight:900;cursor:pointer}
+.home-honor-navigation{display:flex;align-items:center;justify-content:center;gap:24px;margin:4px auto 14px;color:#f9df91;font-weight:900;font-size:18px}
+.home-honor-navigation button{border:1px solid #e8c56b;background:linear-gradient(135deg,#fff0ba,#c69337);color:#1b1b27;border-radius:12px;min-width:48px;min-height:40px;cursor:pointer;font-size:22px}
+.home-honor-controls{flex-wrap:wrap;padding-bottom:12px;gap:12px}
+.home-honor-showcase .honor-certificate{position:relative}
+.home-honor-showcase .honor-certificate::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 25%,#ffffff00 36%,#fff5c51c 45%,#ffffff33 49%,#fff5c500 56%,transparent 70%);background-size:250% 100%;animation:honor-foil-sweep 6s ease-in-out infinite}
+@keyframes honor-foil-sweep{0%,55%,100%{background-position:120% 0}75%{background-position:-120% 0}}
+.home-honor-showcase .honor-variant-0{background:linear-gradient(145deg,#071529,#163c6b 45%,#09172c)!important}
+.home-honor-showcase .honor-variant-1{background:linear-gradient(145deg,#082a26,#1d6553 45%,#082a26)!important}
+.home-honor-showcase .honor-variant-2{background:linear-gradient(145deg,#20152f,#50316b 45%,#1b1029)!important}
+.home-honor-showcase .honor-variant-3{background:linear-gradient(145deg,#21170f,#76502c 45%,#24160f)!important}
+.home-honor-showcase .honor-variant-4{background:linear-gradient(145deg,#f9f0db,#ddc58b 55%,#f4e6ca)!important;color:#392717!important}
+.home-honor-showcase .honor-variant-4 .honor-card-name,.home-honor-showcase .honor-variant-4 .honor-card-achievement,.home-honor-showcase .honor-variant-4 .honor-card-note,.home-honor-showcase .honor-variant-4 .honor-card-date{color:#392717!important}
+.home-honor-showcase .honor-gold-seal .honor-seal-signature{font-size:clamp(17px,3vw,20px)!important;letter-spacing:-1px;max-width:100%;transform:rotate(-4deg)}
+@media(max-width:600px){.home-honor-coverflow{height:525px}.home-honor-flip{height:505px;width:min(100%,350px)}.home-honor-front .honor-certificate-inner{min-height:100%}.home-honor-controls{margin-bottom:8px}.home-honor-controls a,.home-honor-controls button{font-size:12px;padding:11px}.home-honor-navigation{margin-top:0}}
+@media(prefers-reduced-motion:reduce){.home-honor-showcase::before,.home-honor-showcase .honor-certificate::after{animation:none}.home-honor-flip{transition:none}}
