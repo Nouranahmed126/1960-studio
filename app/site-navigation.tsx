@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useEffect,useState} from "react";
 import {usePathname} from "next/navigation";
 const groups=[
-{title:"الإدارة والقيادة",links:[["/","الرئيسية","⌂"],["/dashboard","حسابي","👤"],["/honor-board","الشرف","🏆"],["/recordings","الريكوردات","🎙️"],["/crew","النجوم","⭐"],["/meetings","الاجتماعات","📅"]]},
+{title:"الإدارة والقيادة",links:[["/","الرئيسية","⌂"],["/dashboard","حسابي","👤"],["/honor-board","الشرف","🏆"],["/recordings","الريكوردات","🎙️"],["/vision","رؤية الفيلم","🎭"],["/crew","النجوم","⭐"],["/meetings","الاجتماعات","📅"]]},
 {title:"أقسام الفيلم",links:[["/teams/5","الكتابة والسيناريو","✍️"],["/teams/3","التصوير والإخراج","🎥"],["/teams/4","المونتاج","🎞️"],["/teams/1","التصميم والصوت","🎨"],["/teams/2","الإنتاج والممثلين","🎬"]]},
 {title:"الأرشيف والتواصل",links:[["/museum","متحف 1960","📻"],["/gallery","الكواليس","📸"],["/production-hub","الإنتاج","🎬"],["/submissions","التسليمات","📥"]]}
 ] as const;
