@@ -1873,3 +1873,31 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 @keyframes honor-signature-glint{0%,76%,100%{filter:brightness(1)}83%{filter:brightness(1.35) drop-shadow(0 0 3px #fff0a6)}90%{filter:brightness(1.08)}}
 @media(max-width:380px){.honor-cinematic-page .honor-gold-seal .honor-seal-signature{font-size:18px!important;max-width:calc(100% + 18px)}}
 @media(prefers-reduced-motion:reduce){.honor-cinematic-page .honor-gold-seal .honor-seal-signature{animation:none}}
+
+/* 1960 Golden Spotlight: cinematic, compact and mobile-first */
+.home-honor-showcase{position:relative;isolation:isolate;margin:16px auto 26px!important;padding:18px 10px 24px!important;text-align:center;background:radial-gradient(ellipse at 50% 0%,#ad7b2640,transparent 60%),linear-gradient(155deg,#0a1728,#101c2f);border:1px solid #cda84b85;border-radius:22px;overflow:hidden}
+.home-honor-showcase>h2{color:#f8d77e;font-size:clamp(20px,4vw,29px);margin:4px 0}
+.home-honor-subtitle{color:#f5e7c9;font-size:13px}
+.home-honor-stage{display:flex;align-items:center;justify-content:center;gap:4px;margin:12px auto;max-width:850px}
+.home-honor-coverflow{position:relative;perspective:1100px;width:min(100%,540px);height:560px;flex:1;overflow:visible}
+.home-honor-slide{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;transition:transform .85s cubic-bezier(.2,.8,.2,1),opacity .6s ease;transform-style:preserve-3d}
+.home-honor-slide .honor-certificate{width:min(100%,390px);max-height:540px;overflow:hidden;margin:0}
+.home-honor-slide .honor-certificate-inner{min-height:475px}
+.home-honor-arrow,.home-honor-spotlight-nav button{position:relative;z-index:20;border:1px solid #e8c56b;background:linear-gradient(135deg,#fff0ba,#c69337);color:#1b1b27;border-radius:13px;min-width:35px;min-height:46px;font-weight:900;cursor:pointer}
+.home-honor-controls{display:flex;align-items:center;justify-content:center;gap:18px;color:#f8d77e}
+.home-honor-controls a,.home-honor-enter{background:linear-gradient(110deg,#fce8a0,#c28c2c,#fff1b2);color:#172035!important;border:1px solid #fff1b8;border-radius:12px;padding:12px 18px;font-weight:900;text-decoration:none;box-shadow:0 5px 22px #f0c34d35}
+.home-honor-spotlight{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:#020a17e8;backdrop-filter:blur(12px);padding:12px;overflow-y:auto}
+.home-honor-spotlight-panel{position:relative;width:min(100%,560px);max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;padding:12px 12px 20px;border-radius:22px;border:1px solid #f8d77e;background:radial-gradient(ellipse at top,#6c4d1b55,transparent 60%),#0b192b;box-shadow:0 0 65px #d8ad4a40;text-align:center}
+.home-honor-spotlight-panel>h2{color:#ffe69a;font-size:clamp(18px,4vw,25px);margin:5px 0}.home-honor-spotlight-panel>p{color:#fff1d0;margin:0 0 10px}
+.home-honor-sparks{color:#ffdd75;letter-spacing:14px;animation:honor-sparkle 3s ease-in-out infinite}
+.home-honor-spotlight-card{display:flex;justify-content:center}.home-honor-spotlight-card .honor-certificate{width:min(100%,380px);margin:0}.home-honor-spotlight-card .honor-certificate-inner{min-height:370px;padding:20px}
+.home-honor-spotlight-nav{display:flex;align-items:center;justify-content:center;gap:22px;margin:10px;color:#ffe69a}
+.home-honor-spotlight-nav button{min-height:35px}
+.home-honor-enter{cursor:pointer;width:100%;max-width:430px;min-height:48px;font-size:13px}
+@keyframes honor-sparkle{50%{opacity:.4;transform:translateY(-4px)}}
+.home-honor-showcase .honor-gold-seal{animation:honor-seal-glow 3s ease-in-out infinite}
+@keyframes honor-seal-glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.13) drop-shadow(0 0 6px #ffdd83)}}
+.home-honor-showcase .honor-certificate{animation:honor-frame-shimmer 3s ease-in-out infinite}
+@keyframes honor-frame-shimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.06)}}
+@media(max-width:600px){.home-honor-coverflow{height:540px}.home-honor-slide .honor-certificate{width:min(100%,350px)}.home-honor-slide .honor-certificate-inner{min-height:470px}.home-honor-stage{gap:2px}.home-honor-arrow{min-width:30px;padding:3px}.home-honor-spotlight-card .honor-certificate-inner{min-height:330px;padding:15px}.home-honor-spotlight-panel{padding:10px}.home-honor-spotlight-card .honor-card-note{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.home-honor-sparks,.home-honor-showcase .honor-gold-seal,.home-honor-showcase .honor-certificate{animation:none}.home-honor-slide{transition:none}}
