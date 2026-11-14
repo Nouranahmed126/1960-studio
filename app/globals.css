@@ -2081,3 +2081,16 @@ button.home-honor-mini>*{position:relative;z-index:2}
 @keyframes honor-jewel-sweep{from{background-position:160% 0}to{background-position:-150% 0}}
 @keyframes honor-jewel-rim{0%,100%{filter:brightness(.9)}50%{filter:brightness(1.6)}}
 @media(prefers-reduced-motion:reduce){button.home-honor-mini,button.home-honor-mini::before,button.home-honor-mini::after{animation:none!important}}
+
+/* Readability-first iPhone fix: deep cocoa ink on every light/gold mini certificate */
+.home-honor-grid button.home-honor-mini{--mini-ink:#352315!important;color:#352315!important}
+.home-honor-grid button.home-honor-mini .home-honor-mini-top,
+.home-honor-grid button.home-honor-mini .home-honor-mini-top span,
+.home-honor-grid button.home-honor-mini h3,
+.home-honor-grid button.home-honor-mini .home-honor-mini-achievement,
+.home-honor-grid button.home-honor-mini .home-honor-mini-bottom,
+.home-honor-grid button.home-honor-mini .home-honor-mini-bottom time{color:#352315!important;text-shadow:none!important;opacity:1!important}
+.home-honor-grid button.home-honor-mini .home-honor-mini-stars{color:#815016!important;text-shadow:0 1px 0 #ffe8a1!important;opacity:1!important}
+.home-honor-grid button.home-honor-mini .home-honor-mini-top{font-weight:900!important}
+.home-honor-grid button.home-honor-mini h3{font-weight:900!important}
+.home-honor-grid button.home-honor-mini .home-honor-mini-achievement{font-weight:800!important}
