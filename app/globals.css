@@ -2109,3 +2109,37 @@ button.home-honor-mini>*{position:relative;z-index:2}
 .assignment-checkin>small{display:block;margin-top:15px;color:#c9bca5;font-size:11px}
 @media(max-width:450px){.assignment-checkin{padding:21px 12px}.assignment-checkin-actions{gap:8px}.assignment-checkin-actions button{min-width:125px;padding:11px 12px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){.assignment-checkin-star{animation:none}}
+
+/* Cinematic Heritage 1960: scoped palette, preserving honor cards and team styles */
+:root{--heritage-charcoal:#070d12;--heritage-navy:#0a1118;--heritage-gold:#d4af37;--heritage-parchment:#e5d4b3;--heritage-emerald:#24483d;--heritage-bronze:#8a6037}
+html{background:var(--heritage-charcoal)}
+body{background:radial-gradient(ellipse at 0 0,#21372f 0,transparent 36%),radial-gradient(ellipse at 100% 22%,#34291c 0,transparent 40%),var(--heritage-charcoal)!important}
+.cinema-home-page,.recordings-library{color:var(--heritage-parchment)}
+.cinema-home-page .cinema-home-header{border-bottom-color:#d4af3766}
+.cinema-home-page .studio-logo{color:#e5d4b3!important}
+.archive-ticket{position:relative;border:2px solid #d4af37!important;border-radius:11px!important;background:repeating-linear-gradient(0deg,transparent 0 26px,#e5d4b309 27px 28px),linear-gradient(135deg,#14241e,#0a1118 75%)!important;box-shadow:0 0 0 5px #a07b2930,0 14px 34px #0008!important}
+.archive-ticket::before,.archive-ticket::after{content:"";position:absolute;top:50%;width:17px;height:26px;border-radius:50%;background:#070d12;border:1px solid #d4af37;transform:translateY(-50%);pointer-events:none}
+.archive-ticket::before{right:-11px}.archive-ticket::after{left:-11px}
+.archive-ticket-stamp{display:inline-block;margin:7px auto 0;padding:5px 12px;border:1px dashed #e5d4b3;color:#e5d4b3;border-radius:4px;font-size:12px;font-weight:900;transform:rotate(-4deg)}
+.archive-ticket.archive-ticket-alert{animation:archive-ticket-shake .4s ease-in-out}
+.archive-ticket.archive-ticket-alert .archive-ticket-stamp{color:#ffd47d;border-color:#ffd47d}
+.archive-ticket .assignment-checkin-actions button{background:linear-gradient(135deg,#d4af37,#e5d4b3)!important;color:#1a201d!important}
+.archive-ticket .assignment-checkin-actions button:last-child{background:#24483d!important;color:#f5e7c5!important}
+@keyframes archive-ticket-shake{0%,100%{translate:0}25%{translate:-3px}50%{translate:3px}75%{translate:-1px}}
+/* Cassette: real HTML audio remains accessible and controls playback */
+.recordings-library .recording-card{background:linear-gradient(150deg,#17251e,#0a1118)!important;border-color:#b9984b!important}
+.retro-cassette{width:100%;max-width:440px;margin:14px auto 0;padding:12px;border:3px solid #c3a56b;border-radius:19px;background:linear-gradient(135deg,#bcb29d,#ded2b6 46%,#a69c86);box-shadow:inset 0 0 0 3px #292b2b,0 12px 25px #0006;color:#252522;direction:ltr;text-align:left}
+.cassette-top,.cassette-footer{display:flex;justify-content:space-between;gap:8px;align-items:center;font:800 9px system-ui,sans-serif;letter-spacing:1.1px;color:#272923}
+.cassette-label{margin:9px 0 7px;padding:9px 8px;border-radius:4px;background:#e8ddc6;border-top:4px solid #8a6037;color:#1e2b27;font-size:13px;font-weight:900;text-align:center;direction:rtl;overflow-wrap:anywhere}
+.cassette-window{display:flex;justify-content:space-around;align-items:center;gap:10px;max-width:270px;height:82px;margin:0 auto 9px;padding:6px 12px;border:5px solid #30322f;border-radius:18px;background:linear-gradient(#333b3b,#161c1c);box-shadow:inset 0 3px 8px #0008}
+.cassette-reel{position:relative;flex-shrink:0;width:58px;height:58px;border:6px solid #d2c7ac;border-radius:50%;background:#222a2b;box-shadow:0 0 0 3px #7b715b;display:grid;place-items:center}
+.cassette-reel::after{content:"";width:13px;height:13px;background:#c8b995;border-radius:50%;border:3px solid #555c57}
+.cassette-reel i{position:absolute;top:3px;left:calc(50% - 2px);width:4px;height:13px;background:#d5c9ae;border-radius:3px;transform-origin:2px 20px}
+.cassette-reel i:nth-child(2){transform:rotate(60deg)}.cassette-reel i:nth-child(3){transform:rotate(120deg)}.cassette-reel i:nth-child(4){transform:rotate(180deg)}.cassette-reel i:nth-child(5){transform:rotate(240deg)}.cassette-reel i:nth-child(6){transform:rotate(300deg)}
+.cassette-tape-line{height:3px;flex:1;background:#a18b62}
+.cassette-playing .cassette-reel{animation:cassette-spin 2.4s linear infinite}
+@keyframes cassette-spin{to{transform:rotate(360deg)}}
+.cassette-footer{padding:0 5px 8px}.cassette-footer span{color:#a43e2d}
+.retro-cassette audio{display:block;width:100%;max-width:100%;height:43px;direction:ltr;filter:sepia(.28)}
+@media(max-width:400px){.retro-cassette{padding:9px}.cassette-window{height:68px}.cassette-reel{width:45px;height:45px}.cassette-reel i{height:9px;transform-origin:2px 14px}.cassette-top{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.archive-ticket.archive-ticket-alert,.cassette-playing .cassette-reel{animation:none!important}}
