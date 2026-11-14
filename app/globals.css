@@ -2014,3 +2014,38 @@ button.home-honor-mini::after{content:"";position:absolute;inset:2px;border-radi
 @keyframes mini-honor-border{to{--mini-gold-angle:360deg}}
 @media(max-width:650px){.home-honor-mini-seal{width:45px;height:45px}.home-honor-mini-seal strong{font-size:8px}.home-honor-mini-seal span{font-size:4px}.home-honor-modal .honor-certificate{min-height:540px}.home-honor-modal .honor-certificate-inner{min-height:540px;padding:17px 15px 20px}.home-honor-modal .honor-card-name{font-size:clamp(24px,6vw,33px)}.home-honor-modal .honor-card-note{font-size:clamp(13px,3.6vw,17px)}}
 @media(prefers-reduced-motion:reduce){button.home-honor-mini,button.home-honor-mini::before,.home-honor-sparkle{animation:none!important;transition:none!important}}
+
+/* FIX: keep jewel-toned surfaces visible; gold belongs to the animated rim only. */
+.home-honor-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;max-width:1100px}
+button.home-honor-mini{--mini-surface:linear-gradient(145deg,#14385f,#07172d 75%);background:var(--mini-surface)!important;background-clip:padding-box!important;border:2px solid #d6ad60!important;isolation:isolate;min-height:0;padding:10px 7px;gap:5px;border-radius:13px;box-shadow:inset 0 0 17px #ffffff0b,0 6px 15px #0005}
+button.home-honor-mini-sapphire{--mini-surface:linear-gradient(145deg,#1d5184,#0b2545 65%,#061526)}
+button.home-honor-mini-emerald{--mini-surface:linear-gradient(145deg,#206958,#0c3b35 65%,#071e20)}
+button.home-honor-mini-amethyst{--mini-surface:linear-gradient(145deg,#604079,#342044 65%,#1d122a)}
+button.home-honor-mini-amber{--mini-surface:linear-gradient(145deg,#83532e,#4d301e 65%,#24180f)}
+button.home-honor-mini-pearl{--mini-surface:linear-gradient(145deg,#fff5df,#ddc793 65%,#c7ab74);--mini-ink:#3b2919}
+button.home-honor-mini::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:conic-gradient(from var(--mini-gold-angle,0deg),#a56e20,#fff0b1,#c08b31,#f7da84,#a56e20);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;z-index:1;pointer-events:none;animation:mini-honor-border 7s linear infinite}
+button.home-honor-mini::after{content:none!important}
+.home-honor-mini-top{font-size:9px;gap:2px}
+.home-honor-mini-top span:last-child{font-size:7px}
+.home-honor-mini-medal{width:24px;height:24px;font-size:14px}
+.home-honor-mini h3{font-size:clamp(12px,1.7vw,17px);line-height:1.35}
+.home-honor-mini-stars{font-size:clamp(11px,1.7vw,17px);letter-spacing:0}
+.home-honor-mini-achievement{font-size:clamp(10px,1.25vw,13px);line-height:1.4}
+.home-honor-mini-bottom{font-size:9px;padding-top:6px}
+.home-honor-mini-seal{width:36px;height:36px}
+.home-honor-mini-seal span{font-size:3.5px}.home-honor-mini-seal strong{font-size:7px}
+@media(max-width:650px){
+.home-honor-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.home-honor-grid-section{padding:13px 7px 16px}
+button.home-honor-mini{padding:8px 5px;gap:5px;border-radius:11px}
+.home-honor-mini-top{font-size:7px}
+.home-honor-mini-top span:last-child{display:none}
+.home-honor-mini-medal{width:23px;height:23px;font-size:13px}
+.home-honor-mini h3{font-size:clamp(11px,3vw,14px)}
+.home-honor-mini-stars{font-size:clamp(10px,3vw,14px)}
+.home-honor-mini-achievement{font-size:10px;line-height:1.4}
+.home-honor-mini-bottom{font-size:8px;justify-content:center}
+.home-honor-mini-seal{width:32px;height:32px}
+.home-honor-mini-seal span{font-size:3px}.home-honor-mini-seal strong{font-size:6px}
+.home-honor-sparkle{font-size:11px;left:3px}
+}
