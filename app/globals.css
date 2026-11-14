@@ -2049,3 +2049,19 @@ button.home-honor-mini{padding:8px 5px;gap:5px;border-radius:11px}
 .home-honor-mini-seal span{font-size:3px}.home-honor-mini-seal strong{font-size:6px}
 .home-honor-sparkle{font-size:11px;left:3px}
 }
+
+/* iPhone-safe gemstone foil: two background layers, NO covering pseudo element */
+.home-honor-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important}
+button.home-honor-mini{--jewel-top:#1d5184;--jewel-mid:#0b2545;--jewel-bottom:#061526;--mini-ink:#fff4dc;background:linear-gradient(145deg,var(--jewel-top),var(--jewel-mid) 58%,var(--jewel-bottom)) padding-box,conic-gradient(from var(--mini-gold-angle),#70400e,#f5c75c,#fff4bb,#98601b,#f6d477,#70400e) border-box!important;background-clip:padding-box,border-box!important;border:3px solid transparent!important;color:var(--mini-ink)!important;box-shadow:inset 0 0 12px #ffffff12,0 0 8px #b87c2b66,0 5px 13px #0005!important;animation:mini-honor-float 5s ease-in-out infinite,mini-honor-border 4s linear infinite!important;overflow:hidden}
+button.home-honor-mini-sapphire{--jewel-top:#1e5688;--jewel-mid:#103454;--jewel-bottom:#07192f}
+button.home-honor-mini-emerald{--jewel-top:#24745b;--jewel-mid:#104637;--jewel-bottom:#09251e}
+button.home-honor-mini-amethyst{--jewel-top:#6a4789;--jewel-mid:#402752;--jewel-bottom:#22142d}
+button.home-honor-mini-amber{--jewel-top:#916239;--jewel-mid:#56351e;--jewel-bottom:#29180e}
+button.home-honor-mini-pearl{--jewel-top:#f9f0d7;--jewel-mid:#e6d2a4;--jewel-bottom:#cdb783;--mini-ink:#342313}
+button.home-honor-mini::before,button.home-honor-mini::after{content:none!important;display:none!important}
+button.home-honor-mini .home-honor-mini-top,button.home-honor-mini h3,button.home-honor-mini .home-honor-mini-achievement{color:var(--mini-ink)!important;text-shadow:0 1px 2px #0005}
+button.home-honor-mini-pearl .home-honor-mini-top,button.home-honor-mini-pearl h3,button.home-honor-mini-pearl .home-honor-mini-achievement{text-shadow:none}
+button.home-honor-mini .home-honor-mini-stars{color:#f9d36f!important;text-shadow:0 0 5px #b58233}
+button.home-honor-mini-pearl .home-honor-mini-stars{color:#94611b!important;text-shadow:none}
+@media(max-width:650px){.home-honor-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}.home-honor-grid-section{padding:12px 5px 16px!important}button.home-honor-mini{padding:7px 3px!important;gap:4px!important;border-width:3px!important;border-radius:10px!important}.home-honor-mini-top{font-size:6.5px!important}.home-honor-mini-medal{width:20px!important;height:20px!important;font-size:12px!important}.home-honor-mini h3{font-size:clamp(9px,2.35vw,12px)!important;line-height:1.3!important}.home-honor-mini-stars{font-size:clamp(8px,2.25vw,12px)!important;letter-spacing:-.6px!important}.home-honor-mini-achievement{font-size:clamp(8px,2vw,10px)!important;line-height:1.35!important}.home-honor-mini-bottom{font-size:7px!important;gap:2px!important}.home-honor-mini-seal{width:27px!important;height:27px!important}.home-honor-mini-seal span{font-size:2.7px!important}.home-honor-mini-seal strong{font-size:5.5px!important}.home-honor-sparkle{font-size:10px!important}}
+@media(prefers-reduced-motion:reduce){button.home-honor-mini{animation:none!important}}
