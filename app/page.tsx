@@ -1,7 +1,18 @@
 import MuseumTeaser from "./museum-teaser";
-import SubmissionRadar from "./submission-radar";
 import HomeCrewStrip from "./home-crew-strip";
 import AssignmentCheckin from "./assignment-checkin";
-import MiniCinemaIcon from "./mini-cinema-icon";
 import HomeHonorShowcase from "./home-honor-showcase";
-export default function Home(){return <main dir="rtl" className="studio-shell cinema-home-page cinema-broadcast-home" style={{maxWidth:1200}}><header className="studio-nav cinema-home-header"><a className="studio-logo" href="/">1960 STUDIO</a><span className="studio-mood-pill"><MiniCinemaIcon kind="tv" size={13}/> صناع حكاية 1960 <i/> البث متصل</span></header><HomeHonorShowcase/><a className="recording-home-link" href="/recordings">🎙️ مكتبة الريكوردات المهمة · اسمعوا شرح المشروع في أي وقت ←</a><a className="vision-home-link" href="/vision"><span>🎬 الرؤية الدرامية المعتمدة</span><strong>الاستغماية مش مجرد افتتاحية… دي مفتاح حكاية 1960</strong><small>اقرأوا البناء الدرامي للفيلم ورحلة حسن وفريدة وعمر ←</small></a><SubmissionRadar compact/><section className="cinema-home-hero" style={{textAlign:"center",padding:"14px 0 2px"}}><p className="studio-eyebrow">مشروع التخرج</p><h1 style={{fontSize:"clamp(52px,12vw,108px)",lineHeight:1,margin:"6px 0",letterSpacing:3}}>1960</h1></section><p className="cinematic-home-credit">الإشراف الأكاديمي على الفيلم: د/ أحمد عبدالمنعم <span aria-hidden="true">✦</span> تصميم وتطوير منصة 1960: نوران أحمد</p><AssignmentCheckin/><div className="cinema-dual-marquees"><HomeCrewStrip/><MuseumTeaser/></div><a href="/honor-board" className="studio-honor-banner cinema-home-honor" style={{display:"block",textDecoration:"none",fontWeight:800}}>🏆 لوحة شرف لوكيشن 1960 · نجوم الأسبوع وتكريمات الإخراج ←</a><footer className="cinematic-home-footer">Created & Designed by Nouran Ahmed · 1960 Studio</footer></main>}
+
+export default function Home(){
+ return <main dir="rtl" className="studio-shell cinema-home-page cinema-broadcast-home minimalist-home">
+  <header className="studio-nav cinema-home-header minimalist-home-header">
+   <a className="studio-logo" href="/" aria-label="1960 Studio الرئيسية">STUDIO 1960</a>
+   <span className="minimalist-home-tagline">مساحة صُنّاع فيلم 1960 <span aria-hidden="true">✦</span></span>
+  </header>
+  <div className="minimalist-home-sections">
+   <HomeHonorShowcase/>
+   <AssignmentCheckin/>
+   <div className="cinema-dual-marquees minimalist-home-reels"><HomeCrewStrip/><MuseumTeaser/></div>
+  </div>
+ </main>
+}
