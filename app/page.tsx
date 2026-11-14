@@ -12,8 +12,8 @@ export default function Home(){
   </header>
   <SubmissionRadar compact/>
   <div className="minimalist-home-sections">
-   <HomeHonorShowcase/>
    <AssignmentCheckin/>
+   <HomeHonorShowcase/>
    <div className="cinema-dual-marquees minimalist-home-reels"><HomeCrewStrip/><MuseumTeaser/></div>
   </div>
  </main>
