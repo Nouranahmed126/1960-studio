@@ -3,11 +3,11 @@ import {useEffect,useState} from "react";
 type Answer="yes"|"no"|null;
 const storageKey="studio1960-assignment-checkin";
 export default function AssignmentCheckin(){
- const [answer,setAnswer]=useState<Answer>(null);
+ const [answer,setAnswer]=useState<Answer>(null),[alertPulse,setAlertPulse]=useState(false);
  useEffect(()=>{try{const saved=window.localStorage.getItem(storageKey);if(saved==="yes"||saved==="no")setAnswer(saved)}catch{}},[]);
- function choose(value:Exclude<Answer,null>){setAnswer(value);try{window.localStorage.setItem(storageKey,value)}catch{}}
- return <section className="assignment-checkin" aria-label="سؤال التكليفات" dir="rtl">
- <span className="assignment-checkin-eyebrow">STUDIO 1960 · DAILY CHECK-IN</span>
+ function choose(value:Exclude<Answer,null>){setAnswer(value);setAlertPulse(value==="no");try{window.localStorage.setItem(storageKey,value)}catch{}}
+ return <section className={"assignment-checkin archive-ticket"+(alertPulse?" archive-ticket-alert":"")} aria-label="سؤال التكليفات" dir="rtl">
+ <span className="assignment-checkin-eyebrow">ARCHIVE NOTICE · STUDIO 1960</span><span className="archive-ticket-stamp" aria-hidden="true">{answer==="no"?"قيد التنفيذ":answer==="yes"?"مُنجز":"ملف التكليف"}</span>
  <div className="assignment-checkin-star" aria-hidden="true">✦</div>
  <h2>خلصت تكليفاتك؟ 🎬</h2>
  <p>طمنينا على إنجازك… كل خطوة بتقرّبنا من فيلم أقوى.</p>
