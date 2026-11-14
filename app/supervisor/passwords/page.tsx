@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState,type FormEvent} from "react";
-import {getSupabase} from "../../lib/supabase-browser";
+import {getSupabase} from "../../../lib/supabase-browser";
 type Student={id:string;full_name:string|null;app_role:string|null};
 export default function PasswordManagement(){
  const [allowed,setAllowed]=useState(false),[loading,setLoading]=useState(true),[students,setStudents]=useState<Student[]>([]),[selected,setSelected]=useState(""),[password,setPassword]=useState(""),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
