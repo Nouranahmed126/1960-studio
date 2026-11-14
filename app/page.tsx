@@ -13,7 +13,17 @@ export default function Home(){
   <SubmissionRadar compact/>
   <div className="minimalist-home-sections">
    <AssignmentCheckin/>
-   <section className="home-quick-submit" aria-label="التسليم السريع"><div className="home-quick-submit-copy"><span className="home-quick-submit-kicker">QUICK SUBMISSION · STUDIO 1960</span><h2>📤 سلّم تكليفك بسرعة</h2><p>اكتبي عنوان التكليف واختاري فريقك أولًا، وبعدها ارفعي الملف أو الصورة أو الرابط أو الريكورد. استني رسالة نجاح الحفظ قبل ما تقفلي الصفحة.</p></div><div className="home-quick-submit-actions"><a href="/submissions?kind=file">📎 رفع ملف</a><a href="/submissions?kind=media">🖼️ صور وفيديو</a><a href="/submissions?kind=link">🔗 إضافة رابط</a><a href="/submissions?kind=voice">🎙️ تسجيل صوتي</a></div><a className="home-quick-submit-main" href="/submissions">فتح صفحة التسليم السريع ←</a></section>
+   <section className="home-quick-submit" aria-label="التسليم السريع">
+    <div className="home-quick-submit-copy"><span className="home-quick-submit-kicker">QUICK SUBMISSION · STUDIO 1960</span><h2>📤 سلّم تكليفك بسرعة</h2></div>
+    <div className="home-chat-submit" role="group" aria-label="اختصارات تسليم التكليف">
+     <details className="home-chat-submit-menu"><summary aria-label="خيارات المرفقات" title="إضافة مرفق">＋</summary>
+      <div className="home-chat-submit-options"><a href="/submissions?kind=file">📎 رفع ملف</a><a href="/submissions?kind=media">🖼️ صورة أو فيديو</a><a href="/submissions?kind=link">🔗 إضافة رابط</a></div>
+     </details>
+     <a className="home-chat-submit-field" href="/submissions" aria-label="كتابة عنوان التكليف واختيار الفريق">اكتبي عنوان التكليف وابدئي التسليم…</a>
+     <a className="home-chat-submit-mic" href="/submissions?kind=voice" aria-label="فتح التسجيل الصوتي" title="تسجيل صوتي">🎙️</a>
+    </div>
+    <p className="home-chat-submit-hint">حددي عنوان التكليف والفريق قبل الإرسال · انتظري تأكيد الحفظ</p>
+   </section>
    <HomeHonorShowcase/>
    <div className="cinema-dual-marquees minimalist-home-reels"><HomeCrewStrip/><MuseumTeaser/></div>
   </div>
