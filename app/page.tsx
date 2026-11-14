@@ -13,6 +13,7 @@ export default function Home(){
   <SubmissionRadar compact/>
   <div className="minimalist-home-sections">
    <AssignmentCheckin/>
+   <section className="home-quick-submit" aria-label="التسليم السريع"><div className="home-quick-submit-copy"><span className="home-quick-submit-kicker">QUICK SUBMISSION · STUDIO 1960</span><h2>📤 سلّم تكليفك بسرعة</h2><p>اكتبي عنوان التكليف واختاري فريقك أولًا، وبعدها ارفعي الملف أو الصورة أو الرابط أو الريكورد. استني رسالة نجاح الحفظ قبل ما تقفلي الصفحة.</p></div><div className="home-quick-submit-actions"><a href="/submissions?kind=file">📎 رفع ملف</a><a href="/submissions?kind=media">🖼️ صور وفيديو</a><a href="/submissions?kind=link">🔗 إضافة رابط</a><a href="/submissions?kind=voice">🎙️ تسجيل صوتي</a></div><a className="home-quick-submit-main" href="/submissions">فتح صفحة التسليم السريع ←</a></section>
    <HomeHonorShowcase/>
    <div className="cinema-dual-marquees minimalist-home-reels"><HomeCrewStrip/><MuseumTeaser/></div>
   </div>
