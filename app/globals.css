@@ -1943,3 +1943,28 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 /* 1960 dramatic vision — hide and seek as the narrative structure */
 .vision-home-link{display:flex;flex-direction:column;gap:7px;text-align:center;text-decoration:none!important;padding:19px 16px;margin:16px 0;border:1px solid #d5af60;border-radius:18px;background:radial-gradient(ellipse at top,#9b73363a,transparent 70%),linear-gradient(125deg,#12243b,#172f34,#101b2c);color:#fbe9bc!important;box-shadow:0 12px 35px #0003}.vision-home-link span{font-size:12px;letter-spacing:1px;color:#d7b66b}.vision-home-link strong{font-size:clamp(17px,3vw,24px)}.vision-home-link small{font-size:13px;color:#f4d99b}
 .hide-seek-vision{max-width:960px;margin:auto;padding:30px 18px 100px;color:#f8edd8}.vision-back{color:#f7d587}.vision-hero{text-align:center;margin:22px auto 35px;padding:50px 22px;border:1px solid #d6ad5e;border-radius:25px;background:radial-gradient(ellipse at center top,#e0b05238,transparent 67%),linear-gradient(155deg,#13263b,#0a1829);box-shadow:0 20px 60px #0005}.vision-hero>span,.vision-conclusion>span{font-size:12px;letter-spacing:4px;color:#eac475}.vision-hero h1{font-size:clamp(44px,9vw,82px);color:#f8d887;margin:14px 0}.vision-hero h2{font-size:clamp(18px,3vw,27px);color:#fff1cb}.vision-hero p{line-height:1.9}.vision-timeline{display:grid;gap:20px}.vision-timeline article{position:relative;border:1px solid #b9995980;border-right:5px solid #d8b45c;border-radius:18px;background:linear-gradient(125deg,#152a3e,#0e1d30);padding:25px 26px;box-shadow:0 10px 25px #0003}.vision-chapter{font-size:12px;letter-spacing:2px;color:#e5c16c}.vision-timeline h2{color:#ffe4a2;font-size:clamp(21px,4vw,28px);margin:10px 0}.vision-timeline p{line-height:2.1;font-size:clamp(15px,2.5vw,17px);margin:12px 0}.vision-timeline strong{color:#ffe2a1}.vision-timeline blockquote{margin:16px 0;padding:15px;border-right:3px solid #f3d17c;background:#f1d78d12;color:#ffe6a8;font-size:clamp(19px,4vw,27px);font-weight:800}.vision-timeline .vision-answer{background:#c69b4e30}.vision-conclusion{text-align:center;margin:30px 0;padding:38px 24px;border:1px solid #f1d284;border-radius:22px;background:radial-gradient(ellipse at top,#ae873747,transparent 70%),#14273a}.vision-conclusion p{font-size:clamp(19px,3.5vw,27px);font-weight:800;line-height:1.9;color:#ffe4a2}.vision-conclusion a{display:inline-block;color:#172238!important;background:linear-gradient(100deg,#fce6a1,#c9983f);border-radius:12px;padding:12px 18px;text-decoration:none;font-weight:900}
+
+/* Compact homepage coronation stage — keep full luxury card detail */
+.home-honor-showcase{margin:10px auto 18px!important;padding:12px 9px 17px!important}
+.home-honor-showcase .home-honor-subtitle{margin:3px 0 7px}
+.home-honor-showcase .home-honor-stage{margin:4px auto 0!important;max-width:700px}
+.home-honor-showcase .home-honor-coverflow{height:430px;width:min(100%,450px)}
+.home-honor-showcase .home-honor-flip{width:min(100%,310px);height:415px}
+.home-honor-showcase .home-honor-front .honor-certificate{width:100%;height:100%;max-height:none}
+.home-honor-showcase .home-honor-front .honor-certificate-inner{min-height:100%;height:100%;padding:15px 18px;box-sizing:border-box}
+.home-honor-showcase .honor-card-name{font-size:clamp(23px,3.3vw,31px);margin:7px 0}
+.home-honor-showcase .honor-card-achievement{font-size:clamp(15px,2.3vw,20px)}
+.home-honor-showcase .honor-card-note{font-size:clamp(12px,1.8vw,15px);line-height:1.6}
+.home-honor-showcase .honor-medallion{transform:scale(.8);transform-origin:center}
+.home-honor-showcase .honor-gold-seal{transform:scale(.78);transform-origin:center bottom}
+.home-honor-showcase .home-honor-navigation{margin:0 auto 9px}
+.home-honor-showcase .home-honor-controls{padding-bottom:2px}
+@media(max-width:600px){
+.home-honor-showcase .home-honor-coverflow{height:405px}
+.home-honor-showcase .home-honor-flip{width:min(100%,285px);height:390px}
+.home-honor-showcase .home-honor-front .honor-certificate-inner{padding:13px 14px}
+.home-honor-showcase .honor-card-name{font-size:24px}
+.home-honor-showcase .honor-card-achievement{font-size:16px}
+.home-honor-showcase .honor-card-note{font-size:12px}
+.home-honor-showcase .home-honor-navigation button{min-height:36px}
+}
