@@ -2157,3 +2157,26 @@ body:has(.minimalist-home){background:#081522!important}
 .minimalist-home .minimalist-home-reels{display:grid;gap:14px;margin:0!important;padding:0!important}
 .minimalist-home .minimalist-home-reels>*{margin-block:0!important;box-shadow:0 8px 22px #0003}
 @media(max-width:650px){.minimalist-home{padding-inline:13px!important;padding-top:11px!important}.minimalist-home-sections{gap:19px;padding-top:19px}.minimalist-home-header{min-height:45px}}
+
+/* Cinematic Reel homepage: compact archive ticket + two-row horizontal honor reel.
+   Keep existing jewel-card animations, gold rim shimmer, modal and moving film strips intact. */
+.minimalist-home .minimalist-home-sections{gap:16px!important;padding-top:14px!important}
+.minimalist-home .assignment-checkin.archive-ticket{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"eyebrow stamp" "question actions" "feedback feedback" "foot foot";align-items:center;column-gap:12px;row-gap:3px;text-align:right;padding:12px 21px!important;min-height:unset!important;border-radius:12px!important}
+.minimalist-home .archive-ticket .assignment-checkin-eyebrow{grid-area:eyebrow;font-size:9px}
+.minimalist-home .archive-ticket .archive-ticket-stamp{grid-area:stamp;margin:0;font-size:10px;padding:3px 7px}
+.minimalist-home .archive-ticket .assignment-checkin-star{display:none}
+.minimalist-home .archive-ticket h2{grid-area:question;margin:0!important;font-size:clamp(15px,3.6vw,21px)!important;white-space:nowrap}
+.minimalist-home .archive-ticket>p{display:none}
+.minimalist-home .archive-ticket .assignment-checkin-actions{grid-area:actions;flex-wrap:nowrap;gap:6px}
+.minimalist-home .archive-ticket .assignment-checkin-actions button{min-width:0!important;white-space:nowrap;padding:8px 11px!important;font-size:clamp(10px,2.5vw,13px)!important;border-radius:8px}
+.minimalist-home .archive-ticket .assignment-checkin-feedback{grid-area:feedback;max-width:none;margin:5px 0 0;padding:7px 10px;font-size:12px;line-height:1.5}
+.minimalist-home .archive-ticket>small{grid-area:foot;margin:1px 0 0;font-size:9px;opacity:.75}
+.minimalist-home .home-honor-grid-section{padding:14px 9px 13px!important;overflow:hidden}
+.minimalist-home .home-honor-grid-section h2{font-size:clamp(20px,4vw,28px);margin:3px 0 4px}
+.minimalist-home .home-honor-grid-eyebrow{font-size:9px;letter-spacing:1.5px}
+.minimalist-home .home-honor-grid-subtitle{font-size:12px;margin-bottom:10px}
+.minimalist-home .home-honor-grid{display:grid!important;grid-template-columns:none!important;grid-template-rows:repeat(2,minmax(0,auto))!important;grid-auto-flow:column!important;grid-auto-columns:clamp(125px,22vw,175px)!important;gap:11px!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding:8px 9px 14px!important;justify-content:start!important;scrollbar-width:thin;scrollbar-color:#d4af37 #0a1118}
+.minimalist-home .home-honor-grid button.home-honor-mini{width:100%;min-width:0;scroll-snap-align:start;min-height:190px!important}
+.minimalist-home .home-honor-grid-all{margin-top:8px}
+@media(max-width:550px){.minimalist-home .minimalist-home-sections{gap:12px!important}.minimalist-home .assignment-checkin.archive-ticket{padding:11px 12px!important;column-gap:7px}.minimalist-home .archive-ticket .assignment-checkin-actions button{padding:7px 8px!important}.minimalist-home .home-honor-grid{grid-auto-columns:clamp(115px,36vw,155px)!important;gap:9px!important}.minimalist-home .home-honor-grid button.home-honor-mini{min-height:185px!important}}
+@media(max-width:355px){.minimalist-home .assignment-checkin.archive-ticket{grid-template-areas:"eyebrow stamp" "question question" "actions actions" "feedback feedback" "foot foot"}.minimalist-home .archive-ticket .assignment-checkin-actions{justify-content:start}}
