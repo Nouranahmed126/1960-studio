@@ -2209,3 +2209,27 @@ body:has(.minimalist-home){background:#081522!important}
 .home-chat-submit-mic{display:grid;place-items:center;flex:none;width:37px;height:37px;border-radius:50%;background:#d9b875;color:#081524!important;text-decoration:none!important;font-size:19px}
 .home-chat-submit-hint{font-size:10px!important;line-height:1.5!important;color:#c6bda9!important;margin:7px 2px 0!important;text-align:center}
 @media(max-width:430px){.home-quick-submit{padding:10px!important}.home-chat-submit{gap:5px}.home-chat-submit-menu summary,.home-chat-submit-mic{width:34px;height:34px}}
+
+
+/* 1960 Honor vertical micro-marquee. To reverse direction, add animation-direction:reverse to .honor-vertical-track. */
+.minimalist-home .home-honor-grid-section{display:flex!important;flex-direction:column;align-items:center;padding:14px 10px 20px!important;background:linear-gradient(145deg,#0d1b2a,#050a14)!important}
+.honor-vertical-marquee{width:80px;height:350px;position:relative;margin:12px auto 15px;border:1px solid #d4af37;border-radius:13px;background:#050a14;overflow:hidden;isolation:isolate;box-shadow:0 0 0 2px #d4af371a,0 10px 25px #0007;mask-image:linear-gradient(to bottom,transparent,black 12%,black 88%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,black 12%,black 88%,transparent)}
+.honor-vertical-track{display:flex;flex-direction:column;width:100%;animation:honor-vertical-rise 20s linear infinite;will-change:transform}
+.honor-vertical-set{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none;padding:4px 0}
+.honor-vertical-marquee:hover .honor-vertical-track,.honor-vertical-marquee:active .honor-vertical-track,.honor-vertical-marquee:focus-within .honor-vertical-track{animation-play-state:paused}
+@keyframes honor-vertical-rise{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.honor-vertical-marquee button.honor-micro-card{appearance:none;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:none;width:70px!important;height:76px!important;min-width:0!important;min-height:0!important;max-height:76px!important;margin:0!important;padding:5px 3px!important;overflow:hidden;border:1.5px solid #c79531!important;border-radius:8px;background:linear-gradient(135deg,#f8e6bb,#c9a76e 75%,#f6d993)!important;color:#2c2014!important;box-shadow:inset 0 0 0 1px #ffe7a0,0 2px 8px #0006;cursor:pointer;transform:none!important;text-shadow:none!important}
+.honor-vertical-marquee .honor-micro-card:focus-visible{outline:2px solid #fff4ba;outline-offset:-3px}
+.honor-micro-medal{display:block;font-size:14px;line-height:1;color:#98600d}
+.honor-micro-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;max-width:100%;font-size:9px;font-weight:900;line-height:1.3;text-align:center;color:#302013}
+.honor-micro-stars{font-size:9px;line-height:1;letter-spacing:-1px;color:#80500f;white-space:nowrap}
+.honor-vertical-marquee .honor-micro-sapphire{background:linear-gradient(145deg,#274568,#10243c)!important;color:#fff1c9!important}
+.honor-vertical-marquee .honor-micro-emerald{background:linear-gradient(145deg,#27634f,#12382e)!important;color:#fff1c9!important}
+.honor-vertical-marquee .honor-micro-amethyst{background:linear-gradient(145deg,#61436d,#2b2044)!important;color:#fff1c9!important}
+.honor-vertical-marquee .honor-micro-amber{background:linear-gradient(145deg,#a87840,#4c2e21)!important;color:#fff1c9!important}
+.honor-vertical-marquee .honor-micro-pearl{background:linear-gradient(145deg,#fff4da,#d6c6a5)!important;color:#302013!important}
+.honor-vertical-marquee .honor-micro-card:not(.honor-micro-pearl) .honor-micro-name{color:#fff2d8!important}
+.honor-vertical-marquee .honor-micro-card:not(.honor-micro-pearl) .honor-micro-stars,.honor-vertical-marquee .honor-micro-card:not(.honor-micro-pearl) .honor-micro-medal{color:#f6cb6a!important}
+.minimalist-home .home-honor-grid-all{margin:2px auto 0!important;max-width:calc(100% - 20px)}
+@media(min-width:700px){.honor-vertical-marquee{width:96px}.honor-vertical-marquee button.honor-micro-card{width:74px!important;height:80px!important;max-height:80px!important}.honor-micro-name{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.honor-vertical-track{animation:none!important}.honor-vertical-marquee{overflow-y:auto;mask-image:none;-webkit-mask-image:none}.honor-vertical-set:nth-child(2){display:none}}
