@@ -1,6 +1,7 @@
 import MuseumTeaser from "./museum-teaser";
 import HomeCrewStrip from "./home-crew-strip";
 import AssignmentCheckin from "./assignment-checkin";
+import SubmissionRadar from "./submission-radar";
 import HomeHonorShowcase from "./home-honor-showcase";
 
 export default function Home(){
@@ -9,6 +10,7 @@ export default function Home(){
    <a className="studio-logo" href="/" aria-label="1960 Studio الرئيسية">STUDIO 1960</a>
    <span className="minimalist-home-tagline">مساحة صُنّاع فيلم 1960 <span aria-hidden="true">✦</span></span>
   </header>
+  <SubmissionRadar compact/>
   <div className="minimalist-home-sections">
    <HomeHonorShowcase/>
    <AssignmentCheckin/>
