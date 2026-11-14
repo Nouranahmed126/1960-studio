@@ -2180,3 +2180,14 @@ body:has(.minimalist-home){background:#081522!important}
 .minimalist-home .home-honor-grid-all{margin-top:8px}
 @media(max-width:550px){.minimalist-home .minimalist-home-sections{gap:12px!important}.minimalist-home .assignment-checkin.archive-ticket{padding:11px 12px!important;column-gap:7px}.minimalist-home .archive-ticket .assignment-checkin-actions button{padding:7px 8px!important}.minimalist-home .home-honor-grid{grid-auto-columns:clamp(115px,36vw,155px)!important;gap:9px!important}.minimalist-home .home-honor-grid button.home-honor-mini{min-height:185px!important}}
 @media(max-width:355px){.minimalist-home .assignment-checkin.archive-ticket{grid-template-areas:"eyebrow stamp" "question question" "actions actions" "feedback feedback" "foot foot"}.minimalist-home .archive-ticket .assignment-checkin-actions{justify-content:start}}
+
+/* Homepage quick submission dock: simple entry to existing verified submission workflow */
+.minimalist-home .home-quick-submit{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px 18px;align-items:center;padding:15px 18px;border:1px solid #d4af3780;border-radius:14px;background:linear-gradient(125deg,#112b32,#0c1927);box-shadow:0 8px 24px #0003;color:#e5d4b3}
+.home-quick-submit-kicker{font-size:9px;letter-spacing:1.2px;color:#d4af37}
+.home-quick-submit h2{font-size:clamp(17px,3.6vw,22px);margin:2px 0 4px;color:#f8dfa5}
+.home-quick-submit p{font-size:12px;line-height:1.6;margin:0;max-width:550px;color:#e2d6bf}
+.home-quick-submit-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:410px}
+.home-quick-submit-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:37px;padding:7px 10px;border-radius:9px;background:#e5d4b3;color:#132231!important;font-weight:800;font-size:12px;text-decoration:none;border:1px solid #d4af37;transition:transform .2s,background .2s}
+.home-quick-submit-actions a:hover{transform:translateY(-2px);background:#f9e4b0}
+.home-quick-submit-main{grid-column:1/-1;display:block;text-align:center;padding:9px 14px;border-radius:9px;background:#d4af3725;border:1px solid #d4af3770;color:#f8dfa5!important;font-weight:800;text-decoration:none;font-size:13px}
+@media(max-width:700px){.minimalist-home .home-quick-submit{grid-template-columns:1fr;padding:12px;gap:10px}.home-quick-submit-actions{max-width:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.home-quick-submit-actions a{min-height:40px}.home-quick-submit p{font-size:11px}}
