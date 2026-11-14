@@ -2284,3 +2284,51 @@ body:has(.minimalist-home){background:#081522!important}
  .minimalist-home .honor-vertical-track{animation:none!important}
  .minimalist-home .honor-vertical-marquee{overflow-y:auto!important;mask-image:none!important;-webkit-mask-image:none!important;pointer-events:auto!important}
 }
+
+
+/* 1960 STUDIO — canonical cinematic palette, shared by all devices and accounts.
+   Reference: supervisor's navy / champagne / antique-gold mobile screenshot. */
+:root{
+ color-scheme:dark;
+ --rose:#d4af37;--rose-deep:#b88738;
+ --ink:#fff1d3;--muted:#d2c2a5;--cream:#0b1827;
+ --blush:#12263a;--line:#b99551;
+ --studio-bg:#050a14;--studio-navy:#0d1b2a;
+ --studio-panel:#102337;--studio-gold:#d4af37;
+ --studio-champagne:#e5d4b3;--studio-text:#fff1d3;
+}
+html{background:#050a14!important;color-scheme:dark}
+body{
+ background:radial-gradient(ellipse at 5% 5%,#17302b 0,transparent 34%),
+ radial-gradient(ellipse at 90% 35%,#17253c 0,transparent 37%),#050a14!important;
+ color:#fff1d3!important;
+}
+.studio-logo,.studio-eyebrow,.studio-kicker{color:#d4af37!important}
+.studio-lead,.studio-note,.studio-feature p,.studio-section-count{color:#d2c2a5!important}
+.studio-feature{background:linear-gradient(145deg,#122b3c,#0d1b2a)!important;border-color:#987b45!important}
+.studio-feature-icon{background:#263b45!important;color:#f1d58d!important}
+.studio-feature-line{background:linear-gradient(90deg,#d4af37,transparent)!important}
+.studio-nav-link,.studio-primary{background:linear-gradient(135deg,#f5dfaa,#c79d55)!important;color:#0d1b2a!important}
+main section[style*="background"],main article[style*="background"]{background:#102337!important;border-color:#9e824d!important}
+input:not([type="checkbox"]),textarea,select{
+ background:#13243a!important;color:#fff1d3!important;
+ border-color:#7c8a98!important;outline-color:#d4af37!important;
+}
+input::placeholder,textarea::placeholder{color:#b7b9c2!important;opacity:1}
+input[type="checkbox"]{accent-color:#d4af37}
+button,button[type="submit"]{
+ background:linear-gradient(135deg,#f3dfb5,#cba363)!important;
+ color:#0d1b2a!important;box-shadow:0 6px 18px #0004;
+}
+button:disabled{opacity:.55}
+a,a[style*="color"]{color:#e5c77f!important}
+p[style*="color"],small[style*="color"],span[style*="color"]{color:#d2c2a5!important}
+fieldset{background:#102337!important;border-color:#9e824d!important}
+/* Keep the supervisor's floating golden honor cards identical on mobile and desktop. */
+.minimalist-home .honor-vertical-marquee button.honor-micro-card{
+ background:linear-gradient(145deg,#fff1cf,#dfbc78 76%,#f5d89e)!important;
+ color:#0d1b2a!important;
+}
+.minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-name{color:#0d1b2a!important}
+.minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-stars,
+.minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-medal{color:#69430b!important}
