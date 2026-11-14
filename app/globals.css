@@ -2191,3 +2191,21 @@ body:has(.minimalist-home){background:#081522!important}
 .home-quick-submit-actions a:hover{transform:translateY(-2px);background:#f9e4b0}
 .home-quick-submit-main{grid-column:1/-1;display:block;text-align:center;padding:9px 14px;border-radius:9px;background:#d4af3725;border:1px solid #d4af3770;color:#f8dfa5!important;font-weight:800;text-decoration:none;font-size:13px}
 @media(max-width:700px){.minimalist-home .home-quick-submit{grid-template-columns:1fr;padding:12px;gap:10px}.home-quick-submit-actions{max-width:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.home-quick-submit-actions a{min-height:40px}.home-quick-submit p{font-size:11px}}
+
+
+/* Compact chat-style quick submission — 1960 Studio */
+.home-quick-submit{padding:12px 15px!important;margin-block:10px!important;max-width:100%;box-sizing:border-box}
+.home-quick-submit-copy{margin:0 0 8px!important}
+.home-quick-submit-copy h2{font-size:clamp(15px,3.6vw,20px)!important;margin:0!important}
+.home-quick-submit-kicker{font-size:9px!important;letter-spacing:.12em}
+.home-chat-submit{display:flex;align-items:center;gap:8px;position:relative;min-height:48px;border:1px solid #b99658;border-radius:999px;background:#091624;box-shadow:inset 0 1px 9px #0005,0 3px 12px #0003;padding:5px 7px;direction:rtl}
+.home-chat-submit-menu{position:relative;flex:none}
+.home-chat-submit-menu summary{display:grid;place-items:center;cursor:pointer;list-style:none;width:37px;height:37px;border-radius:50%;background:linear-gradient(135deg,#f3d899,#b7863c);color:#091624;font-size:29px;line-height:1;font-weight:600}
+.home-chat-submit-menu summary::-webkit-details-marker{display:none}
+.home-chat-submit-options{position:absolute;z-index:40;top:calc(100% + 10px);right:0;width:max-content;min-width:180px;max-width:min(75vw,260px);padding:7px;display:grid;gap:3px;background:#101f2d;border:1px solid #cba85e;border-radius:14px;box-shadow:0 14px 32px #0009}
+.home-chat-submit-options a{display:block;color:#f8e7c5!important;text-decoration:none;padding:10px 12px;border-radius:9px;font-size:13px;font-weight:700}
+.home-chat-submit-options a:hover,.home-chat-submit-options a:focus-visible{background:#283a49}
+.home-chat-submit-field{flex:1;min-width:0;text-align:right;color:#c4c6cb!important;text-decoration:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(11px,2.7vw,14px);padding:6px 3px}
+.home-chat-submit-mic{display:grid;place-items:center;flex:none;width:37px;height:37px;border-radius:50%;background:#d9b875;color:#081524!important;text-decoration:none!important;font-size:19px}
+.home-chat-submit-hint{font-size:10px!important;line-height:1.5!important;color:#c6bda9!important;margin:7px 2px 0!important;text-align:center}
+@media(max-width:430px){.home-quick-submit{padding:10px!important}.home-chat-submit{gap:5px}.home-chat-submit-menu summary,.home-chat-submit-mic{width:34px;height:34px}}
