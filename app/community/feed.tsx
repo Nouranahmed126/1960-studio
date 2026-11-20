@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
+import { getVisitorToken } from "../../lib/plateau-visitor";
 import PostInteractions, { type InteractionCounts } from "../gallery/post-interactions";
 
 type Media = { path: string; kind: "image" | "video" };
@@ -18,7 +19,7 @@ type Post = {
   legacy_media: Media[];
   youtube_id: string | null;
 };
-type Viewer = { id: string; name: string; supervisor: boolean };
+type Viewer = { id: string; supervisor: boolean };
 type FeedData = { posts: Post[]; counts: Record<number, InteractionCounts>; urls: Record<string, string> };
 const emptyFeed: FeedData = { posts: [], counts: {}, urls: {} };
 const mediaTypes: Record<string, string> = {
@@ -76,14 +77,14 @@ export default function Feed() {
         setAccess(error && error.name !== "AuthSessionMissingError" ? "offline" : "guest");
         return;
       }
-      const profile = await db!.from("profiles").select("full_name,approval_status,app_role").eq("id", user.id).single();
+      const profile = await db!.from("profiles").select("approval_status,app_role").eq("id", user.id).single();
       if (!active) return;
-      if (profile.error) { setAccess("offline"); return; }
+      if (profile.error) { setAccess("guest"); return; }
       if (profile.data.app_role !== "supervisor" && profile.data.approval_status !== "approved") {
         setAccess("pending");
         return;
       }
-      setViewer({ id: user.id, name: profile.data.full_name, supervisor: profile.data.app_role === "supervisor" });
+      setViewer({ id: user.id, supervisor: profile.data.app_role === "supervisor" });
       setAccess("member");
     }
     void identify();
@@ -103,19 +104,16 @@ export default function Feed() {
     const posts = (result.data ?? []) as Post[];
     const visible = posts.slice(0, limit);
     const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : []);
-    const oldPaths = [...new Set(visible.flatMap(post => post.legacy_media.map(media => media.path)))];
-    const paths = [...new Set([...newPaths, ...oldPaths])];
+    const paths = [...new Set(newPaths)];
     const now = Date.now();
     const shouldSign = (path: string) => (mediaCache.current.get(path)?.refreshAfter ?? 0) <= now;
     const unsignedUploads = newPaths.filter(shouldSign);
-    const unsignedGallery = oldPaths.filter(shouldSign);
-    const [counts, uploads, gallery] = await Promise.all([
-      visible.length ? db.rpc("plateau_interaction_counts", { post_ids: visible.map(post => post.id) }) : null,
+    const [counts, uploads] = await Promise.all([
+      visible.length ? db.rpc("plateau_public_counts", { post_ids: visible.map(post => post.id), visitor_token: viewer ? null : getVisitorToken() }) : null,
       unsignedUploads.length ? db.storage.from("post-media").createSignedUrls(unsignedUploads, 3600) : null,
-      unsignedGallery.length ? db.storage.from("studio-gallery").createSignedUrls(unsignedGallery, 3600) : null,
     ]);
     if (signal?.aborted || requestId !== refreshId.current) return;
-    for (const item of [...(uploads?.data ?? []), ...(gallery?.data ?? [])]) {
+    for (const item of uploads?.data ?? []) {
       if (item.path && item.signedUrl) mediaCache.current.set(item.path, { url: item.signedUrl, refreshAfter: now + 50 * 60000 });
     }
     const visiblePaths = new Set(paths);
@@ -127,10 +125,10 @@ export default function Feed() {
     setFeed({ posts, urls, counts: Object.fromEntries(interactions.map(row => [row.post_id, row])) });
     setRefreshVersion(version => version + 1);
     setNotice(counts?.error ? "تعذّر تحديث أعداد التفاعلات." : "");
-  }, [limit]);
+  }, [limit, viewer]);
 
   useEffect(() => {
-    if (access !== "member") return;
+    if (access === "loading" || access === "offline") return;
     let request: AbortController | undefined;
     const sync = () => {
       request?.abort();
@@ -222,26 +220,15 @@ export default function Feed() {
 
   return <main className="gallery-shell plateau-feed">
     <div className="plateau-content">
-      <header className="plateau-intro"><h1>التايم لاين</h1>
-        <p>شاركوا تقدم الشغل ولحظات الكواليس مع فريقكم.</p>
-      </header>
-      {access === "loading" && <p role="status">جارٍ تحميل التايم لاين…</p>}
-      {access === "guest" && <section className="plateau-card plateau-access">
-        <h2>أهلًا بفريق العمل</h2><p>سجّل دخولك علشان تشوف المنشورات وتشارك مع الفريق.</p>
-        <Link className="plateau-primary" href="/login">تسجيل الدخول</Link> <Link href="/register">طلب الانضمام</Link>
-      </section>}
-      {access === "pending" && <p className="plateau-card plateau-access">التايم لاين هيتفتح بعد اعتماد حسابك.</p>}
+      <h1 className="plateau-feed-title">التايم لاين</h1>
+      {access === "loading" && <p role="status">جارٍ التحميل…</p>}
+      {access === "guest" && <div className="plateau-guest-bar"><Link href="/login">سجّل الدخول للنشر</Link></div>}
+      {access === "pending" && <p className="plateau-guest-bar">النشر بعد اعتماد الحساب.</p>}
       {access === "offline" && <p role="status">اتصال Supabase غير متاح. لو بتشغّل الموقع محليًا، راجع إعدادات الاتصال في README.</p>}
-      {viewer && <form className="plateau-card plateau-composer" onSubmit={publish}>
-        <label htmlFor="plateau-post"><strong>إنشاء منشور</strong></label>
-        <textarea id="plateau-post" rows={3} maxLength={4000} disabled={!!busy} value={body}
-          onChange={event => setBody(event.target.value)} placeholder={`شارك حاجة مع فريقك، ${viewer.name || "زميلنا"}…`} />
-        {preview && file && <div className="plateau-composer-preview">
-          {file.type.startsWith("image/") ? <img src={preview} alt="معاينة الصورة" /> : <video src={preview} controls />}
-          <button type="button" disabled={!!busy} onClick={() => { setFile(undefined); if (mediaInput.current) mediaInput.current.value = ""; }}>إزالة المرفق</button>
-        </div>}
-        {showLink && <label>رابط فيديو YouTube<input type="url" dir="ltr" disabled={!!busy} value={link} onChange={event => setLink(event.target.value)} /></label>}
-        <div className="plateau-composer-tools">
+      {viewer && <form className="plateau-card plateau-composer plateau-composer-slim" onSubmit={publish}>
+        <div className="plateau-compose-line">
+          <textarea aria-label="اكتب منشور" rows={body.includes("\n") ? 3 : 1} maxLength={4000} disabled={!!busy} value={body}
+            onChange={event => setBody(event.target.value)} placeholder="شارك الآن…" />
           <input ref={mediaInput} type="file" accept={Object.keys(mediaTypes).join(",")} aria-label="رفع صورة أو فيديو" hidden
             onChange={event => {
               const selected = event.target.files?.[0];
@@ -253,17 +240,28 @@ export default function Feed() {
               }
               setActionError(""); setFile(selected); setLink(""); setShowLink(false);
             }} />
-          <button type="button" disabled={!!busy} onClick={() => mediaInput.current?.click()}>صورة أو فيديو</button>
-          <button type="button" aria-expanded={showLink} disabled={!!busy || !!file} onClick={() => { setShowLink(!showLink); setLink(""); }}>رابط فيديو</button>
-          <button className="plateau-primary" disabled={!!busy || (!body.trim() && !file && !link.trim())}>{busy || "نشر"}</button>
+          <button type="button" className="plateau-compose-icon" aria-label="إضافة صورة أو فيديو" title="إضافة صورة أو فيديو"
+            disabled={!!busy} onClick={() => mediaInput.current?.click()}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m4 17 5-5 4 4 3-3 4 4"/><circle cx="16" cy="9" r="1"/></svg>
+          </button>
+          <button type="button" className="plateau-compose-icon" aria-label="إضافة رابط فيديو" title="إضافة رابط فيديو"
+            aria-expanded={showLink} disabled={!!busy || !!file} onClick={() => { setShowLink(!showLink); setLink(""); }}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+          </button>
+          <button className="plateau-primary" disabled={!!busy || (!body.trim() && !file && !link.trim())}>نشر</button>
         </div>
+        {preview && file && <div className="plateau-composer-preview">
+          {file.type.startsWith("image/") ? <img src={preview} alt="معاينة الصورة" /> : <video src={preview} controls />}
+          <button type="button" disabled={!!busy} onClick={() => { setFile(undefined); if (mediaInput.current) mediaInput.current.value = ""; }}>إزالة المرفق</button>
+        </div>}
+        {showLink && <label>رابط فيديو YouTube<input type="url" dir="ltr" disabled={!!busy} value={link} onChange={event => setLink(event.target.value)} /></label>}
         {busy && <p role="status">{busy}</p>}
       </form>}
       {actionError && <p role="alert" className="plateau-notice">{actionError}</p>}
       {notice && <p role="status" className="plateau-notice">{notice} <button onClick={() => void refresh()}>تحديث</button></p>}
-      {viewer && refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات. شارك أول لحظة مع الفريق.</p>}
+      {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات.</p>}
       <section className="plateau-posts" aria-label="منشورات الفريق">
-        {viewer && feed.posts.slice(0, limit).map(post => {
+        {feed.posts.slice(0, limit).map(post => {
           const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : post.legacy_media;
           return <article className="plateau-card plateau-post" key={post.id}>
             <header className="plateau-post-header">
@@ -287,12 +285,12 @@ export default function Feed() {
             </div>}
             {post.youtube_id && <iframe className="plateau-embed" title={`فيديو YouTube من ${post.author_name}`} loading="lazy"
               src={`https://www.youtube-nocookie.com/embed/${post.youtube_id}`} allowFullScreen />}
-            {viewer.supervisor && <div className="plateau-moderation">
+            {viewer?.supervisor && <div className="plateau-moderation">
               <button disabled={!!moderating} onClick={() => void moderate(post, false)}>{post.pinned_at ? "إلغاء التثبيت" : "تثبيت"}</button>
               <button disabled={!!moderating} onClick={() => void moderate(post, true)}>حذف المنشور</button>
             </div>}
             <PostInteractions postId={post.id} counts={feed.counts[post.id] ?? zeroCounts} refreshVersion={refreshVersion}
-              viewerId={viewer.id} supervisor={viewer.supervisor} />
+              viewerId={viewer?.id} supervisor={viewer?.supervisor ?? false} />
           </article>;
         })}
       </section>
