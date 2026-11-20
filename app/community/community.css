@@ -210,3 +210,23 @@ body .plateau-welcome button[type="submit"]:not(:disabled) {
   font: inherit;
   font-weight: 750;
 }
+
+.plateau-feed-title {
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  line-height: 1.25;
+  margin: 0 0 12px;
+  padding-block-start: clamp(20px, 4vw, 36px);
+}
+.plateau-guest-bar { padding: 6px 0; font-size: .875rem; }
+.plateau-composer.plateau-composer-slim { padding: 8px; gap: 8px; }
+.plateau-compose-line { display: grid; grid-template-columns: minmax(0, 1fr) repeat(2, 40px) auto; align-items: end; gap: 5px; }
+body .plateau-feed .plateau-compose-line textarea {
+  min-height: 40px;
+  padding: 8px 10px;
+  resize: vertical;
+  font-size: .875rem;
+}
+body .plateau-feed .plateau-compose-line button { min-height: 40px; padding: 4px 8px; font-size: .875rem; }
+body .plateau-feed .plateau-compose-line .plateau-compose-icon { display: grid; place-items: center; padding: 0; }
+.plateau-compose-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.plateau-compose-line .plateau-primary { min-width: 54px; }

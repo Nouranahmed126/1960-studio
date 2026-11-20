@@ -3,15 +3,16 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
 
+import { getVisitorToken } from "../../lib/plateau-visitor";
+
 export type InteractionCounts = { likes: number; comments: number; liked: boolean };
-type Comment = { id: string; user_id: string; author_name: string; body: string; created_at: string };
-const commentColumns = "id,user_id,author_name,body,created_at";
+type Comment = { id: string; own: boolean; author_name: string; body: string; created_at: string };
 const commentPageSize = 20;
 const dateFormat = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium" });
 
 export default function PostInteractions({ postId, viewerId, supervisor, counts, refreshVersion }: {
   postId: number;
-  viewerId: string;
+  viewerId?: string;
   supervisor: boolean;
   counts: InteractionCounts;
   refreshVersion: number;
@@ -35,14 +36,9 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
     const db = getSupabase();
     if (!db) return;
     let active = true;
-    void db.from("plateau_comments").select(commentColumns, { count: "exact" })
-      .eq("post_id", postId).order("created_at", { ascending: false }).order("id", { ascending: false })
-      .limit(Math.max(comments.length, commentPageSize)).then(result => {
-        if (active && !result.error) {
-          setComments(result.data ?? []);
-          setCommentCount(result.count ?? 0);
-        }
-      });
+    void db.rpc("plateau_public_comments", { target: postId, max_rows: Math.max(comments.length, commentPageSize) }).then(result => {
+      if (active && !result.error) setComments(result.data ?? []);
+    });
     return () => { active = false; };
   }, [refreshVersion, open, postId]);
 
@@ -55,12 +51,14 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
     setLiking(true);
     setLikeError("");
     try {
-      const action = liked
+      const action = !viewerId
+        ? await db.rpc("plateau_visitor_like", { target: postId, visitor_token: getVisitorToken(), desired: !liked })
+        : liked
         ? await db.from("plateau_likes").delete().eq("post_id", postId).eq("user_id", viewerId)
         : await db.from("plateau_likes").insert({ post_id: postId });
       if (action.error && action.error.code !== "23505") throw action.error;
 
-      const summary = await db.rpc("plateau_interaction_counts", { post_ids: [postId] }).single<InteractionCounts>();
+      const summary = await db.rpc("plateau_public_counts", { post_ids: [postId], visitor_token: viewerId ? null : getVisitorToken() }).single<InteractionCounts>();
       const next = summary.data ?? { liked: !liked, likes: Math.max(0, likes + (liked ? -1 : 1)) };
       setReaction(next);
     } catch {
@@ -73,11 +71,10 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
   async function fetchComments(limit: number) {
     const db = getSupabase();
     if (!db) return;
-    const result = await db.from("plateau_comments").select(commentColumns, { count: "exact" })
-      .eq("post_id", postId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(limit);
+    const result = await db.rpc("plateau_public_comments", { target: postId, max_rows: limit });
     if (result.error) throw result.error;
     setComments(result.data ?? []);
-    setCommentCount(result.count ?? 0);
+
   }
 
   async function updateComments(action: () => Promise<void>) {
@@ -99,10 +96,12 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
     const body = draft.trim();
     if (!db || !body) return;
     await updateComments(async () => {
-      const result = await db.from("plateau_comments").insert({ post_id: postId, body }).select(commentColumns).single();
+      const result = viewerId
+        ? await db.from("plateau_comments").insert({ post_id: postId, body })
+        : await db.rpc("plateau_visitor_comment", { target: postId, visitor_token: getVisitorToken(), message: body });
       if (result.error) throw result.error;
       setDraft("");
-      setComments(current => [result.data, ...current]);
+      await fetchComments(Math.max(comments.length, commentPageSize));
       setCommentCount(current => (current ?? counts.comments) + 1);
     });
   }
@@ -142,11 +141,11 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
         {comments.map(comment => <li key={comment.id}>
           <div><strong>{comment.author_name}</strong> <time dateTime={comment.created_at}>{dateFormat.format(new Date(comment.created_at))}</time></div>
           <p>{comment.body}</p>
-          {(supervisor || comment.user_id === viewerId) &&
+          {(supervisor || comment.own) &&
             <button type="button" disabled={loadingComments} onClick={() => void removeComment(comment.id)}>حذف التعليق</button>}
         </li>)}
       </ul>
-      {comments.length < total && <button type="button" disabled={loadingComments}
+      {comments.length < Math.min(total, 1000) && <button type="button" disabled={loadingComments}
         onClick={() => void updateComments(() => fetchComments(comments.length + commentPageSize))}>عرض تعليقات أكتر</button>}
     </section>}
   </div>;
