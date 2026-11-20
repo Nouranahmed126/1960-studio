@@ -33,3 +33,14 @@
 - استكمال اختبار البريد وRLS والبناء والنشر.
 
 لا تضعي `service_role` في الواجهة أو GitHub، ولا تشاركي رابط الموقع مع الطلاب قبل اختبار الصلاحيات.
+
+### Plateau | Crew Hub timeline
+
+The homepage uses the existing approved student and supervisor accounts. Copy
+`.env.example` to `.env.local` and set `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` to the corresponding Supabase project values.
+For a separate copy of the studio database, apply the gallery interactions
+migration and then the Plateau feed migration after the studio schema is in place.
+The feed migration creates the private `post-media` bucket and copies existing
+community posts and interactions. Access to media uses renewable signed URLs
+generated from persisted storage paths.
