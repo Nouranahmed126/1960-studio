@@ -11,7 +11,7 @@ export default function Login() {
     if (!db) return;
     let active = true;
     void db.auth.getSession().then(({ data: { session } }) => {
-      if (active && session?.user) window.location.replace("/dashboard");
+      if (active && session?.user) window.location.replace("/");
     });
     return () => { active = false; };
   }, []);
@@ -24,13 +24,13 @@ export default function Login() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email:email.includes("@")?email.trim():email.trim().toLowerCase()+"@students.1960.invalid", password });
       if (error) { setMessage(error.message.toLowerCase().includes("email not confirmed")?"بريدك لسه غير مؤكَّد. افتحي رسالة التأكيد من البريد أو استخدمي زر إعادة إرسال التأكيد تحت.":"تعذر تسجيل الدخول: "+error.message); return; }
-      window.location.replace("/dashboard");
+      window.location.replace("/");
     } catch { setMessage("حصلت مشكلة في الاتصال. حاولي تاني."); }
     finally { setBusy(false); }
   }
   return <main style={{ minHeight:"100vh",display:"grid",placeItems:"center",padding:20 }}>
     <section style={{width:"100%",maxWidth:410,padding:28,background:"#191e2a",border:"1px solid #343a49",borderRadius:20}}>
-      <a href="/" style={{color:"#d5a66d",textDecoration:"none"}}>1960 STUDIO</a>
+      <a href="/" style={{color:"#d5a66d",textDecoration:"none"}}>Plateau | Crew Hub</a>
       <h1>تسجيل الدخول</h1>
       <p style={{color:"#aeb8ca",lineHeight:1.8}}>لأعضاء مشروع التخرج والمشرفة.</p>
       <form onSubmit={submit} style={{display:"grid",gap:15}}>

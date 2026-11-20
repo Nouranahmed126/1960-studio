@@ -14,7 +14,7 @@ export default function Sectors(){
  return <main className="film-departments-page" dir="rtl" style={{maxWidth:1180,margin:"auto",padding:"72px 18px 110px",color:"#f7edf0"}}>
  <a href="/dashboard" style={{color:"#e1b78b"}}>← لوحة الحساب</a>
  <header style={{margin:"12px 0 16px",padding:"18px 20px",borderRadius:22,background:"linear-gradient(115deg,#493545,#221d29)",border:"1px solid #82667a"}}>
- <small style={{color:"#e4b786",letterSpacing:2}}>1960 STUDIO · DEPARTMENTS</small><h1 style={{fontSize:"clamp(28px,4vw,43px)",margin:"10px 0"}}>🎬 أقسام إنتاج الفيلم</h1><p style={{maxWidth:690,lineHeight:1.9}}>خمسة أقسام مستقلة، لكل قسم تكليفاته وملفاته ودفتر متابعة خاص بأعضائه. اختاري القسم لفتح مساحة عمله.</p></header>
+ <small style={{color:"#e4b786",letterSpacing:2}}>Plateau | Crew Hub · DEPARTMENTS</small><h1 style={{fontSize:"clamp(28px,4vw,43px)",margin:"10px 0"}}>🎬 أقسام إنتاج الفيلم</h1><p style={{maxWidth:690,lineHeight:1.9}}>خمسة أقسام مستقلة، لكل قسم تكليفاته وملفاته ودفتر متابعة خاص بأعضائه. اختاري القسم لفتح مساحة عمله.</p></header>
  {message&&<p role="status">{message}</p>}
  <div className="film-departments-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,220px),1fr))",gap:16}}>
  {teams.map((team,index)=>{const info=descriptions[team.id]??{icon:"🎬",subtitle:"مساحة عمل الفريق"};const count=counts[team.id]??{members:0,tasks:0,files:0};return <a className="film-department-card" key={team.id} href={"/teams/"+team.id} style={{position:"relative",display:"flex",flexDirection:"column",gap:9,padding:14,minHeight:178,border:"1px solid #806678",borderRadius:19,background:"linear-gradient(145deg,#352a38,#211d29)",textDecoration:"none",color:"#f8edf0",boxShadow:"0 8px 28px #0002"}}>
