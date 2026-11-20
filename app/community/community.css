@@ -1,0 +1,71 @@
+body .gallery-shell.community-shell {
+  width: min(100%, 820px) !important;
+  padding-inline: clamp(14px, 4vw, 40px);
+}
+
+.community-shell .community-intro {
+  overflow: hidden;
+  padding: clamp(24px, 7vw, 58px);
+  border: 1px solid #795641;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at top left, #614034, transparent 65%),
+    linear-gradient(145deg, #32201e, #191416 76%);
+  margin-block: 26px;
+}
+
+.community-intro h1 { margin-block: 0 8px; }
+.community-intro p { font-size: 1rem; }
+.community-intro a {
+  display: inline-block;
+  margin-block-start: 8px;
+  padding: 10px 16px;
+  border: 1px solid #bc946f;
+  border-radius: 9px;
+  color: #ffe2b9;
+  text-decoration: none;
+}
+
+.community-shell .gallery-grid { grid-template-columns: minmax(0, 1fr); }
+.community-shell .gallery-media { aspect-ratio: auto; background: #151115; }
+.community-shell .gallery-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(70vh, 620px);
+  object-fit: contain;
+}
+
+.community-shell .gallery-info p,
+.community-interactions p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.community-interactions { border-top: 1px solid #725347; padding: 12px clamp(12px, 3vw, 24px); }
+.community-actions, .community-comment-form { display: flex; gap: 8px; }
+.community-actions button, .community-interactions button {
+  min-height: 42px;
+  border: 1px solid #795d50;
+  border-radius: 9px;
+  padding: 7px 12px;
+  background: #2e2227;
+  color: #f9e6d4;
+  font: inherit;
+  cursor: pointer;
+}
+.community-actions button { flex: 1; }
+.community-actions button[aria-pressed="true"] { color: #ffc3cc; border-color: #cf8394; background: #552d3f; }
+.community-actions button:not(:disabled):hover, .community-interactions button:not(:disabled):hover { border-color: #e5b784; }
+.community-interactions button:disabled { opacity: .64; cursor: default; }
+.community-actions b { margin-inline-start: .25em; }
+.community-comment-form { margin-block: 12px; }
+.community-comment-form input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #795d50;
+  border-radius: 9px;
+  padding: 8px 12px;
+  background: #201a1e;
+  color: #fff3e7;
+  font: inherit;
+}
+.community-comments { display: grid; gap: 8px; padding: 0; list-style: none; }
+.community-comments li { background: #221b20; border-radius: 9px; padding: 10px 12px; }
+.community-comments p { margin: 4px 0; }
+.community-comments time { color: #d4bba9; font-size: .875rem; margin-inline-start: .4em; }
