@@ -10,27 +10,27 @@ body:has(.plateau-feed)::after { content: none; }
 .plateau-nav > div { width: min(100% - 32px, 1120px); margin-inline: auto; min-height: 64px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; padding-block: 8px; }
 .plateau-nav .plateau-brand { color: #f5f5dc; font-size: clamp(1.15rem, 3vw, 1.45rem); font-weight: 750; white-space: nowrap; }
 .plateau-brand span { color: var(--plateau-gold); }
-.plateau-nav nav { display: flex; gap: clamp(10px, 2vw, 20px); min-width: 0; }
-body .plateau-nav a { color: #f5f5dc !important; text-decoration: none; }
-.plateau-nav nav a { flex: none; padding: 9px 3px; font-size: .875rem; white-space: nowrap; }
+.plateau-nav .plateau-primary-nav { display: flex; gap: clamp(10px, 2vw, 20px); min-width: 0; }
+body .plateau-nav :is(.plateau-brand, .plateau-primary-nav a) { color: #f5f5dc !important; text-decoration: none; }
+.plateau-nav .plateau-primary-nav a { flex: none; padding: 9px 3px; font-size: .875rem; white-space: nowrap; }
 @media (max-width: 700px) {
   .plateau-nav > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 8px 3px; min-height: 0; }
   .plateau-nav .plateau-brand { justify-self: start; line-height: 1.35; }
-  .plateau-nav nav { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #d4af37 #0f172a; }
-  .plateau-nav nav a { padding-inline: 2px; }
+  .plateau-nav .plateau-primary-nav { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #d4af37 #0f172a; }
+  .plateau-nav .plateau-primary-nav a { padding-inline: 2px; }
 }
-body .plateau-nav a:hover, body .plateau-nav a:focus-visible { color: var(--plateau-gold) !important; }
+body .plateau-nav :is(.plateau-brand, .plateau-primary-nav a):is(:hover, :focus-visible) { color: var(--plateau-gold) !important; }
 body .gallery-shell.plateau-feed {
   width: 100% !important;
   max-width: none !important;
   min-height: calc(100vh - 64px);
-  padding: 0 16px 80px;
+  padding: 0 clamp(18px, 4vw, 52px) 80px;
   background: #faf8f5;
   color: var(--plateau-navy);
   font-size: 1rem;
   line-height: 1.65;
 }
-.plateau-content { max-width: 740px; margin-inline: auto; }
+.plateau-content { max-width: 1100px; margin-inline: auto; }
 .plateau-intro { padding-block: clamp(28px, 6vw, 56px) 22px; }
 .plateau-intro h1 { font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.2; margin-block: 0 7px; color: var(--plateau-navy); }
 .plateau-feed p { margin-block: 0 8px; }
@@ -107,4 +107,106 @@ body .plateau-feed .community-actions button[aria-pressed=true] { background: #f
   body .plateau-feed .plateau-composer-tools button { padding-inline: 4px; font-size: .875rem; }
   .plateau-post-header { padding-inline: 14px; }
   .plateau-feed .plateau-post-body { margin-inline: 14px; }
+}
+
+/* Keep the full-width feed clear of the legacy floating navigation controls. */
+body:has(.plateau-feed) .plateau-nav > div { position: relative; padding-inline-end: 54px; }
+body:has(.plateau-feed) .plateau-nav .site-menu-trigger {
+  position: absolute !important;
+  inset: 10px auto auto 0 !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  background: #1e293b !important;
+  color: #f5f5dc !important;
+  box-shadow: none !important;
+}
+body:has(.plateau-feed) :is(.site-bottom-toggle, .site-bottom-nav) { display: none !important; }
+.plateau-nav .plateau-primary-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+.plateau-nav .plateau-primary-nav { gap: clamp(12px, 2vw, 22px); }
+.plateau-intro { padding-block: clamp(32px, 6vw, 68px) clamp(23px, 4vw, 36px); }
+.plateau-composer, .plateau-access { padding: clamp(18px, 4vw, 36px); }
+.plateau-composer { gap: 16px; }
+.plateau-posts { gap: clamp(20px, 3.5vw, 36px); margin-block: clamp(24px, 4vw, 40px); }
+.plateau-post-header { padding: clamp(16px, 3vw, 29px) clamp(17px, 3vw, 32px) 12px; }
+.plateau-feed .plateau-post-body { margin: 4px clamp(17px, 3vw, 32px) 22px; }
+.community-interactions { padding: clamp(14px, 2.6vw, 24px) clamp(16px, 3vw, 32px); }
+.community-comments { gap: 12px; }
+.community-comments li { padding: 14px; }
+.plateau-credits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 22px;
+  border-top: 1px solid var(--plateau-line);
+  padding-block: 16px 4px;
+  line-height: 1.8;
+}
+.plateau-credit-name { white-space: nowrap; }
+
+@media (max-width: 700px) {
+  body:has(.plateau-feed) .plateau-nav > div { padding-inline-end: 0; }
+  .plateau-nav .plateau-brand { min-height: 36px; display: flex; align-items: center; gap: .27em; }
+  .plateau-nav .plateau-primary-nav { padding-block: 2px; }
+  .plateau-nav .plateau-primary-nav a { padding-inline: 5px; }
+  body:has(.plateau-feed) .plateau-nav .site-menu-trigger { top: 5px !important; }
+  .plateau-credits { display: grid; }
+}
+
+html:has(.plateau-welcome[open]), body:has(.plateau-welcome[open]) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.plateau-welcome {
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: max(20px, env(safe-area-inset-top)) 18px max(20px, env(safe-area-inset-bottom));
+  background: #0f172a;
+  color: #f5f5dc;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.plateau-welcome[open] { display: grid; }
+.plateau-welcome::backdrop { background: #0f172a; }
+.plateau-welcome-content {
+  width: min(100%, 560px);
+  margin: auto;
+  display: grid;
+  justify-items: center;
+  gap: clamp(8px, 2dvh, 18px);
+  text-align: center;
+}
+.plateau-welcome-badge {
+  display: grid;
+  place-items: center;
+  width: clamp(55px, 13vw, 88px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  font: 700 clamp(27px, 9vw, 44px) Georgia, serif;
+}
+body .plateau-welcome h1 { margin: 0; color: #f5f5dc; font-size: clamp(1.7rem, 7vw, 3.25rem); line-height: 1.15; }
+.plateau-welcome h1 span { color: #d4af37; }
+body .plateau-welcome p { margin: 0; color: #f5f5dc; }
+.plateau-welcome p span { white-space: nowrap; }
+body .plateau-welcome button[type="submit"]:not(:disabled) {
+  min-height: 48px;
+  margin-block-start: 6px;
+  padding: 10px 26px;
+  border: 1px solid #f5f5dc;
+  border-radius: 10px;
+  background: #d4af37 !important;
+  color: #0f172a !important;
+  font: inherit;
+  font-weight: 750;
 }

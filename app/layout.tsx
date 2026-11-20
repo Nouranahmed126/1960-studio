@@ -17,15 +17,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <header className="plateau-nav">
       <div>
         <Link href="/" className="plateau-brand" dir="ltr">Plateau <span>|</span> Crew Hub</Link>
-        <nav aria-label="الأقسام الرئيسية">
+        <nav className="plateau-primary-nav" aria-label="الأقسام الرئيسية">
           <Link href="/">التايم لاين</Link>
           <Link href="/dashboard#assignments">التكليفات</Link>
           <Link href="/film#quick-submission">تسليم سريع</Link>
           <Link href="/honor-board">لوحة الشرف</Link>
           <Link href="/dashboard">حسابي</Link>
         </nav>
+        <SiteNavigation/>
       </div>
     </header>
-    {children}<MeetingReminders/><SiteNavigation/>
+    {children}<MeetingReminders/>
   </body></html>;
 }

@@ -297,7 +297,10 @@ export default function Feed() {
         })}
       </section>
       {feed.posts.length > limit && <button className="plateau-more" onClick={() => setLimit(previous => previous + pageSize)}>منشورات أقدم</button>}
-      <footer className="plateau-credits">الإشراف الأكاديمي د. أحمد عبد المنعم · تصميم وتطوير نوران أحمد</footer>
+      <footer className="plateau-credits">
+        <span>الإشراف الأكاديمي: <span className="plateau-credit-name">د. أحمد عبد المنعم</span></span>
+        <span>تصميم وتطوير: <span className="plateau-credit-name">نوران أحمد</span></span>
+      </footer>
     </div>
     <dialog ref={dialog} className="plateau-lightbox" onClose={() => setLightbox("")}>
       <form method="dialog"><button aria-label="إغلاق الصورة">إغلاق</button></form>
