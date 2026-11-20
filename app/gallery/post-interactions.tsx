@@ -6,7 +6,7 @@ import { getSupabase } from "../../lib/supabase-browser";
 import { getVisitorToken } from "../../lib/plateau-visitor";
 
 export type InteractionCounts = { likes: number; comments: number; liked: boolean };
-type Comment = { id: string; own: boolean; author_name: string; body: string; created_at: string };
+type Comment = { id: string; own: boolean; visitor: boolean; author_name: string; body: string; created_at: string };
 const commentPageSize = 20;
 const dateFormat = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium" });
 
@@ -106,13 +106,15 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
     });
   }
 
-  async function removeComment(id: string) {
+  async function removeComment(comment: Comment) {
     const db = getSupabase();
     if (!db) return;
     await updateComments(async () => {
-      const result = await db.from("plateau_comments").delete().eq("post_id", postId).eq("id", id).select("id").single();
-      if (result.error) throw result.error;
-      setComments(current => current.filter(comment => comment.id !== id));
+      const result = comment.visitor
+        ? await db.rpc("plateau_remove_visitor_comment", { target: postId, comment_id: comment.id })
+        : await db.from("plateau_comments").delete().eq("post_id", postId).eq("id", comment.id).select("id").single();
+      if (result.error || !result.data) throw result.error ?? new Error("Comment unavailable");
+      setComments(current => current.filter(item => item.id !== comment.id));
       setCommentCount(current => Math.max(0, (current ?? counts.comments) - 1));
     });
   }
@@ -142,7 +144,7 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
           <div><strong>{comment.author_name}</strong> <time dateTime={comment.created_at}>{dateFormat.format(new Date(comment.created_at))}</time></div>
           <p>{comment.body}</p>
           {(supervisor || comment.own) &&
-            <button type="button" disabled={loadingComments} onClick={() => void removeComment(comment.id)}>حذف التعليق</button>}
+            <button type="button" disabled={loadingComments} onClick={() => void removeComment(comment)}>حذف التعليق</button>}
         </li>)}
       </ul>
       {comments.length < Math.min(total, 1000) && <button type="button" disabled={loadingComments}
