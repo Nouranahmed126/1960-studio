@@ -36,7 +36,7 @@ export default function Register() {
  }
  const inputStyle={width:"100%",boxSizing:"border-box" as const,display:"block",padding:12,marginTop:6,borderRadius:9,border:"1px solid #596174",background:"#10131c",color:"white",fontSize:16};
  return <main style={{maxWidth:480,margin:"45px auto",padding:20}}>
-  <a href="/" style={{color:"#d5a66d"}}>Plateau | Crew Hub</a>
+  <a href="/" style={{color:"#d5a66d"}}>Plateau Crew Hub</a>
   <h1>انضمي لفريق الفيلم</h1>
   <p style={{color:"#aeb8ca",lineHeight:1.8}}>اختاري فريقين أو ثلاثة. العضوية بتتفعل بعد موافقة المشرفة.</p>
   <form onSubmit={submit} style={{display:"grid",gap:18}}>

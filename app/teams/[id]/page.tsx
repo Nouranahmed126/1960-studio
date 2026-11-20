@@ -34,7 +34,7 @@ export default function TeamRoom(){
  const [active,setActive]=useState<"overview"|"tasks"|"members">("overview"),[selected,setSelected]=useState<ReviewItem|null>(null),[reviewNote,setReviewNote]=useState(""),[reviewStars,setReviewStars]=useState(0),[reviewBusy,setReviewBusy]=useState(false),[previewUrl,setPreviewUrl]=useState("");
  const [deliveryFilter,setDeliveryFilter]=useState("all"),[deliveryStudent,setDeliveryStudent]=useState("all"),[openedBundle,setOpenedBundle]=useState<ReviewItem[]|null>(null),[openedStudent,setOpenedStudent]=useState<string|null>(null);
  const [quickText,setQuickText]=useState(""),[quickBusy,setQuickBusy]=useState(false),[quickNotice,setQuickNotice]=useState("");
- const look=identity[id]??{icon:"🎬",english:"Plateau | Crew Hub",description:"مساحة عمل الفريق",vibe:"default"};
+ const look=identity[id]??{icon:"🎬",english:"Plateau Crew Hub",description:"مساحة عمل الفريق",vibe:"default"};
  const keyFor=(kind:string,itemId:number)=>kind+":"+itemId;
 
  async function load(){
@@ -122,7 +122,7 @@ export default function TeamRoom(){
  }
  const teamName=team?.name??"الفريق";
  return <main className={"cinema-team-room mini-studio-room vibe-"+look.vibe} dir="rtl">
-  <div className="studio-room-topline"><a href="/sectors">← كل الفرق</a><span className="cinema-live-status"><i/> {liveAt?"متصل · مباشر":"غرفة الفريق"}</span><span className="studio-room-brand">Plateau | Crew Hub / STUDIO HUB</span></div>
+  <div className="studio-room-topline"><a href="/sectors">← كل الفرق</a><span className="cinema-live-status"><i/> {liveAt?"متصل · مباشر":"غرفة الفريق"}</span><span className="studio-room-brand">Plateau Crew Hub / STUDIO HUB</span></div>
   <header className="studio-room-hero"><div><small>{look.english}</small><h1>{look.icon} {teamName}</h1><p>{look.description}</p></div><div className="studio-room-hero-mark">{String(id).padStart(2,"0")}<span>DEPT.</span></div></header>
   <nav className="studio-team-switcher" aria-label="الفرق الخمسة">{teamLinks.map(t=><a key={t.id} href={"/teams/"+t.id} aria-current={id===t.id?"page":undefined}><span>{t.icon}</span><b>{t.label}</b><small>{(teamCounts[t.id]??0)+" طلاب"}</small></a>)}</nav>
   {error&&<p className="studio-room-message" role="status">{error}</p>}

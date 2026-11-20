@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const seenKey = "studio1960-intro-seen";
+const seenKey = "plateau-intro-seen";
 
 export default function CinematicIntro() {
   const welcome = useRef<HTMLDialogElement>(null);
@@ -30,8 +30,8 @@ export default function CinematicIntro() {
   return <dialog ref={welcome} className="plateau-welcome" aria-labelledby="plateau-welcome-title" onClose={enter}>
     <div className="plateau-welcome-content">
       <span className="plateau-welcome-badge" aria-hidden="true">P</span>
-      <h1 id="plateau-welcome-title" dir="ltr">Plateau <span>|</span> Crew Hub</h1>
-      <p>منصة فريق مشروع التخرج</p>
+      <h1 id="plateau-welcome-title" dir="ltr">Plateau Crew Hub</h1>
+      <p>مساحة العمل الإبداعي للفريق</p>
       <p>الإشراف الأكاديمي: <span>د. أحمد عبد المنعم</span></p>
       <p>تصميم وتطوير: <span>نوران أحمد</span></p>
       <form method="dialog"><button type="submit">دخول المنصة</button></form>

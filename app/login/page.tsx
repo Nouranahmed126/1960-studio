@@ -30,7 +30,7 @@ export default function Login() {
   }
   return <main style={{ minHeight:"100vh",display:"grid",placeItems:"center",padding:20 }}>
     <section style={{width:"100%",maxWidth:410,padding:28,background:"#191e2a",border:"1px solid #343a49",borderRadius:20}}>
-      <a href="/" style={{color:"#d5a66d",textDecoration:"none"}}>Plateau | Crew Hub</a>
+      <a href="/" style={{color:"#d5a66d",textDecoration:"none"}}>Plateau Crew Hub</a>
       <h1>تسجيل الدخول</h1>
       <p style={{color:"#aeb8ca",lineHeight:1.8}}>لأعضاء مشروع التخرج والمشرفة.</p>
       <form onSubmit={submit} style={{display:"grid",gap:15}}>
