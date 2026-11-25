@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
+import MovingReel from "./moving-reel";
 type Member={id:string;full_name:string};
 type Detail={user_id:string;photo_path:string|null};
 export default function HomeCrewStrip(){
