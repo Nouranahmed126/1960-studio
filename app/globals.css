@@ -2777,3 +2777,28 @@ body:has(.studio-timeline-page){background:radial-gradient(ellipse at 8% 0%,#eee
 .site-menu-panel.site-menu-compact .site-menu-grid a[aria-current=page]{background:linear-gradient(120deg,#eee8fa,#d8c9f2)!important;color:#302a3b!important}
 .site-menu-panel.site-menu-compact .site-menu-group h2,.site-menu-panel.site-menu-compact .site-menu-header strong{color:#7459ae!important}
 @media(max-width:600px){.studio-timeline-intro{margin:16px 0 14px;padding:16px}.studio-timeline-page .minimalist-home-sections{gap:14px!important}}
+
+/* Remove remaining dark inline card treatments across legacy internal pages */
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#102337" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#0b1b2b" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#11141d" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#1c202c" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#191e2a" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#302833" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#241e28" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#352832" i],
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#050a14" i]{
+ background:linear-gradient(145deg,#fff,#f4f0fb)!important;
+ color:#302a3b!important;border-color:#ded5ef!important;
+ box-shadow:0 8px 22px rgba(91,70,135,.07)!important
+}
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#102337" i] :is(h1,h2,h3,h4,p,small,label,strong,span,li),
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#0b1b2b" i] :is(h1,h2,h3,h4,p,small,label,strong,span,li),
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#1c202c" i] :is(h1,h2,h3,h4,p,small,label,strong,span,li),
+body main :is(section,article,aside,form,nav,div,a,button)[style*="#191e2a" i] :is(h1,h2,h3,h4,p,small,label,strong,span,li){color:#49366f!important}
+.honor-cinematic-page{background:transparent!important;color:#302a3b!important}
+.honor-cinematic-page>h1,.honor-cinematic-page>p{color:#302a3b!important}
+.honor-create-form,.honor-edit-modal{background:linear-gradient(145deg,#fff,#f4f0fb)!important;color:#302a3b!important;border:1px solid #ded5ef!important;box-shadow:0 12px 30px rgba(91,70,135,.09)!important}
+.honor-create-form :is(h2,label),.honor-edit-modal :is(h2,label){color:#49366f!important}
+.honor-create-form :is(input,textarea,select),.honor-edit-modal :is(input,textarea,select){background:#fff!important;color:#302a3b!important;border-color:#d8cdec!important}
+.honor-edit-modal button,.honor-create-form button{background:linear-gradient(120deg,#eee8fa,#d8c9f2,#f5e8c9)!important;color:#302a3b!important;border:1px solid #d5c8eb!important}
