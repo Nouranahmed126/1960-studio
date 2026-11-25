@@ -4,13 +4,43 @@ import Link from "next/link";
 import {useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
 import {usePathname} from "next/navigation";
-const groups=[
-{title:"Studio & Account",links:[["/","Home","⌂"],["/dashboard","My Account","👤"],["/honor-board","Honors Wall","🏆"],["/recordings","Recordings","🎙️"],["/vision","Film Vision","🎭"],["/crew","Film Stars","⭐"],["/meetings","Meetings","📅"]]},
-{title:"Production Teams",links:[["/teams/5","Writing & Script","✍️"],["/teams/3","Camera & Direction","🎥"],["/teams/4","Editing","🎞️"],["/teams/1","Design & Sound","🎨"],["/teams/2","Production & Cast","🎬"]]},
-{title:"Archive & Community",links:[["/museum","Museum Archive","📻"],["/gallery","Behind the Scenes","📸"],["/production-hub","Production Hub","🎬"],["/submissions","Submissions","📥"]]}
+
+const sections=[
+  ["/","Welcome","tv"],
+  ["/timeline","Timeline","film"],
+  ["/assignments","Assignments","clap"],
+  ["/submissions","Quick Submit","camera"],
+  ["/honor-board","Honors Wall","tv"],
+  ["/dashboard","My Account","tv"]
 ] as const;
-const quick=[["/","Home","⌂"],["/museum","Museum Archive","📻"],["/sectors","Teams","🎬"],["/gallery","Behind the Scenes","📸"],["/dashboard","My Account","👤"]] as const;
+
 export default function SiteNavigation(){
- const [open,setOpen]=useState(false);const [navExpanded,setNavExpanded]=useState(false);const [isSupervisor,setIsSupervisor]=useState(false);const path=usePathname();const [pendingTab,setPendingTab]=useState<string|null>(null);const activeTab=pendingTab??path;useEffect(()=>{setPendingTab(null);setOpen(false);setNavExpanded(false)},[path]);useEffect(()=>{const db=getSupabase();if(!db)return;let active=true;void db.auth.getUser().then(async({data:{user}})=>{if(!user)return;const p=await db.from("profiles").select("app_role").eq("id",user.id).single();if(active)setIsSupervisor(p.data?.app_role==="supervisor")});return()=>{active=false}},[]);
- return <><button className={"site-menu-trigger"+(path==="/decor-studio"?" studio-character-menu":"")} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(!open)} aria-label="Open studio menu" title="Explore">‹</button>{open&&<><div className="site-menu-shade" onClick={()=>setOpen(false)}/><nav id="site-menu" className="site-menu-panel site-menu-compact" aria-label="All studio sections"><div className="site-menu-header"><strong>1960 · أقسام الاستوديو</strong><button onClick={()=>setOpen(false)} aria-label="Close menu">✕</button></div>{groups.map(group=><section className="site-menu-group" key={group.title}><h2>{group.title}</h2><div className="site-menu-grid">{group.links.map(([href,name,icon])=><Link key={href} href={href} prefetch onClick={()=>{setPendingTab(href);setOpen(false)}} aria-current={activeTab===href?"page":undefined}><span aria-hidden="true"><MiniCinemaIcon kind={href.includes("teams/3")||href==="/production-hub"?"camera":href.includes("teams/4")||href==="/gallery"?"film":href==="/museum"?"radio":href.includes("teams/")?"clap":"tv"} size={17}/></span><small>{href==="/dashboard"&&isSupervisor?"Executive Office":name}</small></Link>)}</div></section>)}<Link className="site-menu-login" href="/login">🔑 تسجيل الدخول</Link></nav></>}<button type="button" className={"site-bottom-toggle"+(navExpanded?" is-expanded":"")} aria-label={navExpanded?"Hide navigation":"Show navigation"} aria-expanded={navExpanded} onClick={()=>setNavExpanded(v=>!v)}>{navExpanded?"⌄":"⌃"}</button><nav className={"site-bottom-nav site-bottom-collapsible"+(navExpanded?" is-expanded":"")} aria-label="Quick navigation" aria-hidden={!navExpanded}><div className="site-bottom-scroll">{quick.map(([href,name,icon])=><Link key={href} href={href} prefetch tabIndex={navExpanded?0:-1} onClick={()=>{setPendingTab(href);setNavExpanded(false)}} aria-current={activeTab===href?"page":undefined}><span><MiniCinemaIcon kind={href==="/sectors"?"camera":href==="/gallery"?"film":href==="/museum"?"radio":"tv"} size={19}/></span><small>{href==="/dashboard"&&isSupervisor?"Executive Office":name}</small></Link>)}</div></nav></>;
+ const [open,setOpen]=useState(false);
+ const [isSupervisor,setIsSupervisor]=useState(false);
+ const path=usePathname();
+ useEffect(()=>{setOpen(false)},[path]);
+ useEffect(()=>{
+   const db=getSupabase();if(!db)return;let active=true;
+   void db.auth.getUser().then(async({data:{user}})=>{
+     if(!user)return;
+     const p=await db.from("profiles").select("app_role").eq("id",user.id).single();
+     if(active)setIsSupervisor(p.data?.app_role==="supervisor");
+   });
+   return()=>{active=false};
+ },[]);
+ return <>
+   <button className={"site-menu-trigger"+(path==="/decor-studio"?" studio-character-menu":"")} aria-expanded={open} aria-controls="site-menu" onClick={()=>setOpen(!open)} aria-label="Open studio sections" title="Sections">‹</button>
+   {open&&<>
+     <div className="site-menu-shade" onClick={()=>setOpen(false)}/>
+     <nav id="site-menu" className="site-menu-panel site-menu-compact" aria-label="Studio sections">
+       <div className="site-menu-header"><strong>PLATEAU · SECTIONS</strong><button onClick={()=>setOpen(false)} aria-label="Close menu">✕</button></div>
+       <section className="site-menu-group"><h2>Navigate</h2><div className="site-menu-grid">
+         {sections.map(([href,name,icon])=><Link key={href} href={href} prefetch onClick={()=>setOpen(false)} aria-current={path===href?"page":undefined}>
+           <span aria-hidden="true"><MiniCinemaIcon kind={icon} size={18}/></span><small>{href==="/dashboard"&&isSupervisor?"Executive Office":name}</small>
+         </Link>)}
+       </div></section>
+       <Link className="site-menu-login" href="/login" onClick={()=>setOpen(false)}>Sign in</Link>
+     </nav>
+   </>}
+ </>;
 }
