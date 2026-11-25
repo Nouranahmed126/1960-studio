@@ -317,3 +317,10 @@ body:has(.reference-hub) .reference-hub.reference-hub{
 .reference-hub .reference-card:last-child .reference-copy{position:relative;z-index:4}
 @media(max-width:700px){.reference-hub .reference-hero{aspect-ratio:2.42!important;border-radius:15px!important}.reference-hub .reference-kicker{font-size:clamp(6px,1.65vw,11px)!important;line-height:1.3!important}.reference-hub .reference-brand h1{font-size:clamp(13px,3.8vw,27px)!important}.reference-hub .reference-mark{width:clamp(22px,6vw,42px)!important;font-size:clamp(16px,4.5vw,30px)!important}.reference-hub .reference-lead{font-size:clamp(7px,1.9vw,13px)!important;line-height:1.3!important;margin:0!important;padding-left:3px!important}.reference-hub .reference-studio{font-size:clamp(6px,1.5vw,10px)!important;margin:0!important;padding-top:2px!important;gap:3px!important}.reference-hub .reference-hero .reference-film{height:9px!important}.reference-hub .reference-card{aspect-ratio:1.95!important;padding:8px 15px 8px 7px!important}.reference-hub .reference-card:last-child{aspect-ratio:4.8!important}}
 @media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Sculpted honors and legible crew names */
+.reference-hub .ribbon-item-crew,.reference-hub .ribbon-item-honor{display:inline-flex!important;align-items:center;gap:7px;flex-shrink:0;white-space:nowrap;color:#352046!important}
+.reference-hub .ribbon-item-honor{border-radius:999px!important;border:1px solid #a96c21!important;background:linear-gradient(165deg,#fff5cc 0%,#e7bd69 40%,#b77929 72%,#f5d994 100%)!important;box-shadow:inset 0 2px 3px #fff9dc,inset 0 -3px 4px #75400c66,0 3px 5px #48260e55!important;padding:4px 12px!important}
+.reference-hub .ribbon-item bdi{color:#352046!important;font-weight:700!important;white-space:nowrap!important}
+.reference-hub .ribbon-initial{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#f4e4c5;color:#694222;font-weight:700;flex-shrink:0}
+.reference-hub .ribbon-item-honor .ribbon-emblem{border-radius:50%;border:1px solid #fff2b6;object-fit:cover}
