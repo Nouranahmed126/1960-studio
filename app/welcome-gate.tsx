@@ -9,7 +9,7 @@ const destinations = [
   { href: "/timeline", label: "Timeline", detail: "Studio updates & activity", icon: "◷" },
   { href: "/assignments", label: "Assignments", detail: "Tasks & progress", icon: "▤" },
   { href: "/submissions", label: "Quick Submit", detail: "Files, voice & written work", icon: "↥" },
-  { href: "/honor-board", label: "Honors Wall", detail: "Awards & recognition", icon: "✧" },
+  { href: "/honor-board", label: "Film Stars & Honors", detail: "Meet the crew & celebrate achievements", icon: "✧" },
 ];
 
 export default function WelcomeGate() {
