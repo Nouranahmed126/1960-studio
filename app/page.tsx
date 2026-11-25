@@ -4,7 +4,7 @@ const destinations=[
  {href:"/timeline",label:"Timeline",desc:"Studio updates and crew activity",icon:"◷",tone:"lavender"},
  {href:"/assignments",label:"Assignments",desc:"Tasks, deadlines and progress",icon:"▤",tone:"violet"},
  {href:"/submissions",label:"Quick Submit",desc:"Send files, voice notes or written work",icon:"↥",tone:"gold"},
- {href:"/honor-board",label:"Honors Wall",desc:"Celebrate outstanding achievements",icon:"✧",tone:"gold"},
+ {href:"/honor-board",label:"Film Stars & Honors",desc:"Meet the crew and celebrate achievements",icon:"✧",tone:"gold"},
  {href:"/dashboard",label:"My Account",desc:"Your profile and personal submissions",icon:"◎",tone:"lavender"}
 ];
 const navigation=[["/","Welcome"],["/timeline","Timeline"],["/assignments","Assignments"],["/submissions","Quick Submit"],["/honor-board","Honors Wall"],["/dashboard","My Account"]];
