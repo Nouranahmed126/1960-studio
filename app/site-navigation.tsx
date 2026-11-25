@@ -7,7 +7,7 @@ import {usePathname} from "next/navigation";
 
 const sectionGroups=[
  {title:"Studio & Account",items:[["/","Home","tv"],["/recordings","Recordings","tv"],["/honor-board","Film Stars & Honors","tv"],["/vision","Film Vision","film"],["/dashboard","My Account","tv"]]},
- {title:"Production Teams",items:[["/sectors","Teams & Departments","users"],["/assignments","Assignments","clap"],["/production-hub","Production Hub","film"]]},
+ {title:"Production Teams",items:[["/sectors","Teams & Departments","camera"],["/assignments","Assignments","clap"],["/production-hub","Production Hub","film"]]},
  {title:"Archive & Community",items:[["/gallery","Behind the Scenes","film"],["/museum","Museum Archive","tv"],["/submissions","Quick Submit","camera"],["/timeline","Timeline","film"]]}
 ] as const;
 
