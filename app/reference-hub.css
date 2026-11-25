@@ -54,3 +54,9 @@
 @media(prefers-reduced-motion:reduce){.reference-hub .ribbon-window{overflow-x:auto;mask-image:none}}
 
 .reference-hub .reference-film{background:repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) top 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) bottom 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,transparent 0 22px,#a56b2c 22px 24px) center/100% 55% no-repeat,linear-gradient(180deg,#a66a28,#ffdf8a 19%,#b77b32 28%,#f8d69a 45%,#d49a48 73%,#ffdf8a 84%,#996021);border:1px solid #a36b2b!important;box-shadow:0 2px 4px #70421c55,0 0 8px #ffce73;opacity:1}
+
+body:has(.reference-hub) > .plateau-site-credit{display:none!important}
+.reference-hub .reference-credits{display:flex!important;flex-direction:column;align-items:center;gap:12px;margin:18px auto 4px;padding:14px 8px;border-top:1px solid #d4af3766;text-align:center;color:#4a2c7a}
+.reference-hub .reference-credits div{display:flex;flex-direction:column;gap:3px;align-items:center}
+.reference-hub .reference-credits small{font:500 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#66536e}
+.reference-hub .reference-credits b{font:italic 500 clamp(21px,4.5vw,36px)/1.2 "Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive;color:#58317c;text-shadow:0 1px #fff;letter-spacing:.015em}
