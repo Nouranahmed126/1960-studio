@@ -3256,3 +3256,17 @@ html body .studio-hub-mark{animation:hubMarkGlow 4s ease-in-out infinite!importa
 @keyframes hubMarkGlow{0%,100%{transform:translateY(0);box-shadow:0 4px 12px #a98bdf44}50%{transform:translateY(-3px);box-shadow:0 5px 20px #c5a05066}}
 @supports not (background:conic-gradient(from 0deg,red,blue)){html body :is(.studio-hub-card,.studio-hub-header){border-color:#b99a59!important;background:#faf7ff!important}}
 @media(prefers-reduced-motion:reduce){html body :is(.studio-hub-card,.studio-hub-header,.studio-hub-card-icon,.studio-hub-card-arrow,.studio-hub-mark){animation:none!important}}
+
+
+/* Public landing polish: keep navigation in its own space */
+html body:has(.studio-hub-page) .site-menu-trigger{position:absolute!important;top:8px!important;left:14px!important;right:auto!important;bottom:auto!important;width:44px!important;height:44px!important;min-height:44px!important;border-radius:14px!important;z-index:105!important}
+html body .studio-hub-page{padding-top:64px!important;padding-bottom:24px!important;isolation:isolate;position:relative}
+html body .studio-hub-page::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 15% 25%,#e5d8fa80,transparent 48%),radial-gradient(ellipse at 85% 75%,#f6e5b780,transparent 45%);background-size:130% 130%;animation:hubAmbient 12s ease-in-out infinite alternate}
+@keyframes hubAmbient{from{background-position:0% 0%}to{background-position:100% 100%}}
+html body .studio-hub-grid>.studio-hub-card:last-child:nth-child(odd){grid-column:1/-1;background:linear-gradient(115deg,#fff,#f9f4e8,#f3ebfb) padding-box,conic-gradient(from var(--hub-orbit-angle),#d9c9ee,#d1a84d,#fff0bd,#b98b35,#d9c9ee) border-box!important}
+html body .studio-hub-card:nth-child(3) .studio-hub-card-icon,html body .studio-hub-card:nth-child(4) .studio-hub-card-icon{background:linear-gradient(115deg,#ead29a 15%,#fff6d9 45%,#d7b66c 75%)!important;background-size:240% 100%!important;animation:hubIconDance 3.4s ease-in-out infinite,hubGoldShimmer 4s ease-in-out infinite!important}
+@keyframes hubGoldShimmer{0%,100%{background-position:100% 0}50%{background-position:0% 0}}
+html body:has(.studio-hub-page) footer,html body .studio-hub-credits{font-size:12px!important;line-height:1.7!important;text-align:center!important;overflow-wrap:anywhere;color:#51465f!important}
+html body:has(.studio-hub-page) footer{padding:18px 16px calc(56px + env(safe-area-inset-bottom,0px))!important}
+html body .studio-hub-credits{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:4px 12px!important}
+@media(prefers-reduced-motion:reduce){html body .studio-hub-page::before,html body .studio-hub-card:nth-child(3) .studio-hub-card-icon,html body .studio-hub-card:nth-child(4) .studio-hub-card-icon{animation:none!important}}
