@@ -2544,7 +2544,7 @@ body :is(.honor-micro-card,.cinema-home-star-card,.museum-teaser-card){position:
 .studio-hub-card{position:relative;min-height:164px;padding:20px;display:flex;flex-direction:column;gap:14px;text-decoration:none!important;border:1px solid #eae6f5;border-radius:22px;background:#fff;box-shadow:0 8px 26px rgba(65,48,95,.045);overflow:hidden;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
 .studio-hub-card:hover{transform:translateY(-4px);box-shadow:0 15px 34px rgba(65,48,95,.10);border-color:#cbbce9}
 .studio-hub-card-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#f0ebfc,#d7caf4);color:#7256b4;font-size:24px}
-.studio-hub-card-copy{display:flex;flex-direction:column;gap:5px;padding-right:22px}
+.studio-hub-card-copy{display:flex;flex-direction:column;gap:5px;padding-right:30px;padding-bottom:25px;max-width:100%}.studio-hub-card-copy small{max-width:100%;overflow-wrap:anywhere}.studio-hub-card-arrow{position:absolute;right:16px;bottom:12px;line-height:1;z-index:2}
 .studio-hub-card-copy strong{font-size:17px;color:#282333!important}
 .studio-hub-card-copy small{font-size:12px;line-height:1.55;color:#777083!important}
 .studio-hub-card-arrow{position:absolute;right:19px;bottom:20px;color:#8b70d6;font-size:20px;transition:transform .2s}
