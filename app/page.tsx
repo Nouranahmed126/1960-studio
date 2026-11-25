@@ -1,32 +1,17 @@
-import MuseumTeaser from "./museum-teaser";
-import HomeCrewStrip from "./home-crew-strip";
-import AssignmentCheckin from "./assignment-checkin";
-import SubmissionRadar from "./submission-radar";
-import HomeHonorShowcase from "./home-honor-showcase";
+import Link from "next/link";
 import WelcomeGate from "./welcome-gate";
-
-export default function Home(){
- return <><WelcomeGate/><main dir="rtl" className="studio-shell cinema-home-page cinema-broadcast-home minimalist-home">
-  <header className="studio-nav cinema-home-header minimalist-home-header">
-   <a className="studio-logo" href="/" aria-label="1960 Studio الرئيسية">STUDIO 1960</a>
-   <span className="minimalist-home-tagline">مساحة صُنّاع فيلم 1960 <span aria-hidden="true">✦</span></span>
-  </header>
-  <SubmissionRadar compact/>
-  <div className="minimalist-home-sections">
-   <AssignmentCheckin/>
-   <section className="home-quick-submit" aria-label="التسليم السريع">
-    <div className="home-quick-submit-copy"><span className="home-quick-submit-kicker">QUICK SUBMISSION · STUDIO 1960</span><h2>📤 سلّم تكليفك بسرعة</h2></div>
-    <div className="home-chat-submit" role="group" aria-label="اختصارات تسليم التكليف">
-     <details className="home-chat-submit-menu"><summary aria-label="خيارات المرفقات" title="إضافة مرفق">＋</summary>
-      <div className="home-chat-submit-options"><a href="/submissions?kind=file">📎 رفع ملف</a><a href="/submissions?kind=media">🖼️ صورة أو فيديو</a><a href="/submissions?kind=link">🔗 إضافة رابط</a></div>
-     </details>
-     <a className="home-chat-submit-field" href="/submissions" aria-label="كتابة عنوان التكليف واختيار الفريق">اكتبي عنوان التكليف وابدئي التسليم…</a>
-     <a className="home-chat-submit-mic" href="/submissions?kind=voice" aria-label="فتح التسجيل الصوتي" title="تسجيل صوتي">🎙️</a>
-    </div>
-    <p className="home-chat-submit-hint">حددي عنوان التكليف والفريق قبل الإرسال · انتظري تأكيد الحفظ</p>
-   </section>
-   <HomeHonorShowcase/>
-   <div className="cinema-dual-marquees minimalist-home-reels"><HomeCrewStrip/><MuseumTeaser/></div>
-  </div>
- </main></>
-}
+const destinations=[
+ {href:"/timeline",label:"Timeline",desc:"Studio updates and crew activity",icon:"◷",tone:"lavender"},
+ {href:"/assignments",label:"Assignments",desc:"Tasks, deadlines and progress",icon:"▤",tone:"violet"},
+ {href:"/submissions",label:"Quick Submit",desc:"Send files, voice notes or written work",icon:"↥",tone:"gold"},
+ {href:"/honor-board",label:"Honors Wall",desc:"Celebrate outstanding achievements",icon:"✧",tone:"gold"},
+ {href:"/dashboard",label:"My Account",desc:"Your profile and personal submissions",icon:"◎",tone:"lavender"},
+ {href:"/museum",label:"Museum Archive",desc:"Explore the 1960 collection",icon:"▣",tone:"violet"},
+ {href:"/crew",label:"Film Stars",desc:"Meet the approved crew",icon:"★",tone:"gold"},
+ {href:"/gallery",label:"Behind the Scenes",desc:"Moments from production",icon:"▧",tone:"lavender"}
+];
+export default function Home(){return <><WelcomeGate/><main className="studio-shell studio-hub-page" dir="ltr">
+ <header className="studio-hub-header"><span className="studio-hub-mark">P<span>✦</span></span><div><p className="studio-hub-kicker">A CREATIVE PRODUCTION COMMUNITY</p><h1>Plateau <em>Crew Hub</em></h1><p className="studio-hub-lead">One crew. One vision. A story in the making.</p></div><span className="studio-hub-year">1960</span></header>
+ <section className="studio-hub-grid" aria-label="Studio sections">{destinations.map((item,i)=><Link className={"studio-hub-card tone-"+item.tone} href={item.href} key={item.href}><span className="studio-hub-card-icon">{item.icon}</span><span className="studio-hub-card-copy"><strong>{item.label}</strong><small>{item.desc}</small></span><span className="studio-hub-card-arrow">↗</span><span className="studio-hub-card-index">{String(i+1).padStart(2,"0")}</span></Link>)}</section>
+ <footer className="studio-hub-credits"><span>Academic Supervision <strong>Dr. Ahmed Abdelmoneim</strong></span><span>Designed &amp; Developed by <strong>Nouran Ahmed</strong></span></footer>
+ </main></>}
