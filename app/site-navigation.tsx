@@ -31,11 +31,7 @@ export default function SiteNavigation(){
      <div className="site-menu-shade" onClick={()=>setOpen(false)}/>
      <nav id="site-menu" className="site-menu-panel site-menu-compact" aria-label="Studio sections">
        <div className="site-menu-header"><strong>PLATEAU · SECTIONS</strong><button onClick={()=>setOpen(false)} aria-label="Close menu">✕</button></div>
-       <section className="site-menu-group"><h2>Navigate</h2><div className="site-menu-grid">
-         {sections.map(([href,name,icon])=><Link key={href} href={href} prefetch onClick={()=>setOpen(false)} aria-current={path===href?"page":undefined}>
-           <span aria-hidden="true"><MiniCinemaIcon kind={icon} size={18}/></span><small>{href==="/dashboard"&&isSupervisor?"Executive Office":name}</small>
-         </Link>)}
-       </div></section>
+       {sectionGroups.map(group=><section className="site-menu-group" key={group.title}><h2>{group.title}</h2><div className="site-menu-grid">{group.items.filter(([href])=>isSupervisor||href!=="/production-hub").map(([href,name,icon])=><Link key={href} href={href} prefetch onClick={()=>setOpen(false)} aria-current={path===href?"page":undefined}><span aria-hidden="true"><MiniCinemaIcon kind={icon} size={18}/></span><small>{href==="/dashboard"&&isSupervisor?"Executive Office":name}</small></Link>)}</div></section>)}
        <Link className="site-menu-login" href="/login" onClick={()=>setOpen(false)}>Sign in</Link>
      </nav>
    </>}
