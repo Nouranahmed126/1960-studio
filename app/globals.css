@@ -2323,3 +2323,36 @@ fieldset{background:#102337!important;border-color:#9e824d!important}
 .minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-name{color:#0d1b2a!important}
 .minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-stars,
 .minimalist-home .honor-vertical-marquee .honor-micro-card .honor-micro-medal{color:#69430b!important}
+
+
+/* LIGHT EDITORIAL REDESIGN — 1960 Studio | preview branch */
+:root{color-scheme:light;--rose:#c59b27;--rose-deep:#a77d17;--ink:#142238;--muted:#64748b;--cream:#f8f9fb;--blush:#fff;--line:#e5e7eb}
+html,body{background:#f5f6f8!important;color:#142238!important}
+body{background:radial-gradient(ellipse at 8% 0%,#fff8e8 0,transparent 34%),radial-gradient(ellipse at 95% 15%,#eaf1fb 0,transparent 32%),#f5f6f8!important;color:#142238!important}
+body *{scrollbar-color:#cbd5e1 #f1f5f9}
+.studio-shell,.gallery-shell,.dashboard-shell,main:not(.studio-shell):not(.gallery-shell){color:#142238!important}
+.studio-nav,.gallery-header,.dashboard-shell>header,main>header{border-color:#e5e7eb!important}
+.studio-logo,.studio-eyebrow,.studio-kicker,.studio-feature-number,.studio-section-count,.gallery-header,.gallery-info span{color:#a77d17!important}
+.studio-hero h1,.gallery-intro h1,.studio-section-heading h2,.gallery-info h2,.gallery-upload h2,.studio-feature h3,h1,h2,h3,strong{color:#142238}
+.studio-lead,.studio-note,.studio-feature p,.studio-section-count,.gallery-intro p,.gallery-info p{color:#64748b!important}
+.studio-feature,.gallery-upload,.gallery-card,main section[style*="background"],main article[style*="background"],fieldset{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:0 8px 26px rgba(15,23,42,.055)!important;color:#142238!important}
+.studio-feature{border-radius:18px!important}.studio-feature-icon{background:#fbf4df!important;color:#a77d17!important}
+.studio-feature-line{background:linear-gradient(90deg,#c59b27,transparent)!important}
+.studio-nav-link,.studio-primary,button,button[type="submit"]{background:linear-gradient(135deg,#d9b85e,#bd922a)!important;color:#142238!important;border:1px solid #c59b27!important;box-shadow:0 5px 15px rgba(197,155,39,.16)!important}
+button:disabled{opacity:.55}
+a,a[style*="color"]{color:#8a6718!important}
+input:not([type="checkbox"]),textarea,select{background:#fff!important;color:#142238!important;border:1px solid #d8dee8!important;box-shadow:inset 0 1px 2px rgba(15,23,42,.025)!important}
+input::placeholder,textarea::placeholder{color:#94a3b8!important}input[type="checkbox"]{accent-color:#c59b27}
+p[style*="color"],small[style*="color"],span[style*="color"]{color:#64748b!important}
+.gallery-media{background:#f1f5f9!important}.gallery-filters button{background:#fff!important;color:#334155!important;border-color:#e2e8f0!important}.gallery-filters button[aria-pressed="true"]{background:#fbf3dc!important;color:#8a6718!important;border-color:#c59b27!important}
+.site-menu-trigger,.site-menu-panel,.site-bottom-nav{background:rgba(255,255,255,.96)!important;color:#142238!important;border-color:#e5e7eb!important;box-shadow:0 12px 35px rgba(15,23,42,.10)!important;backdrop-filter:blur(18px)}
+.site-menu-panel a{background:#f8fafc!important;color:#142238!important;border:1px solid #edf0f4!important}.site-menu-panel a[aria-current="page"]{background:#fbf3dc!important;color:#7c5b12!important;border-color:#e7d49a!important}
+.site-menu-shade{background:rgba(15,23,42,.24)!important}.site-menu-panel h2,.site-menu-header strong{color:#142238!important}
+.site-bottom-scroll a{color:#64748b!important}.site-bottom-scroll a[aria-current="page"]{background:#fbf3dc!important;color:#8a6718!important}.site-bottom-scroll a span{text-shadow:none!important;filter:none!important;color:#a77d17!important}
+.minimalist-home .home-quick-submit{background:linear-gradient(135deg,#fff,#fbf7eb)!important;border:1px solid #e8d9ad!important;box-shadow:0 8px 24px rgba(15,23,42,.06)!important;color:#142238!important}
+.home-quick-submit h2,.home-quick-submit-main{color:#142238!important}.home-quick-submit p,.home-chat-submit-hint{color:#64748b!important}
+.home-chat-submit{background:#fff!important;border-color:#e2e8f0!important;box-shadow:inset 0 1px 3px rgba(15,23,42,.04)!important}.home-chat-submit-field{color:#64748b!important}.home-chat-submit-options{background:#fff!important;border-color:#e2e8f0!important}.home-chat-submit-options a{color:#142238!important}
+.minimalist-home .home-honor-grid-section{background:transparent!important}.minimalist-home .honor-vertical-marquee button.honor-micro-card{box-shadow:0 3px 10px rgba(15,23,42,.12)!important}
+.honor-vertical-marquee{border-color:#e5d29c!important;background:#fff!important}
+.site-footer,.studio-footer,footer{color:#64748b!important;border-color:#e5e7eb!important}
+@media(max-width:760px){.site-bottom-nav{padding-bottom:env(safe-area-inset-bottom,0px)!important}.site-menu-panel{background:#fff!important}}
