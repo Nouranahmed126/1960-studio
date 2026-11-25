@@ -3239,3 +3239,20 @@ html body :is(.studio-feature-card,.executive-office-link,.site-menu-grid a){pad
 html body :is(.studio-feature-card,.executive-office-link,.site-menu-grid a) svg{width:20px;height:20px}
 @media(max-width:600px){html body .studio-hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}html body .studio-hub-card:last-child:nth-child(odd){grid-column:1/-1}html body .studio-hub-header{padding:14px!important}}
 @media(prefers-reduced-motion:reduce){html body :is(.studio-hub-card,.studio-hub-header,.studio-feature-card,.executive-office-link,.recording-card,.vision-timeline article,.cinema-team-panel,.gallery-card,.site-menu-grid a,.studio-hub-card-icon,.plateau-welcome-icon,.studio-hub-mark){animation:none!important;transition:none!important}}
+
+
+/* Public hub: travelling luminous perimeter, independent of content */
+@property --hub-orbit-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+html body :is(.studio-hub-card,.studio-hub-header){position:relative;isolation:isolate;border:2px solid transparent!important;background:linear-gradient(145deg,#fff,#f6f1fc) padding-box,conic-gradient(from var(--hub-orbit-angle),#d8c9ed 0deg,#d8c9ed 70deg,#9b78d5 100deg,#d7b35b 135deg,#fff1c5 150deg,#b58a36 165deg,#d8c9ed 195deg,#d8c9ed 360deg) border-box!important;animation:hubPerimeter 4.5s linear infinite!important;box-shadow:0 5px 20px #8d6db51c!important}
+html body .studio-hub-card:nth-child(2n){animation-delay:-1.5s!important}
+html body .studio-hub-card:nth-child(3n){animation-delay:-3s!important}
+@keyframes hubPerimeter{to{--hub-orbit-angle:360deg}}
+html body .studio-hub-card-icon{animation:hubIconDance 3.4s ease-in-out infinite!important;box-shadow:0 3px 12px #9876d42b}
+@keyframes hubIconDance{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-4px) rotate(-5deg)}65%{transform:translateY(-2px) rotate(4deg)}}
+html body .studio-hub-card-arrow{animation:hubArrowPulse 3s ease-in-out infinite}
+@keyframes hubArrowPulse{0%,100%{transform:translate(0,0);opacity:.8}50%{transform:translate(2px,-2px);opacity:1}}
+html body .studio-hub-header{background:linear-gradient(115deg,#fff,#eee5fa,#fff7e7) padding-box,conic-gradient(from var(--hub-orbit-angle),#d8c9ed,#a483d9,#d5ad55,#fff1c5,#d8c9ed) border-box!important}
+html body .studio-hub-mark{animation:hubMarkGlow 4s ease-in-out infinite!important}
+@keyframes hubMarkGlow{0%,100%{transform:translateY(0);box-shadow:0 4px 12px #a98bdf44}50%{transform:translateY(-3px);box-shadow:0 5px 20px #c5a05066}}
+@supports not (background:conic-gradient(from 0deg,red,blue)){html body :is(.studio-hub-card,.studio-hub-header){border-color:#b99a59!important;background:#faf7ff!important}}
+@media(prefers-reduced-motion:reduce){html body :is(.studio-hub-card,.studio-hub-header,.studio-hub-card-icon,.studio-hub-card-arrow,.studio-hub-mark){animation:none!important}}
