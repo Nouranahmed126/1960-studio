@@ -6,7 +6,7 @@ import { getSupabase } from "../lib/supabase-browser";
 
 type Role = "student" | "supervisor" | "guest";
 const destinations = [
-  { href: "/", label: "Timeline", detail: "Studio updates & activity", icon: "◷" },
+  { href: "/timeline", label: "Timeline", detail: "Studio updates & activity", icon: "◷" },
   { href: "/assignments", label: "Assignments", detail: "Tasks & progress", icon: "▤" },
   { href: "/submissions", label: "Quick Submit", detail: "Files, voice & written work", icon: "↥" },
   { href: "/honor-board", label: "Honors Wall", detail: "Awards & recognition", icon: "✧" },
