@@ -10,5 +10,4 @@ export default function Home(){return <main className="studio-shell studio-hub-p
  <header className="studio-hub-header"><span className="studio-hub-mark">P<span>✦</span></span><div><p className="studio-hub-kicker">A CREATIVE PRODUCTION COMMUNITY</p><h1>Plateau <em>Crew Hub</em></h1><p className="studio-hub-lead">One crew. One vision. A story in the making.</p></div><span className="studio-hub-year">1960</span></header>
 
  <section className="studio-hub-grid" aria-label="Studio sections">{destinations.map((item,i)=><Link className={"studio-hub-card tone-"+item.tone} href={item.href} key={item.href}><span className="studio-hub-card-icon">{item.icon}</span><span className="studio-hub-card-copy"><strong>{item.label}</strong><small>{item.desc}</small></span><span className="studio-hub-card-arrow">↗</span><span className="studio-hub-card-index">{String(i+1).padStart(2,"0")}</span></Link>)}</section>
- <footer className="studio-hub-credits"><span>Academic Supervision <strong>Dr. Ahmed Abdelmoneim</strong></span><span>Designed &amp; Developed by <strong>Nouran Ahmed</strong></span></footer>
  </main>}
