@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import './reference-hub.css';
+import Ribbons from './reference-ribbons';
 const destinations = [
  {href:'/timeline', label:'Timeline', desc:'Studio updates and crew activity', icon:'timeline'},
  {href:'/assignments', label:'Assignments', desc:'Tasks, deadlines and progress', icon:'assignments'},
@@ -7,12 +8,6 @@ const destinations = [
  {href:'/honor-board', label:'Film Stars & Honors', desc:'Meet the crew and celebrate achievements', icon:'honors'},
  {href:'/dashboard', label:'My Account', desc:'Your profile and personal submissions', icon:'account'},
 ];
-const ribbons = [
- {label:'Studio Crew — 18 Members',items:['18 Studio Crew Members','Writing & Screenplay','Direction & Cinematography','Editing & Post-production','Art Direction & Sound','Production & Casting'],href:'/honor-board',symbol:'✦'},
- {label:'Honors & Recognition',items:['Honors & Recognition','Studio 1960 Honor Roll','Creative Excellence','Teamwork & Dedication','Production Milestones'],href:'/honor-board',symbol:'★'},
- {label:'1960 Keepsakes & Archive',items:['1960 Keepsakes & Archive','Vintage Camera','Maspero · July 21, 1960','35mm Film Reel','Grandfather’s Keepsakes'],href:null,symbol:'◇'}
-];
-function Ribbons(){return <section className="reference-ribbons" aria-label="Studio highlights">{ribbons.map((r,i)=><div className={'reference-ribbon ribbon-'+i} key={r.label}><div className="reference-ribbon-track">{[0,1].map(n=><div className="reference-ribbon-group" key={n} aria-hidden={n===1?true:undefined}>{r.items.map(item=>r.href?<Link key={item} href={r.href} tabIndex={n===1?-1:undefined}><span>{r.symbol}</span>{item}</Link>:<span className="reference-ribbon-chip" key={item}><span>{r.symbol}</span>{item}</span>)}</div>)}</div></div>)}</section>}
 export default function Home(){return <main className="reference-hub" dir="ltr">
 <header className="reference-frame reference-hero">
 <div className="reference-scene" aria-hidden="true"/>
