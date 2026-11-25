@@ -2711,3 +2711,40 @@ body main a{color:#7459ae!important}
 .merged-crew-showcase>p,.merged-crew-showcase h1,.merged-crew-showcase h2{color:#302a3b!important}
 .merged-crew-showcase article{box-shadow:0 10px 25px rgba(91,70,135,.09)!important}
 @media(max-width:600px){.merged-stars-section,.merged-honors-section{padding:15px;margin:18px 0;border-radius:18px}}
+
+/* Final light lavender + warm gold consistency pass */
+:root{--ink:#302a3b!important;--muted:#716a7c!important;--cream:#faf9fd!important;--blush:#f5f2fb!important;--line:#ded5ef!important}
+html,body{background:#faf9fd!important;color:#302a3b!important}
+body{background:radial-gradient(ellipse at 8% 0%,#eee8fa 0,transparent 42%),radial-gradient(ellipse at 92% 92%,#fff3d7 0,transparent 32%),#faf9fd!important}
+body a{color:#7459ae}
+.studio-login-page{background:radial-gradient(ellipse at 10% 8%,#eee8fa 0,transparent 42%),radial-gradient(ellipse at 90% 90%,#fff3d7 0,transparent 30%),#faf9fd!important}
+.site-menu-panel.site-menu-compact{background:linear-gradient(160deg,#fff,#f7f4fc 60%,#eee8fa)!important;color:#302a3b!important;border:1px solid #e3dcf0!important;box-shadow:0 18px 48px rgba(65,48,95,.14)!important}
+.site-menu-compact .site-menu-group{background:#fff!important;border:1px solid #e3dcf0!important;border-radius:16px!important;padding:10px!important}
+.site-menu-compact .site-menu-group h2{color:#8065bd!important;font-size:12px!important;font-weight:800!important}
+.site-menu-panel.site-menu-compact .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+.site-menu-panel.site-menu-compact .site-menu-grid a{background:linear-gradient(135deg,#fff,#f3effb)!important;color:#302a3b!important;border:1px solid #e4dcf1!important;min-height:58px!important;border-radius:12px!important}
+.site-menu-panel.site-menu-compact .site-menu-grid a small{font-size:11px!important;color:#49366f!important}
+.site-menu-panel.site-menu-compact .site-menu-grid a[aria-current=page]{background:linear-gradient(120deg,#eee8fa,#d8c9f2)!important;color:#302a3b!important;border-color:#c9b6e8!important}
+.site-menu-compact .site-menu-header{background:#fff!important;border:1px solid #e3dcf0!important;border-radius:16px!important;color:#49366f!important}
+.site-menu-compact .site-menu-header strong{color:#6f55aa!important}
+.site-menu-shade{background:rgba(48,42,59,.22)!important}
+.site-menu-trigger{background:linear-gradient(120deg,#f4effb,#d8c9f2)!important;color:#302a3b!important;border:1px solid #d5c8eb!important;box-shadow:0 6px 18px rgba(65,48,95,.12)!important}
+.site-bottom-nav,.site-bottom-toggle,.scroll-to-top,.back-to-top,.scroll-top-button,.page-scroll-top{display:none!important}
+.film-departments-page{color:#302a3b!important}
+.film-departments-page>header{background:linear-gradient(135deg,#fff,#f1ecfb)!important;color:#302a3b!important;border:1px solid #ded5ef!important}
+.film-departments-page>header p,.film-departments-page>header h1{color:#302a3b!important}
+.film-department-card{background:linear-gradient(145deg,#fff,#f1ecfb)!important;color:#302a3b!important;border:1px solid #ded5ef!important;box-shadow:0 8px 24px rgba(91,70,135,.08)!important}
+.film-department-card h2,.film-department-card p,.film-department-card small{color:#49366f!important}
+.executive-office,.executive-office-content,.executive-special,.executive-office-links{background:transparent!important;color:#302a3b!important}
+.executive-office-content>h2,.executive-office-content>p,.executive-office-content>.executive-eyebrow{background:#fff!important;color:#302a3b!important}
+.executive-office-links a,.executive-special-grid article,.executive-mentor{background:linear-gradient(145deg,#fff,#f3effb)!important;border:1px solid #ded5ef!important;color:#302a3b!important;box-shadow:0 8px 22px rgba(91,70,135,.07)!important}
+.executive-office-links a strong,.executive-office-links a small,.executive-special-grid h4,.executive-special-grid p,.executive-mentor p{color:#49366f!important}
+.delivery-register,.assignment-register-group,.student-discussion-panel,.student-public-scoreboard,.scoreboard-assignment,.student-honor-strip{background:linear-gradient(145deg,#fff,#f5f2fb)!important;border:1px solid #e3dcf0!important;border-radius:16px!important;color:#302a3b!important}
+.assignment-register-group summary,.assignment-register-table td,.assignment-register-table th{color:#49366f!important}
+.assignment-register-group summary{background:#f7f4fc!important}
+.student-honor-strip{padding:18px!important;margin:18px 0!important}
+.student-honor-strip h2,.student-honor-strip p{color:#49366f!important}
+.student-honor-strip span{display:inline-flex;margin:5px;padding:8px 12px;border-radius:20px;background:linear-gradient(120deg,#fff4d6,#ead5a2);color:#6a4c1d!important;font-weight:800}
+input,textarea,select{background:#fff!important;color:#302a3b!important;border-color:#d8cdec!important}
+button{border-color:#d8cdec}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
