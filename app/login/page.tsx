@@ -15,7 +15,6 @@ export default function Login() {
     });
     return () => { active = false; };
   }, []);
-  async function resendConfirmation(){const db=getSupabase();if(!db)return;if(!email.trim()){setMessage("اكتبي بريدك الإلكتروني الأول، وبعدها اضغطي إعادة إرسال التأكيد.");return;}setBusy(true);const {error}=await db.auth.resend({type:"signup",email:email.trim()});setBusy(false);setMessage(error?"تعذر طلب رسالة التأكيد: "+error.message:"لو البريد مسجل ولسه محتاج تأكيد، هتوصلك رسالة جديدة. راجعي البريد والرسائل غير المرغوبة.");}
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const supabase = getSupabase();
@@ -28,19 +27,19 @@ export default function Login() {
     } catch { setMessage("حصلت مشكلة في الاتصال. حاولي تاني."); }
     finally { setBusy(false); }
   }
-  return <main style={{ minHeight:"100vh",display:"grid",placeItems:"center",padding:20 }}>
-    <section style={{width:"100%",maxWidth:410,padding:28,background:"#191e2a",border:"1px solid #343a49",borderRadius:20}}>
-      <a href="/" style={{color:"#d5a66d",textDecoration:"none"}}>1960 STUDIO</a>
+  return <main className="studio-login-page" dir="rtl">
+    <section className="studio-login-card">
+      <a className="studio-login-brand" href="/">STUDIO 1960</a>
       <h1>تسجيل الدخول</h1>
-      <p style={{color:"#aeb8ca",lineHeight:1.8}}>لأعضاء مشروع التخرج والمشرفة.</p>
-      <form onSubmit={submit} style={{display:"grid",gap:15}}>
-        <label>اسم المستخدم للطالب أو البريد الإلكتروني للمشرفة<input type="text" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)} style={field}/></label>
-        <label>كلمة المرور<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)} style={field}/></label>
-        <button type="submit" disabled={busy} style={{padding:14,background:"#d5a66d",border:0,borderRadius:10,fontWeight:700,cursor:"pointer"}}>{busy?"جارٍ الدخول...":"دخول"}</button>
+      <p className="studio-login-intro">لأعضاء مشروع التخرج والمشرفة.</p>
+      <form onSubmit={submit} className="studio-login-form">
+        <label>اسم المستخدم للطالب أو البريد الإلكتروني للمشرفة<input type="text" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
+        <label>كلمة المرور<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>
+        <button type="submit" disabled={busy}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
-      {message && <p role="alert" style={{color:"#ffb5a9",lineHeight:1.8}}>{message}</p>}
-      <p style={{fontSize:13,color:"#aeb8ca"}}>الطلاب الجدد لا يحتاجون بريدًا إلكترونيًا. حساب المشرفة القديم يعمل بالبريد.</p><p style={{fontSize:13,color:"#aeb8ca"}}>طالب جديد؟ <a href="/register" style={{color:"#d5a66d"}}>إنشاء حساب وطلب الانضمام</a></p>
+      {message && <p role="alert" className="studio-login-message">{message}</p>}
+      <p className="studio-login-note">الطلاب الجدد لا يحتاجون بريدًا إلكترونيًا. حساب المشرفة القديم يعمل بالبريد.</p>
+      <p className="studio-login-register">طالب جديد؟ <a href="/register">إنشاء حساب وطلب الانضمام</a></p>
     </section>
   </main>;
 }
-const field = {display:"block",width:"100%",boxSizing:"border-box" as const,padding:13,marginTop:7,borderRadius:9,border:"1px solid #596174",background:"#10131c",color:"white",fontSize:16};
