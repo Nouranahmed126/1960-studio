@@ -66,10 +66,10 @@ export default function StudioMotionLayer() {
     <div className="studio-motion-layer" aria-hidden="true">
       <svg className="studio-motion-svg" viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMin slice">
         <defs>
-          <linearGradient id="studio-gold-path" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#C59B27" stopOpacity=".02" />
-            <stop offset=".48" stopColor="#C59B27" stopOpacity=".22" />
-            <stop offset="1" stopColor="#94A3B8" stopOpacity=".05" />
+          <linearGradient id="studio-lavender-path" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#8B5CF6" stopOpacity=".025" />
+            <stop offset=".48" stopColor="#8B5CF6" stopOpacity=".22" />
+            <stop offset="1" stopColor="#C59B27" stopOpacity=".08" />
           </linearGradient>
         </defs>
         <path className="studio-path-base" d="M-100 170 C180 20 300 330 560 180 S930 40 1120 210 S1370 390 1540 180" />
