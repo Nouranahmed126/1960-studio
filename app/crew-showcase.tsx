@@ -1,6 +1,6 @@
 "use client";
 import {useCallback,useEffect,useState} from "react";
-import {getSupabase} from "../../lib/supabase-browser";
+import {getSupabase} from "../lib/supabase-browser";
 type Member={id:string;full_name:string;created_at:string};
 type Detail={user_id:string;film_role:string;bio:string;photo_path?:string|null};
 const panel={background:"#1c202c",border:"1px solid #9e824d",borderRadius:18,padding:20};
