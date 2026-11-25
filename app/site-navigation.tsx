@@ -5,13 +5,10 @@ import {useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
 import {usePathname} from "next/navigation";
 
-const sections=[
-  ["/","Welcome","tv"],
-  ["/timeline","Timeline","film"],
-  ["/assignments","Assignments","clap"],
-  ["/submissions","Quick Submit","camera"],
-  ["/honor-board","Film Stars & Honors","tv"],
-  ["/dashboard","My Account","tv"]
+const sectionGroups=[
+ {title:"Studio & Account",items:[["/","Home","tv"],["/recordings","Recordings","tv"],["/honor-board","Film Stars & Honors","tv"],["/vision","Film Vision","film"],["/dashboard","My Account","tv"]]},
+ {title:"Production Teams",items:[["/sectors","Teams & Departments","users"],["/assignments","Assignments","clap"],["/production-hub","Production Hub","film"]]},
+ {title:"Archive & Community",items:[["/gallery","Behind the Scenes","film"],["/museum","Museum Archive","tv"],["/submissions","Quick Submit","camera"],["/timeline","Timeline","film"]]}
 ] as const;
 
 export default function SiteNavigation(){
