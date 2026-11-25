@@ -11,4 +11,4 @@ export default function Home(){return <main className="studio-shell studio-hub-p
 
  <section className="studio-hub-grid" aria-label="Studio sections">{destinations.map((item,i)=><Link className={"studio-hub-card tone-"+item.tone} href={item.href} key={item.href}><span className="studio-hub-card-icon">{item.icon}</span><span className="studio-hub-card-copy"><strong>{item.label}</strong><small>{item.desc}</small></span><span className="studio-hub-card-arrow">↗</span><span className="studio-hub-card-index">{String(i+1).padStart(2,"0")}</span></Link>)}</section>
  <footer className="studio-hub-credits"><span>Academic Supervision <strong>Dr. Ahmed Abdelmoneim</strong></span><span>Designed &amp; Developed by <strong>Nouran Ahmed</strong></span></footer>
- </main>
+ </main>}
