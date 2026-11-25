@@ -1,9 +1,9 @@
-import MuseumTeaser from "./museum-teaser";
-import HomeCrewStrip from "./home-crew-strip";
-import AssignmentCheckin from "./assignment-checkin";
-import SubmissionRadar from "./submission-radar";
-import HomeHonorShowcase from "./home-honor-showcase";
-import WelcomeGate from "./welcome-gate";
+import MuseumTeaser from "../museum-teaser";
+import HomeCrewStrip from "../home-crew-strip";
+import AssignmentCheckin from "../assignment-checkin";
+import SubmissionRadar from "../submission-radar";
+import HomeHonorShowcase from "../home-honor-showcase";
+import WelcomeGate from "../welcome-gate";
 
 export default function TimelinePage(){
  return <><WelcomeGate/><main dir="rtl" className="studio-shell cinema-home-page cinema-broadcast-home minimalist-home studio-route-page">
