@@ -52,3 +52,5 @@
 .reference-hub .reference-film{height:clamp(10px,2vw,22px);border:0!important;opacity:.9;background:repeating-linear-gradient(90deg,transparent 0 12px,#a86d29 12px 14px),linear-gradient(0deg,#b98235 0 12%,#ffe2a0 12% 23%,#b98235 23% 29%,#f6dca080 29% 71%,#b98235 71% 77%,#ffe2a0 77% 88%,#b98235 88%);box-shadow:0 0 6px #ffc968;border-radius:40% 15% 35% 10%;pointer-events:none;z-index:3}
 .reference-hub .reference-card:last-child .reference-film{left:auto;right:-3%;width:26%;bottom:8%;transform:rotate(-22deg)}
 @media(prefers-reduced-motion:reduce){.reference-hub .ribbon-window{overflow-x:auto;mask-image:none}}
+
+.reference-hub .reference-film{background:repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) top 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) bottom 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,transparent 0 22px,#a56b2c 22px 24px) center/100% 55% no-repeat,linear-gradient(180deg,#a66a28,#ffdf8a 19%,#b77b32 28%,#f8d69a 45%,#d49a48 73%,#ffdf8a 84%,#996021);border:1px solid #a36b2b!important;box-shadow:0 2px 4px #70421c55,0 0 8px #ffce73;opacity:1}
