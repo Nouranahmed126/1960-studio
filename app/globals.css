@@ -2703,3 +2703,11 @@ body main a{color:#7459ae!important}
 .studio-login-register{color:#6e667b!important;line-height:1.9}
 .studio-login-register a{color:#7459ae!important;font-weight:800}
 @media(prefers-reduced-motion:no-preference){.studio-horizontal-nav a{transition:background .25s,border-color .25s,transform .25s}.studio-horizontal-nav a:hover{transform:translateY(-2px);border-color:#b9a6e2}}
+
+/* Combined crew stars and honors into one compact destination */
+.merged-stars-section,.merged-honors-section{margin:28px 0;padding:22px;border:1px solid #e3dcf0;border-radius:24px;background:linear-gradient(145deg,#fff,#f5f1fc)}
+.merged-stars-section>h2,.merged-honors-section>h2{margin:0 0 14px;color:#48356f!important}
+.merged-crew-showcase{padding-top:0!important}
+.merged-crew-showcase>p,.merged-crew-showcase h1,.merged-crew-showcase h2{color:#302a3b!important}
+.merged-crew-showcase article{box-shadow:0 10px 25px rgba(91,70,135,.09)!important}
+@media(max-width:600px){.merged-stars-section,.merged-honors-section{padding:15px;margin:18px 0;border-radius:18px}}
