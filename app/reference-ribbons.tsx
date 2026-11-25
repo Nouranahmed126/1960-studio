@@ -34,14 +34,17 @@ export default function Ribbons(){
   const members=(crewResult.data??[]) as CrewMember[];
   const details=(detailResult.data??[]) as {user_id:string;photo_path:string|null}[];
   const photoById=new Map<string,string>();
-  const photos=await signStudioImages(db,"crew-photos",[...details.map(d=>d.photo_path),...(propResult.data??[]).map(p=>p.image_path)]);
+  const photos=await signStudioImages(db,"crew-photos",details.map(d=>d.photo_path));
+  const propPaths=(propResult.data??[]).map(p=>p.image_path);
+  const galleryPhotos=await signStudioImages(db,"studio-gallery",propPaths);
+  const legacyPhotos=await signStudioImages(db,"crew-photos",propPaths.filter(p=>!galleryPhotos.has(p??"")));
   for(const d of details){const url=photos.get(d.photo_path??"");if(url)photoById.set(d.user_id,url);}
   const uniqueMembers=new Map<string,CrewMember>();
   for(const m of members){const key=normalizeName(m.full_name);if(key&&!uniqueMembers.has(key))uniqueMembers.set(key,m);}
   const crewItems:RibbonItem[]=[];
-  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
+  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
   const artifactItems:RibbonItem[]=[];
-  for(const p of propResult.data??[]){const image=photos.get(p.image_path??"");if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
+  for(const p of propResult.data??[]){const image=galleryPhotos.get(p.image_path??"")??legacyPhotos.get(p.image_path??"");if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
   const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
   if(cassette?.storage_path){const image=(await signStudioImages(db,"studio-gallery",[cassette.storage_path])).get(cassette.storage_path);if(image)artifactItems.push({id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"});}
   const byName=new Map<string,string>();
@@ -77,6 +80,7 @@ export default function Ribbons(){
      {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
       {row.items.map(item=><Link href={row.href} className={"ribbon-item ribbon-item-"+item.kind} key={item.id} tabIndex={copy===1?-1:0} aria-label={item.label}>
        {item.image&&<img className={index===1?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy"/>}
+       {!item.image&&index!==1&&<span className="ribbon-initial" aria-hidden="true">{index===2?"★":item.label.trim().slice(0,1)}</span>}
        {index!==1&&<bdi>{item.label}</bdi>}
       </Link>)}
      </div>)}
