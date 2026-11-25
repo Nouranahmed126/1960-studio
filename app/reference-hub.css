@@ -37,3 +37,18 @@
 .reference-hub .reference-ribbon:hover .reference-ribbon-track,.reference-hub .reference-ribbon:focus-within .reference-ribbon-track,.reference-hub .reference-ribbon:active .reference-ribbon-track{animation-play-state:paused}
 @keyframes studio-ribbon-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.reference-hub .reference-ribbon-track{animation:none!important}.reference-hub .reference-ribbon{overflow-x:auto;mask-image:none;-webkit-mask-image:none}}
+
+.reference-hub .reference-ribbons{gap:10px;margin:15px 0 5px;padding:4px 1px 8px}
+.reference-hub .reference-ribbon{height:42px;box-sizing:border-box;display:grid;grid-template-columns:30% minmax(0,1fr);border:2px solid #9670b8;border-radius:18px;background:linear-gradient(165deg,#fffaf4,#f2e7f8);box-shadow:inset 0 0 0 2px #fff9ff,inset 0 -3px 5px #e5bd77,0 3px 0 #55326e,0 5px 7px #57337530;mask-image:none;-webkit-mask-image:none;overflow:hidden}
+.reference-hub .ribbon-heading{display:flex;align-items:center;gap:7px;padding:0 8px;border-right:1px solid #d7b977;color:#382047;min-width:0}
+.reference-hub .ribbon-heading strong{font:bold clamp(10px,2.6vw,20px)/1 Georgia,serif;text-align:center}
+.reference-hub .ribbon-heading>span{color:#7950a7;font-size:18px}
+.reference-hub .ribbon-window{min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.reference-hub .reference-ribbon-group{gap:16px;padding-right:16px}
+.reference-hub .ribbon-item{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#382047;font-size:clamp(10px,2.5vw,17px)}
+.reference-hub .ribbon-item>span{color:#b58a35;text-shadow:0 1px #fff,0 2px 2px #9a6b38}
+.reference-hub .ribbon-item a{background:none;border:0;padding:0;box-shadow:none;font:inherit;color:inherit!important;white-space:nowrap}
+.reference-hub .reference-crown{display:block;width:max-content;color:#b98424!important;font-size:clamp(19px,4vw,36px)!important;text-shadow:0 -1px #fff6bb,1px 2px #a66a18,2px 4px 4px #80511c55;transform:rotate(-12deg);animation:reference-float 4s ease-in-out infinite}
+.reference-hub .reference-film{height:clamp(10px,2vw,22px);border:0!important;opacity:.9;background:repeating-linear-gradient(90deg,transparent 0 12px,#a86d29 12px 14px),linear-gradient(0deg,#b98235 0 12%,#ffe2a0 12% 23%,#b98235 23% 29%,#f6dca080 29% 71%,#b98235 71% 77%,#ffe2a0 77% 88%,#b98235 88%);box-shadow:0 0 6px #ffc968;border-radius:40% 15% 35% 10%;pointer-events:none;z-index:3}
+.reference-hub .reference-card:last-child .reference-film{left:auto;right:-3%;width:26%;bottom:8%;transform:rotate(-22deg)}
+@media(prefers-reduced-motion:reduce){.reference-hub .ribbon-window{overflow-x:auto;mask-image:none}}
