@@ -98,3 +98,8 @@ body:has(.reference-hub) .reference-hub{min-height:0!important;padding-bottom:8p
 .reference-hub .reference-card:last-child .reference-film{height:20px!important;right:-3%;bottom:9%;width:25%}
 @keyframes reference-film-travel{from{background-position:0 0}to{background-position:57.142857px 0}}
 @media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
+
+.reference-hub .reference-identity{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:clamp(8px,2vw,22px);padding:5% 0 7% 8%!important}
+.reference-hub .reference-kicker{color:#936b26!important;font-size:clamp(9px,1.5vw,17px)!important;letter-spacing:.2em!important;margin:0!important;white-space:nowrap}
+.reference-hub .reference-lead{font-size:clamp(9px,1.5vw,18px)!important;margin:0!important;line-height:1.4!important;white-space:nowrap}
+.reference-hub .reference-brand{margin:0!important}
