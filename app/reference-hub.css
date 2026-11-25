@@ -137,3 +137,9 @@ body:has(.reference-hub){background:#fff!important;background-image:repeating-li
 .reference-hub .reference-hero .reference-film{left:26%;width:83%;bottom:8px}
 .reference-hub .reference-card:last-child .reference-film{width:33%;right:-5%}
 @media(prefers-reduced-motion:reduce){body:has(.reference-hub),.reference-hub .reference-film:before{animation:none!important}}
+
+/* Move the repeated film texture, not the clipped outer ribbon. */
+.reference-hub .reference-film:before{inset:0 -60px 0 0!important;transform:translateX(0);animation:hub-film-belt 2.4s linear infinite!important;will-change:transform}
+@keyframes hub-film-belt{from{translate:0 0}to{translate:-60px 0}}
+.reference-hub .ribbon-emblem{border-radius:50%;object-fit:cover;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
