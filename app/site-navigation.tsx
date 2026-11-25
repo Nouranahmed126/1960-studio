@@ -10,7 +10,7 @@ const sections=[
   ["/timeline","Timeline","film"],
   ["/assignments","Assignments","clap"],
   ["/submissions","Quick Submit","camera"],
-  ["/honor-board","Honors Wall","tv"],
+  ["/honor-board","Film Stars & Honors","tv"],
   ["/dashboard","My Account","tv"]
 ] as const;
 
