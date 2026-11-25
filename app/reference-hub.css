@@ -83,3 +83,18 @@ body:has(.reference-hub) .reference-hub{min-height:0!important;padding-bottom:8p
 
 /* Restore approved card proportions and reserve room for copy. */
 @media(max-width:600px){.reference-hub .reference-hero{aspect-ratio:1.85;min-height:180px}.reference-hub .reference-card{aspect-ratio:1.85}.reference-hub .reference-card:last-child{aspect-ratio:4.2;min-height:92px;padding-block:10px!important}.reference-hub .reference-grid{gap:9px;margin-top:12px}.reference-hub .reference-ribbons{gap:8px;margin-top:12px}.reference-hub .reference-ribbon{height:38px}.reference-hub .reference-identity{padding-bottom:22px!important}.reference-hub .reference-hero .reference-film{left:45%;width:58%;bottom:8px;transform:rotate(-7deg)}.reference-hub .reference-card:last-child .reference-copy{gap:2px}.reference-hub .reference-card:last-child .reference-crown{font-size:18px!important;line-height:1}.reference-hub .reference-card:last-child .reference-copy small{line-height:1.3!important}}
+
+/* Detail refinement; retain approved card dimensions. */
+.reference-hub .reference-scene{background-size:cover!important;background-position:center right!important;inset:0 0 0 39%;mask-image:linear-gradient(90deg,transparent,#000 18%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%)}
+.reference-hub .reference-identity{padding-block:4% 7%!important}
+.reference-hub .reference-kicker{font-size:clamp(7px,1.05vw,12px)!important;letter-spacing:.1em!important;margin:0 0 8px!important;max-width:95%}
+.reference-hub .reference-lead{font-size:clamp(9px,1.4vw,17px)!important;margin:8px 0 5px!important}
+.reference-hub .reference-studio{font-size:clamp(7px,1vw,12px)!important;margin:0!important;letter-spacing:.12em!important}
+.reference-hub .reference-card:last-child .reference-crown{font-size:clamp(22px,4vw,36px)!important;align-self:flex-start;margin-left:-2px;line-height:1;transform:rotate(-12deg)}
+.reference-hub .reference-ribbon{color:#382047!important;text-decoration:none!important;cursor:pointer}
+.reference-hub .ribbon-emblem{width:24px;height:24px;object-fit:contain;flex:none;filter:drop-shadow(0 1px 2px #b58a3555)}
+.reference-hub .reference-film{height:20px!important;background-size:57.142857px 20px!important;animation:reference-film-travel 5s linear infinite!important;pointer-events:none}
+.reference-hub .reference-hero .reference-film{left:44%;width:60%;bottom:9px;transform:rotate(-7deg)}
+.reference-hub .reference-card:last-child .reference-film{height:20px!important;right:-3%;bottom:9%;width:25%}
+@keyframes reference-film-travel{from{background-position:0 0}to{background-position:57.142857px 0}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
