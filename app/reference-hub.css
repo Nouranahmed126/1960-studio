@@ -143,3 +143,15 @@ body:has(.reference-hub){background:#fff!important;background-image:repeating-li
 @keyframes hub-film-belt{from{translate:0 0}to{translate:-60px 0}}
 .reference-hub .ribbon-emblem{border-radius:50%;object-fit:cover;flex-shrink:0}
 @media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Photo-first ribbons; preserve the approved main cards. */
+.reference-hub .reference-ribbon.ribbon-0,.reference-hub .reference-ribbon.ribbon-2{height:46px!important}
+.reference-hub .reference-ribbon.ribbon-1{height:66px!important}
+.reference-hub .ribbon-0 .ribbon-emblem{width:34px!important;height:34px!important;border:1px solid #c39a4d;border-radius:50%;object-fit:cover}
+.reference-hub .ribbon-1 .ribbon-item{padding:0 4px!important;gap:0!important}
+.reference-hub .ribbon-artifact{display:block;width:76px;height:50px;object-fit:contain;background:#fff9ee;border:1px solid #d3ae64;border-radius:7px;box-shadow:0 2px 4px #4a2c7a33;flex:none}
+.reference-hub .ribbon-2 .ribbon-item{border:1px solid #c9a25d;border-radius:999px;padding:3px 10px!important;background:linear-gradient(145deg,#fffaf0,#e8daf5);box-shadow:0 2px 3px #4a2c7a33;gap:5px!important}
+.reference-hub .ribbon-2 .ribbon-emblem{width:25px!important;height:25px!important}
+.reference-hub .reference-film:before{inset:0 -120px 0 0!important;transform:none!important;translate:none!important;animation:film-conveyor 1.5s linear infinite!important;will-change:transform}
+@keyframes film-conveyor{from{transform:translate3d(0,0,0)}to{transform:translate3d(-60px,0,0)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
