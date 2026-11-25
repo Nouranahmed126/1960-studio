@@ -304,3 +304,16 @@ body:has(.reference-hub) .reference-hub.reference-hub{
  .reference-hub .reference-card{aspect-ratio:1.45!important}
  .reference-hub .reference-copy small{font-size:8px!important}
 }
+
+/* Compact reference composition and Safari-safe moving film. */
+.reference-hub .reference-hero{aspect-ratio:2.42!important;grid-template-columns:42% 58%;grid-template-rows:minmax(0,1fr);border-width:3px!important;box-shadow:0 4px 12px #59347735!important}
+.reference-hub .reference-hero .reference-scene{inset:0 0 0 42%!important;width:58%!important;background-size:contain!important;background-position:center right!important;mask-image:none!important;-webkit-mask-image:none!important}
+.reference-hub .reference-identity{width:100%!important;min-width:0;min-height:0;padding:0 0 0 5%!important;gap:clamp(3px,.8vw,12px)!important}
+.reference-hub .reference-hero .reference-film{left:28%!important;width:74%!important;bottom:3px!important;transform:rotate(-5deg);border-radius:50% 10% 40% 10%!important}
+.reference-hub .reference-film{animation:none!important;background:transparent!important}
+.reference-hub .reference-film:before{content:""!important;position:absolute;inset:0 -36px 0 0!important;transform:none;translate:none!important;background:repeating-linear-gradient(90deg,#70421c 0 6px,transparent 6px 18px) top left/18px 3px repeat-x,repeating-linear-gradient(90deg,#70421c 0 6px,transparent 6px 18px) bottom left/18px 3px repeat-x, repeating-linear-gradient(90deg,transparent 0 16px,#9a6429 16px 18px) center/18px 65% repeat-x,linear-gradient(#bd8438,#ffe2a0,#b47b35)!important;animation:reference-belt-fixed 1.2s linear infinite!important;will-change:transform}
+@keyframes reference-belt-fixed{from{transform:translate3d(0,0,0)}to{transform:translate3d(-18px,0,0)}}
+.reference-hub .reference-card:last-child .reference-film{left:auto!important;right:-3%!important;width:18%!important;bottom:5px!important;z-index:1!important}
+.reference-hub .reference-card:last-child .reference-copy{position:relative;z-index:4}
+@media(max-width:700px){.reference-hub .reference-hero{aspect-ratio:2.42!important;border-radius:15px!important}.reference-hub .reference-kicker{font-size:clamp(6px,1.65vw,11px)!important;line-height:1.3!important}.reference-hub .reference-brand h1{font-size:clamp(13px,3.8vw,27px)!important}.reference-hub .reference-mark{width:clamp(22px,6vw,42px)!important;font-size:clamp(16px,4.5vw,30px)!important}.reference-hub .reference-lead{font-size:clamp(7px,1.9vw,13px)!important;line-height:1.3!important;margin:0!important;padding-left:3px!important}.reference-hub .reference-studio{font-size:clamp(6px,1.5vw,10px)!important;margin:0!important;padding-top:2px!important;gap:3px!important}.reference-hub .reference-hero .reference-film{height:9px!important}.reference-hub .reference-card{aspect-ratio:1.95!important;padding:8px 15px 8px 7px!important}.reference-hub .reference-card:last-child{aspect-ratio:4.8!important}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
