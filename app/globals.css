@@ -2512,3 +2512,49 @@ body :is(.studio-primary,.studio-nav-link,.primary-button,.btn-primary,[data-var
 @keyframes studio-gold-path{to{stroke-dashoffset:-220}}
 @keyframes studio-gold-path-reverse{to{stroke-dashoffset:220}}
 @media(prefers-reduced-motion:reduce){body :is(.honor-micro-card,.cinema-home-star-card,.honor-card,.award-badge,.gold-star,.recognition-badge)::after,.studio-path-trace,.studio-path-one,.studio-path-two{animation:none!important}}
+
+/* Refined white / balanced lavender hub and separated route layouts */
+:root{--studio-lavender:#8b70d6;--studio-lavender-mid:#a995e8;--studio-lavender-soft:#f1edfb;--studio-gold:#c59b27}
+html,body{background:#f8f7fc!important;color:#211d2b!important}
+body{background:#f8f7fc!important}
+body :is(.studio-shell,.gallery-shell,.honor-cinematic-page,.dashboard-shell,.production-hub,.submissions-page){background:transparent!important;color:#211d2b!important}
+body :is(.studio-shell h1,.studio-shell h2,.studio-shell h3,.studio-shell strong,.gallery-shell h1,.gallery-shell h2,.honor-cinematic-page h1,.honor-cinematic-page h2){color:#211d2b!important}
+body :is(.studio-shell p,.studio-shell small,.gallery-shell p,.honor-cinematic-page p){color:#655f70!important}
+body :is(.studio-shell a,.gallery-shell a,.honor-cinematic-page a){color:#7056b5!important}
+body :is(.studio-nav,.cinema-home-header,.minimalist-home-header){background:rgba(255,255,255,.88)!important;border-color:#eae6f5!important}
+body :is(.studio-feature,.studio-feature-icon,.studio-nav-link,.studio-primary){background:linear-gradient(135deg,#f4f0ff,#ded4f8 58%,#fff5d7)!important;color:#48356f!important;border-color:#e4dcf7!important}
+body :is(.assignment-checkin,.home-quick-submit,.submission-radar,.radar-inbox,.home-honor-modal,.home-honor-modal-overlay,.radar-overlay,.radar-item,.home-chat-submit,.home-chat-submit-options){background:#fff!important;color:#211d2b!important;border-color:#eae6f5!important}
+body :is(.radar-overlay,.home-honor-modal-overlay){z-index:120!important}
+body :is(.site-menu-shade){z-index:150!important}
+body :is(.site-menu-panel){z-index:151!important;position:fixed!important;overflow-y:auto!important;max-height:calc(100dvh - 28px)!important}
+body :is(.site-bottom-nav,.site-bottom-toggle){z-index:100!important}
+body :is(.plateau-site-credit){position:relative!important;z-index:2!important;clear:both;background:#fff!important;color:#655f70!important;border-top:1px solid #eae6f5!important;padding:18px 16px!important;text-align:center}
+body :is(.honor-vertical-marquee,.cinema-dual-marquees,.cinema-loop-window){overflow:hidden!important;isolation:isolate}
+body :is(.honor-micro-card,.cinema-home-star-card,.museum-teaser-card){position:relative!important;z-index:1!important}
+.studio-hub-page{max-width:1160px!important;min-height:calc(100dvh - 140px);padding:clamp(24px,5vw,64px) 22px 34px!important;margin:auto!important;display:flex;flex-direction:column;justify-content:center;gap:clamp(24px,4vw,42px)}
+.studio-hub-header{position:relative;display:flex;align-items:center;gap:24px;padding:clamp(24px,4vw,44px);border:1px solid #eae6f5;border-radius:28px;background:linear-gradient(115deg,#fff 5%,#f4f0ff 65%,#fffaf0 100%);box-shadow:0 14px 44px rgba(65,48,95,.07);overflow:hidden}
+.studio-hub-mark{display:grid;place-items:center;flex:0 0 72px;height:72px;border-radius:23px;background:linear-gradient(145deg,#e9e1fb,#b9a7e9);color:#fff;font-size:42px;font-weight:900;box-shadow:0 8px 24px #8b70d633}
+.studio-hub-mark span{font-size:13px;color:#c59b27}
+.studio-hub-kicker{margin:0 0 8px;color:#8068bb!important;font-size:11px;letter-spacing:2px;font-weight:800}
+.studio-hub-header h1{font-size:clamp(32px,5vw,54px);line-height:1.05;margin:0;color:#211d2b!important;letter-spacing:-1.8px}
+.studio-hub-header h1 em{font-style:normal;color:#8068bb}
+.studio-hub-lead{margin:10px 0 0;color:#716b7d!important}
+.studio-hub-year{margin-left:auto;font-size:clamp(54px,10vw,116px);font-weight:900;letter-spacing:-8px;color:rgba(126,103,182,.10)}
+.studio-hub-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.studio-hub-card{position:relative;min-height:164px;padding:20px;display:flex;flex-direction:column;gap:14px;text-decoration:none!important;border:1px solid #eae6f5;border-radius:22px;background:#fff;box-shadow:0 8px 26px rgba(65,48,95,.045);overflow:hidden;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.studio-hub-card:hover{transform:translateY(-4px);box-shadow:0 15px 34px rgba(65,48,95,.10);border-color:#cbbce9}
+.studio-hub-card-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#f0ebfc,#d7caf4);color:#7256b4;font-size:24px}
+.studio-hub-card-copy{display:flex;flex-direction:column;gap:5px;padding-right:22px}
+.studio-hub-card-copy strong{font-size:17px;color:#282333!important}
+.studio-hub-card-copy small{font-size:12px;line-height:1.55;color:#777083!important}
+.studio-hub-card-arrow{position:absolute;right:19px;bottom:20px;color:#8b70d6;font-size:20px;transition:transform .2s}
+.studio-hub-card:hover .studio-hub-card-arrow{transform:translate(3px,-3px)}
+.studio-hub-card-index{position:absolute;right:18px;top:16px;color:#b5adc4;font-size:10px;letter-spacing:1px}
+.studio-hub-card.tone-gold .studio-hub-card-icon{background:linear-gradient(145deg,#fff7df,#f1dfa8);color:#9a741c}
+.studio-hub-card.tone-violet .studio-hub-card-icon{background:linear-gradient(145deg,#e8e0fb,#b9a7e9);color:#60469e}
+.studio-hub-credits{display:flex;justify-content:center;gap:10px 28px;flex-wrap:wrap;padding:17px;border-top:1px solid #eae6f5;color:#777083;font-size:12px}
+.studio-hub-credits strong{color:#48356f!important}
+.studio-route-page{min-height:70vh}
+@media(max-width:850px){.studio-hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-hub-year{font-size:70px}}
+@media(max-width:520px){.studio-hub-page{padding:20px 14px 30px!important;gap:20px}.studio-hub-header{padding:22px 18px;gap:14px;border-radius:22px}.studio-hub-mark{flex-basis:54px;height:54px;border-radius:17px;font-size:32px}.studio-hub-header h1{font-size:31px}.studio-hub-year{display:none}.studio-hub-grid{gap:10px}.studio-hub-card{min-height:145px;padding:15px;border-radius:18px}.studio-hub-card-copy{padding-right:0}.studio-hub-card-copy strong{font-size:15px}.studio-hub-card-copy small{font-size:11px}.studio-hub-card-arrow{right:15px;bottom:13px}.studio-hub-credits{font-size:11px;gap:8px 14px}}
+@media(prefers-reduced-motion:reduce){.studio-hub-card,.studio-hub-card-arrow{transition:none!important}}
