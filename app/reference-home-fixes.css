@@ -1,0 +1,72 @@
+/* Homepage-only visual repairs for the approved light Plateau design. */
+body:has(.reference-hub) > header.plateau-nav{display:none!important}
+body:has(.reference-hub){background:#fff8fb!important}
+.reference-hub .reference-hero{
+  overflow:hidden!important;
+  align-items:stretch!important;
+}
+.reference-hub .reference-identity{
+  align-self:stretch!important;
+  justify-content:center!important;
+  min-height:0!important;
+  padding:clamp(16px,3.2vw,30px) 0 clamp(16px,3.2vw,30px) 5%!important;
+  gap:clamp(5px,1vw,12px)!important;
+}
+.reference-hub .reference-kicker{
+  margin:0 0 clamp(4px,1vw,10px)!important;
+  padding-top:2px!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+.reference-hub .reference-brand{margin:0!important;min-width:0}
+.reference-hub .reference-brand h1{line-height:1.04!important}
+.reference-hub .reference-lead{margin:clamp(5px,1vw,12px) 0!important;line-height:1.35!important}
+.reference-hub .reference-studio{margin:0!important;line-height:1.25!important}
+.reference-hub .reference-film{
+  background-repeat:repeat-x!important;
+  background-size:80px 100%!important;
+  background-position:0 0!important;
+  animation:plateau-film-loop 2.4s linear infinite!important;
+  will-change:background-position;
+}
+@keyframes plateau-film-loop{
+  from{background-position:0 0}
+  to{background-position:-80px 0}
+}
+.reference-hub .reference-card:last-child .reference-film{
+  width:24%!important;
+  height:18px!important;
+  right:-2%!important;
+  bottom:7%!important;
+  left:auto!important;
+  transform:rotate(-18deg)!important;
+  pointer-events:none!important;
+}
+.reference-hub .reference-card:last-child .reference-copy{
+  position:relative!important;
+  z-index:2!important;
+  padding-bottom:3px!important;
+}
+.reference-hub .reference-ribbon{min-width:0}
+.reference-hub .reference-ribbon.ribbon-0,
+.reference-hub .reference-ribbon.ribbon-2{height:50px!important}
+.reference-hub .reference-ribbon.ribbon-1{height:68px!important}
+.reference-hub .ribbon-window{min-width:0!important;overflow:hidden!important}
+.reference-hub .ribbon-artifact{width:76px!important;height:54px!important;object-fit:contain!important}
+@media(max-width:600px){
+  .reference-hub .reference-hero{aspect-ratio:2.05!important;min-height:0!important}
+  .reference-hub .reference-identity{width:49%!important;padding:14px 0 18px 4%!important;gap:5px!important}
+  .reference-hub .reference-kicker{font-size:clamp(8px,2.05vw,11px)!important;letter-spacing:.13em!important;line-height:1.3!important}
+  .reference-hub .reference-brand h1{font-size:clamp(19px,5vw,28px)!important;white-space:normal!important}
+  .reference-hub .reference-mark{width:clamp(30px,8vw,42px)!important}
+  .reference-hub .reference-lead{font-size:clamp(9px,2.3vw,12px)!important;white-space:normal!important}
+  .reference-hub .reference-studio{font-size:8px!important}
+  .reference-hub .reference-card:last-child .reference-film{width:22%!important;height:15px!important}
+  .reference-hub .reference-ribbon.ribbon-0,
+  .reference-hub .reference-ribbon.ribbon-2{height:48px!important}
+  .reference-hub .reference-ribbon.ribbon-1{height:64px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .reference-hub .reference-film{animation:none!important}
+}
