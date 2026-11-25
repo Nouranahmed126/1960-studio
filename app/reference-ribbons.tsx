@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import {signStudioImages} from "../lib/studio-media";
 import {useCallback,useEffect,useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
 
@@ -7,13 +8,6 @@ type CrewMember={id:string;full_name:string};
 type Honor={id:number;student_name:string;award:string;achievement:string;stars:number};
 type RibbonItem={id:string;label:string;image?:string;kind:"crew"|"artifact"|"honor"};
 
-async function storageImage(db:NonNullable<ReturnType<typeof getSupabase>>,bucket:string,path:string|null|undefined){
- if(!path)return undefined;
- if(/^https?:\/\//i.test(path))return path;
- const signed=await db.storage.from(bucket).createSignedUrl(path,60*60);
- if(signed.data?.signedUrl)return signed.data.signedUrl;
- return db.storage.from(bucket).getPublicUrl(path).data?.publicUrl;
-}
 function normalizeName(value:string){return value.normalize("NFKC").replace(/[ـ\s]+/g," ").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").trim().toLocaleLowerCase("ar");}
 
 export default function Ribbons(){
@@ -40,15 +34,16 @@ export default function Ribbons(){
   const members=(crewResult.data??[]) as CrewMember[];
   const details=(detailResult.data??[]) as {user_id:string;photo_path:string|null}[];
   const photoById=new Map<string,string>();
-  await Promise.all(details.map(async d=>{const url=await storageImage(db,"crew-photos",d.photo_path);if(url)photoById.set(d.user_id,url)}));
+  const photos=await signStudioImages(db,"crew-photos",[...details.map(d=>d.photo_path),...(propResult.data??[]).map(p=>p.image_path)]);
+  for(const d of details){const url=photos.get(d.photo_path??"");if(url)photoById.set(d.user_id,url);}
   const uniqueMembers=new Map<string,CrewMember>();
   for(const m of members){const key=normalizeName(m.full_name);if(key&&!uniqueMembers.has(key))uniqueMembers.set(key,m);}
   const crewItems:RibbonItem[]=[];
   for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
   const artifactItems:RibbonItem[]=[];
-  for(const p of propResult.data??[]){const image=await storageImage(db,"crew-photos",p.image_path);if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
+  for(const p of propResult.data??[]){const image=photos.get(p.image_path??"");if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
   const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
-  if(cassette?.storage_path){const image=await storageImage(db,"studio-gallery",cassette.storage_path);if(image)artifactItems.push({id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"});}
+  if(cassette?.storage_path){const image=(await signStudioImages(db,"studio-gallery",[cassette.storage_path])).get(cassette.storage_path);if(image)artifactItems.push({id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"});}
   const byName=new Map<string,string>();
   for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)byName.set(normalizeName(m.full_name),photo);}
   const honorRows=(honorResult.data??[]) as Honor[];
