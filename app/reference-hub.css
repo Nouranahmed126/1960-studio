@@ -24,3 +24,16 @@
 .reference-hub .reference-film{height:12px;opacity:.55;bottom:5px;border-width:2px}
 .reference-hub .reference-credits{display:none}
 @media(max-width:600px){.reference-hub .reference-hero{aspect-ratio:1.85}.reference-hub .reference-card{aspect-ratio:1.85}.reference-hub .reference-card:last-child{aspect-ratio:4.2}.reference-hub .reference-frame:after{inset:2px;box-shadow:inset 0 -2px 5px #f8d580}.reference-hub .reference-brand{gap:4px}}
+
+.reference-hub .reference-ribbons{display:grid;gap:5px;margin:14px 0 0;padding:0;overflow:hidden;direction:ltr}
+.reference-hub .reference-ribbon{height:38px;display:flex;align-items:center;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.reference-hub .reference-ribbon-track{display:flex;width:max-content;flex:none;animation:studio-ribbon-scroll 35s linear infinite;will-change:transform}
+.reference-hub .ribbon-0 .reference-ribbon-track,.reference-hub .ribbon-2 .reference-ribbon-track{animation-direction:reverse}
+.reference-hub .ribbon-1 .reference-ribbon-track{animation-duration:40s}
+.reference-hub .ribbon-2 .reference-ribbon-track{animation-duration:44s}
+.reference-hub .reference-ribbon-group{display:flex;align-items:center;gap:8px;padding-right:8px;flex:none}
+.reference-hub .reference-ribbon-group a,.reference-hub .reference-ribbon-chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;border:1px solid #d8b96b;border-radius:999px;background:linear-gradient(135deg,#fffdf9,#eee4fa);padding:5px 12px;color:#4a2c7a!important;font:600 11px/1.3 Arial,sans-serif;text-decoration:none;box-shadow:0 1px 3px #4a2c7a15}
+.reference-hub .reference-ribbon-group span span,.reference-hub .reference-ribbon-group a span{color:#a87924;font-size:14px}
+.reference-hub .reference-ribbon:hover .reference-ribbon-track,.reference-hub .reference-ribbon:focus-within .reference-ribbon-track,.reference-hub .reference-ribbon:active .reference-ribbon-track{animation-play-state:paused}
+@keyframes studio-ribbon-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-ribbon-track{animation:none!important}.reference-hub .reference-ribbon{overflow-x:auto;mask-image:none;-webkit-mask-image:none}}
