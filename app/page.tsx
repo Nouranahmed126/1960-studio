@@ -6,7 +6,6 @@ const destinations=[
  {href:"/honor-board",label:"Film Stars & Honors",desc:"Meet the crew and celebrate achievements",icon:"✧",tone:"gold"},
  {href:"/dashboard",label:"My Account",desc:"Your profile and personal submissions",icon:"◎",tone:"lavender"}
 ];
-const navigation=[["/","Welcome"],["/timeline","Timeline"],["/assignments","Assignments"],["/submissions","Quick Submit"],["/honor-board","Honors Wall"],["/dashboard","My Account"]];
 export default function Home(){return <main className="studio-shell studio-hub-page" dir="ltr">
  <header className="studio-hub-header"><span className="studio-hub-mark">P<span>✦</span></span><div><p className="studio-hub-kicker">A CREATIVE PRODUCTION COMMUNITY</p><h1>Plateau <em>Crew Hub</em></h1><p className="studio-hub-lead">One crew. One vision. A story in the making.</p></div><span className="studio-hub-year">1960</span></header>
 
