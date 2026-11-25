@@ -103,3 +103,12 @@ body:has(.reference-hub) .reference-hub{min-height:0!important;padding-bottom:8p
 .reference-hub .reference-kicker{color:#936b26!important;font-size:clamp(9px,1.5vw,17px)!important;letter-spacing:.2em!important;margin:0!important;white-space:nowrap}
 .reference-hub .reference-lead{font-size:clamp(9px,1.5vw,18px)!important;margin:0!important;line-height:1.4!important;white-space:nowrap}
 .reference-hub .reference-brand{margin:0!important}
+
+/* Full cinematic composition with independently animated film texture. */
+.reference-hub .reference-hero .reference-scene{inset:0!important;width:100%!important;height:100%!important;background-size:cover!important;background-position:center center!important;mask-image:none!important;-webkit-mask-image:none!important}
+.reference-hub .reference-hero .reference-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#faf3f6 0%,#faf3f6ed 18%,#faf3f6a0 29%,transparent 43%);pointer-events:none}
+.reference-hub .reference-identity{position:relative;z-index:2;justify-content:center;gap:12px;padding:4% 0 5% 5%!important}
+.reference-hub .reference-brand h1{text-shadow:0 1px #fff,0 2px #b99acb,0 3px #86649c,0 5px 8px #4a2c7a44!important}
+.reference-hub .reference-lead{font-size:clamp(10px,1.7vw,19px)!important;color:#43294e!important}
+.reference-hub .reference-film{background-position:0 0;animation:reference-film-travel 3s linear infinite!important;will-change:background-position}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
