@@ -112,3 +112,12 @@ body:has(.reference-hub) .reference-hub{min-height:0!important;padding-bottom:8p
 .reference-hub .reference-lead{font-size:clamp(10px,1.7vw,19px)!important;color:#43294e!important}
 .reference-hub .reference-film{background-position:0 0;animation:reference-film-travel 3s linear infinite!important;will-change:background-position}
 @media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
+
+/* Crisp editorial lettering and real moving film texture */
+.reference-hub .reference-brand h1,.reference-hub .reference-brand h1 em{filter:none!important;text-shadow:0 1px 0 #fff!important;color:#43234f!important}
+.reference-hub .reference-brand h1 em{color:#69428c!important;border-bottom-color:#c49a52}
+.reference-hub .reference-hero .reference-scene:after{background:linear-gradient(90deg,#faf4f5 0%,#faf4f5 24%,#faf4f5ed 35%,#faf4f580 43%,transparent 53%)}
+.reference-hub .reference-film{background-position:0 0!important;animation:none!important;overflow:hidden;isolation:isolate}
+.reference-hub .reference-film:before{content:"";position:absolute;inset:0 -58px 0 0;background:inherit;background-size:57.142857px 20px!important;background-repeat:repeat-x!important;animation:film-track-motion 2.2s linear infinite!important;will-change:transform}
+@keyframes film-track-motion{from{transform:translateX(0)}to{transform:translateX(-57.142857px)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
