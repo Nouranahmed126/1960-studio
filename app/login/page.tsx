@@ -2,20 +2,19 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
 const REMEMBER_EMAIL_KEY = "studio1960:remembered-login-email";
+const DEFAULT_LOGIN_EMAIL = "drnouranahmed126@gmail.com";
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(DEFAULT_LOGIN_EMAIL);
   const [password, setPassword] = useState("");
-  const [rememberEmail, setRememberEmail] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(true);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   useEffect(() => {
     const db = getSupabase();
     try {
       const savedEmail = window.localStorage.getItem(REMEMBER_EMAIL_KEY);
-      if (savedEmail) {
-        setEmail(savedEmail);
-        setRememberEmail(true);
-      }
+      setEmail(savedEmail || DEFAULT_LOGIN_EMAIL);
+      setRememberEmail(true);
     } catch {
       // Browser storage can be disabled.
     }
