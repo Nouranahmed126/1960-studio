@@ -764,3 +764,51 @@ body .plateau-feed .plateau-post-location span{overflow-wrap:anywhere}
   .studio-login-input{height:50px;min-height:50px;font-size:14px!important}
   .studio-login-submit{height:45px;min-height:45px}
 }
+
+
+/* Last-loaded overrides for compact menu surfaces (beat legacy high-specificity navy rules). */
+body .site-menu-panel.site-menu-compact{
+ background:linear-gradient(155deg,#fffdfd,#eee6f3)!important;
+ color:#493456!important;border:1px solid #d2b16c!important;
+ box-shadow:0 0 38px #49345625!important;
+}
+body .site-menu-panel.site-menu-compact .site-menu-grid a{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border:1px solid #d9cde1!important;
+ box-shadow:0 3px 10px #4934560d!important;
+}
+body .site-menu-panel.site-menu-compact .site-menu-grid a[aria-current="page"]{
+ background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;
+ color:#493456!important;border-color:#c5a45f!important;
+}
+body .site-menu-panel.site-menu-compact .site-menu-grid a :is(svg,span,small){color:inherit!important}
+body .site-menu-panel.site-menu-compact .site-menu-login{
+ background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;
+ color:#493456!important;border:1px solid #c5a45f!important;
+}
+body .site-menu-panel.site-menu-compact .site-menu-heading,
+body .site-menu-panel.site-menu-compact h2,
+body .site-menu-panel.site-menu-compact strong{color:#493456!important}
+body .site-menu-panel.site-menu-compact .site-menu-close{
+ background:#fffdfd!important;color:#493456!important;border-color:#d9cde1!important;
+}
+body .cinema-home-page .cinema-home-micro,
+body .cinema-home-page .cinema-home-honor{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ color:#493456!important;border:1px solid #d9cde1!important;
+}
+body .cinema-home-page .cinema-home-hero{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border:1px solid #d9cde1!important;color:#493456!important;
+}
+body .cinema-home-page .cinema-home-hero :is(h1,h2,h3,p,small,strong){color:#493456!important}
+body .cinema-home-page .cinema-home-stars-frame,
+body .cinema-home-page .cinema-home-stars-static{
+ background:#fffdfd!important;border-color:#d2b16c!important;
+}
+body .cinema-home-page .cinema-home-star-card{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ color:#493456!important;border-color:#d9cde1!important;
+}
+body .cinema-home-page .cinematic-home-footer,
+body .cinema-home-page .cinematic-home-credit{color:#76558c!important}
