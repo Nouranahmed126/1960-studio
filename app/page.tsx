@@ -13,18 +13,16 @@ const destinations = [
 
 export default function Home(){
  return <main className="reference-hub" dir="ltr">
-  <header className="reference-frame reference-hero">
-   <div className="reference-scene" aria-hidden="true"/>
-   <div className="reference-identity">
-    <div className="reference-brand">
-     <span className="reference-mark">P</span>
-     <h1>Plateau<br/><em>Crew Hub</em></h1>
-     <span className="reference-spark" aria-hidden="true">✦</span>
-    </div>
-    <p className="reference-slogan">Crafted together, frame by frame.</p>
-    <div className="reference-studio"><span aria-hidden="true">—</span> STUDIO 1960</div>
-   </div>
-   <div className="reference-film" aria-hidden="true"/>
+  <header>
+   <h1 className="reference-hero-artwork">
+    <img
+     src="/plateau-crew-hub-hero-reference.jpg"
+     alt="Plateau Crew Hub — Crafted together, frame by frame."
+     width={1584}
+     height={672}
+     fetchPriority="high"
+    />
+   </h1>
   </header>
   <section className="reference-grid" aria-label="Studio sections">
    {destinations.map((item,i)=><Link className="reference-frame reference-card" href={item.href} key={item.href}>

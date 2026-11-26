@@ -1,4 +1,14 @@
 /* Homepage-only visual repairs for the approved light Plateau design. */
+.reference-hub .reference-hero-artwork {
+  margin: 0;
+}
+
+.reference-hub .reference-hero-artwork img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 body:has(.reference-hub) > header.plateau-nav{display:none!important}
 body:has(.reference-hub){background:#fff8fb!important}
 .reference-hub .reference-hero{
