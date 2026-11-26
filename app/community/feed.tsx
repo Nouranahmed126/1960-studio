@@ -103,7 +103,7 @@ export default function Feed() {
     if (result.error) { setNotice("تعذّر تحميل المنشورات. جرّب التحديث."); return; }
     const posts = (result.data ?? []) as Post[];
     const visible = posts.slice(0, limit);
-    const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : []);
+    const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : (post.legacy_media ?? []).map(media => media.path));
     const paths = [...new Set(newPaths)];
     const now = Date.now();
     const shouldSign = (path: string) => (mediaCache.current.get(path)?.refreshAfter ?? 0) <= now;
@@ -262,7 +262,7 @@ export default function Feed() {
       {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات.</p>}
       <section className="plateau-posts" aria-label="منشورات الفريق">
         {feed.posts.slice(0, limit).map(post => {
-          const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : post.legacy_media;
+          const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : (post.legacy_media ?? []);
           return <article className="plateau-card plateau-post" key={post.id}>
             <header className="plateau-post-header">
               <span aria-hidden="true" className="plateau-avatar">{post.author_name.trim().slice(0, 1) || "P"}</span>
