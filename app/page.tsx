@@ -16,13 +16,12 @@ export default function Home(){
   <header className="reference-frame reference-hero">
    <div className="reference-scene" aria-hidden="true"/>
    <div className="reference-identity">
-    <p className="reference-kicker">A CREATIVE PRODUCTION<br/>COMMUNITY</p>
     <div className="reference-brand">
      <span className="reference-mark">P</span>
      <h1>Plateau<br/><em>Crew Hub</em></h1>
      <span className="reference-spark" aria-hidden="true">✦</span>
     </div>
-    <p className="reference-lead">One crew, One vision.<br/>A story in the making.</p>
+    <p className="reference-slogan">Crafted together, frame by frame.</p>
     <div className="reference-studio"><span aria-hidden="true">—</span> STUDIO 1960</div>
    </div>
    <div className="reference-film" aria-hidden="true"/>
