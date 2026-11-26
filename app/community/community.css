@@ -230,3 +230,100 @@ body .plateau-feed .plateau-compose-line button { min-height: 40px; padding: 4px
 body .plateau-feed .plateau-compose-line .plateau-compose-icon { display: grid; place-items: center; padding: 0; }
 .plateau-compose-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .plateau-compose-line .plateau-primary { min-width: 54px; }
+
+
+/* Timeline page: compact Studio 1960 lavender, ivory and gold treatment */
+body:has(.plateau-feed) > header.plateau-nav { display: none !important; }
+body:has(.plateau-feed) .site-menu-trigger,
+body:has(.plateau-feed) .site-menu-shade,
+body:has(.plateau-feed) .site-menu-panel { display: none !important; }
+body .gallery-shell.plateau-feed {
+  min-height: 100svh;
+  padding: clamp(18px, 3.5vw, 34px) clamp(14px, 4vw, 30px) 48px;
+  background: linear-gradient(145deg, #fbf9ff 0%, #f2edfb 58%, #fffaf0 100%);
+  color: #30223f;
+  font-size: 15px;
+}
+.plateau-feed .plateau-content { width: min(100%, 850px); margin-inline: auto; }
+.plateau-timeline-heading {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 18px; margin: 0 auto clamp(26px, 5vw, 42px); direction: ltr;
+}
+.plateau-timeline-heading-copy { display: grid; justify-items: end; gap: 12px; min-width: 0; }
+body .plateau-feed .plateau-feed-title {
+  display: flex; align-items: center; gap: 12px; direction: ltr;
+  margin: 0; padding: 0; color: #342044 !important;
+  font: 800 clamp(2rem, 6vw, 3.35rem)/1.12 Georgia, "Times New Roman", serif;
+  letter-spacing: -.035em;
+}
+.plateau-feed-title span { font-family: system-ui, sans-serif; font-size: .76em; }
+.plateau-timeline-gold-rule {
+  display: block; width: min(100%, 390px); height: 3px; border-radius: 9px;
+  background: linear-gradient(90deg, transparent, #dfc98d 25%, #b88c37 100%);
+}
+body .plateau-feed .plateau-timeline-back {
+  display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px;
+  margin-top: 2px; border: 1px solid #c6a65e; border-radius: 14px;
+  background: linear-gradient(135deg, #f6dc83 0%, #c59b58 48%, #7750a5 100%);
+  color: #382348 !important; box-shadow: 0 3px 0 #56366d;
+}
+.plateau-timeline-back svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.plateau-feed .plateau-composer.plateau-composer-slim {
+  padding: clamp(12px, 2.2vw, 18px); gap: 10px;
+  border: 5px double #9877b2; border-radius: 25px;
+  background: linear-gradient(145deg, #fff 0%, #fbf8ff 68%, #fffaf0 100%);
+  box-shadow: 0 5px 0 #4d3265, 0 12px 24px #6f54851c;
+}
+.plateau-feed .plateau-compose-line {
+  grid-template-columns: 64px 64px auto; grid-template-rows: auto auto;
+  align-items: center; justify-content: start; gap: 8px 10px;
+}
+body .plateau-feed .plateau-compose-line textarea {
+  grid-column: 1 / -1; grid-row: 1; width: 100%; min-height: 58px;
+  padding: 13px 16px; border: 1px solid #ded7e9 !important;
+  border-radius: 17px; background: #fff !important; color: #35263f !important;
+  font-size: clamp(.92rem, 2.2vw, 1.08rem); line-height: 1.55;
+}
+body .plateau-feed .plateau-compose-line textarea::placeholder { color: #716b7d !important; }
+body .plateau-feed .plateau-compose-line button {
+  grid-row: 2; min-height: 54px; border: 1px solid #ded7e9;
+  border-radius: 16px; background: #fff !important; color: #392849 !important;
+}
+body .plateau-feed .plateau-compose-line .plateau-compose-icon { width: 64px; height: 54px; }
+.plateau-compose-icon svg { width: 23px; height: 23px; }
+body .plateau-feed .plateau-compose-line .plateau-primary {
+  min-width: 88px; padding-inline: 18px; border: 1px solid #c9a45b;
+  background: linear-gradient(120deg, #f5d66e 0%, #c89a50 48%, #7649a0 100%) !important;
+  color: #fff !important; font-size: 1.02rem; font-weight: 800;
+  box-shadow: 0 3px 0 #58366e;
+}
+.plateau-feed .plateau-guest-bar { margin-block: 0 12px; color: #57436c; }
+.plateau-feed .plateau-empty {
+  margin-block: clamp(20px, 4vw, 30px) !important; padding: clamp(22px, 4vw, 34px);
+  border: 1px solid #ded8e9; border-radius: 18px;
+  background: #fff; color: #24202a; text-align: center;
+  font-size: clamp(1rem, 2.7vw, 1.45rem); font-weight: 700; line-height: 1.65;
+  box-shadow: 0 3px 12px #65517c0a;
+}
+.plateau-feed .plateau-notice { border: 1px solid #e2d5ad; background: #fffaf0; color: #594523; }
+.plateau-feed .plateau-posts { gap: 14px; margin-block: 18px; }
+.plateau-feed .plateau-card.plateau-post {
+  border: 1px solid #ded5e9; border-radius: 18px; background: #fff;
+  box-shadow: 0 4px 15px #604c7810;
+}
+@media (max-width: 520px) {
+  body .gallery-shell.plateau-feed { padding: 18px 12px 36px; }
+  .plateau-timeline-heading { margin-bottom: 24px; gap: 10px; }
+  body .plateau-feed .plateau-feed-title { font-size: clamp(1.9rem, 9vw, 2.55rem); gap: 7px; }
+  .plateau-timeline-heading-copy { gap: 9px; }
+  body .plateau-feed .plateau-timeline-back { width: 42px; height: 42px; flex-basis: 42px; }
+  .plateau-feed .plateau-composer.plateau-composer-slim { padding: 10px; border-radius: 21px; }
+  .plateau-feed .plateau-compose-line { grid-template-columns: 52px 52px auto; gap: 7px; }
+  body .plateau-feed .plateau-compose-line .plateau-compose-icon { width: 52px; height: 48px; min-height: 48px; }
+  body .plateau-feed .plateau-compose-line button { min-height: 48px; }
+  body .plateau-feed .plateau-compose-line .plateau-primary { min-width: 70px; padding-inline: 12px; }
+  body .plateau-feed .plateau-compose-line textarea { min-height: 54px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .plateau-feed * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
