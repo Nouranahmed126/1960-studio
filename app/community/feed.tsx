@@ -221,7 +221,7 @@ export default function Feed() {
   return <main className="gallery-shell plateau-feed">
     <div className="plateau-content">
       <div className="plateau-feed-heading">
-        <Link href="/film" className="plateau-back" aria-label="العودة إلى الصفحة الرئيسية" title="رجوع">←</Link>
+        <Link href="/" className="plateau-back" aria-label="العودة إلى الصفحة الرئيسية" title="رجوع">←</Link>
         <div className="plateau-feed-heading-copy">
           <svg className="plateau-clapper-icon" viewBox="0 0 32 32" aria-hidden="true">
             <path d="M4 11.5h24v16H4zM4 11.5l2-7 7 2-2 7 7 2 2-7 7 2-2 7 5 1" />
