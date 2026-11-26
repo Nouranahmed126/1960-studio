@@ -220,7 +220,16 @@ export default function Feed() {
 
   return <main className="gallery-shell plateau-feed">
     <div className="plateau-content">
-      <h1 className="plateau-feed-title">التايم لاين</h1>
+      <div className="plateau-feed-heading">
+        <Link href="/film" className="plateau-back" aria-label="العودة إلى الصفحة الرئيسية" title="رجوع">←</Link>
+        <div className="plateau-feed-heading-copy">
+          <svg className="plateau-clapper-icon" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M4 11.5h24v16H4zM4 11.5l2-7 7 2-2 7 7 2 2-7 7 2-2 7 5 1" />
+            <path d="m4 11.5 2-7m7 9 2-7m7 9 2-7" />
+          </svg>
+          <h1 className="plateau-feed-title" dir="ltr">Timeline</h1>
+        </div>
+      </div>
       {access === "loading" && <p role="status">جارٍ التحميل…</p>}
       {access === "guest" && <div className="plateau-guest-bar"><Link href="/login">سجّل الدخول للنشر</Link></div>}
       {access === "pending" && <p className="plateau-guest-bar">النشر بعد اعتماد الحساب.</p>}
@@ -228,7 +237,7 @@ export default function Feed() {
       {viewer && <form className="plateau-card plateau-composer plateau-composer-slim" onSubmit={publish}>
         <div className="plateau-compose-line">
           <textarea aria-label="اكتب منشور" rows={body.includes("\n") ? 3 : 1} maxLength={4000} disabled={!!busy} value={body}
-            onChange={event => setBody(event.target.value)} placeholder="شارك الآن…" />
+            onChange={event => setBody(event.target.value)} placeholder="شارك تحديثاً أو كواليس مع الفريق..." />
           <input ref={mediaInput} type="file" accept={Object.keys(mediaTypes).join(",")} aria-label="رفع صورة أو فيديو" hidden
             onChange={event => {
               const selected = event.target.files?.[0];
@@ -259,7 +268,7 @@ export default function Feed() {
       </form>}
       {actionError && <p role="alert" className="plateau-notice">{actionError}</p>}
       {notice && <p role="status" className="plateau-notice">{notice} <button onClick={() => void refresh()}>تحديث</button></p>}
-      {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات.</p>}
+      {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات في التايم لاين — ابدأ أول تحديث أو شارك لقطة من الكواليس</p>}
       <section className="plateau-posts" aria-label="منشورات الفريق">
         {feed.posts.slice(0, limit).map(post => {
           const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : post.legacy_media;
@@ -295,10 +304,6 @@ export default function Feed() {
         })}
       </section>
       {feed.posts.length > limit && <button className="plateau-more" onClick={() => setLimit(previous => previous + pageSize)}>منشورات أقدم</button>}
-      <footer className="plateau-credits">
-        <span>الإشراف الأكاديمي: <span className="plateau-credit-name">د. أحمد عبد المنعم</span></span>
-        <span>تصميم وتطوير: <span className="plateau-credit-name">نوران أحمد</span></span>
-      </footer>
     </div>
     <dialog ref={dialog} className="plateau-lightbox" onClose={() => setLightbox("")}>
       <form method="dialog"><button aria-label="إغلاق الصورة">إغلاق</button></form>
