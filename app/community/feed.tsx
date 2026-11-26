@@ -18,6 +18,7 @@ type Post = {
   media_kind: Media["kind"] | null;
   legacy_media: Media[];
   youtube_id: string | null;
+  location: string | null;
 };
 type Viewer = { id: string; supervisor: boolean };
 type FeedData = { posts: Post[]; counts: Record<number, InteractionCounts>; urls: Record<string, string> };
@@ -27,7 +28,7 @@ const mediaTypes: Record<string, string> = {
   "video/mp4": "mp4", "video/webm": "webm", "video/quicktime": "mov",
 };
 const dateFormatter = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium", timeStyle: "short" });
-const postColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id";
+const postColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location";
 const zeroCounts = { likes: 0, comments: 0, liked: false };
 const pageSize = 20;
 
@@ -57,6 +58,8 @@ export default function Feed() {
   const [file, setFile] = useState<File>();
   const [link, setLink] = useState("");
   const [showLink, setShowLink] = useState(false);
+  const [location, setLocation] = useState("");
+  const [showLocation, setShowLocation] = useState(false);
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState("");
   const [moderating, setModerating] = useState<number>();
@@ -159,9 +162,11 @@ export default function Feed() {
     if (!db || !viewer || busy) return;
     const text = body.trim();
     const embed = link.trim() ? youtubeId(link.trim()) : null;
+    const place = location.trim();
     setActionError("");
     if (link.trim() && !embed) { setActionError("استخدم رابط HTTPS لفيديو YouTube."); return; }
-    if (!text && !file && !embed) return;
+    if (place.length > 160) { setActionError("اسم المكان لازم يكون 160 حرف أو أقل."); return; }
+    if (!text && !file && !embed && !place) return;
     let path: string | null = null;
     let saved = false;
     setBusy(file ? "جارٍ رفع الملف…" : "جارٍ النشر…");
@@ -173,7 +178,7 @@ export default function Feed() {
         setBusy("جارٍ حفظ المنشور…");
       }
       const result = await db.from("plateau_posts").insert({
-        body: text, media_path: path, media_kind: file ? file.type.split("/")[0] : null, youtube_id: embed,
+        body: text, media_path: path, media_kind: file ? file.type.split("/")[0] : null, youtube_id: embed, location: place || null,
       });
       if (result.error) throw result.error;
       saved = true;
@@ -182,6 +187,8 @@ export default function Feed() {
       if (mediaInput.current) mediaInput.current.value = "";
       setLink("");
       setShowLink(false);
+      setLocation("");
+      setShowLocation(false);
       await refresh();
     } catch {
       if (path && !saved) {
@@ -254,13 +261,19 @@ export default function Feed() {
             aria-expanded={showLink} disabled={!!busy || !!file} onClick={() => { setShowLink(!showLink); setLink(""); }}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
           </button>
-          <button className="plateau-primary" disabled={!!busy || (!body.trim() && !file && !link.trim())}>نشر</button>
+          <button type="button" className="plateau-compose-icon" aria-label="إضافة مكان" title="إضافة مكان"
+            aria-expanded={showLocation} disabled={!!busy} onClick={() => setShowLocation(!showLocation)}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          </button>
+          <button className="plateau-primary" disabled={!!busy || (!body.trim() && !file && !link.trim() && !location.trim())}>نشر</button>
         </div>
         {preview && file && <div className="plateau-composer-preview">
           {file.type.startsWith("image/") ? <img src={preview} alt="معاينة الصورة" /> : <video src={preview} controls />}
           <button type="button" disabled={!!busy} onClick={() => { setFile(undefined); if (mediaInput.current) mediaInput.current.value = ""; }}>إزالة المرفق</button>
         </div>}
-        {showLink && <label>رابط فيديو YouTube<input type="url" dir="ltr" disabled={!!busy} value={link} onChange={event => setLink(event.target.value)} /></label>}
+        {showLink && <label className="plateau-compose-extra">رابط فيديو YouTube<input type="url" dir="ltr" disabled={!!busy} value={link} onChange={event => setLink(event.target.value)} /></label>}
+        {showLocation && <label className="plateau-compose-extra">المكان أو الزيارة<input type="text" maxLength={160} disabled={!!busy} value={location}
+          onChange={event => setLocation(event.target.value)} placeholder="مثال: دار الكتب — القاهرة" /></label>}
         {busy && <p role="status">{busy}</p>}
       </form>}
       {actionError && <p role="alert" className="plateau-notice">{actionError}</p>}
@@ -279,6 +292,7 @@ export default function Feed() {
                 </div>
               </div>
             </header>
+            {post.location && <div className="plateau-post-location" dir="auto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>{post.location}</span></div>}
             {post.body && <p className="plateau-post-body" dir="auto">{post.body}</p>}
             {!!media.length && <div className="plateau-media">
               {media.map((item, index) => {
