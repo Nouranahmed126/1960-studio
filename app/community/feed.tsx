@@ -223,10 +223,7 @@ export default function Feed() {
       <div className="plateau-feed-heading">
         <Link href="/" className="plateau-back" aria-label="العودة إلى الصفحة الرئيسية" title="رجوع">←</Link>
         <div className="plateau-feed-heading-copy">
-          <svg className="plateau-clapper-icon" viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M4 11.5h24v16H4zM4 11.5l2-7 7 2-2 7 7 2 2-7 7 2-2 7 5 1" />
-            <path d="m4 11.5 2-7m7 9 2-7m7 9 2-7" />
-          </svg>
+          <img className="plateau-clapper-icon" src="/icon-timeline.svg" width="32" height="32" alt="" aria-hidden="true" />
           <h1 className="plateau-feed-title" dir="ltr">Timeline</h1>
         </div>
       </div>
