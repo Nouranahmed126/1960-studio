@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="ar" dir="rtl"><body style={{margin:0,fontFamily:"system-ui, sans-serif"}}>
+  return <html lang="ar" dir="rtl"><body className="site-gold-canvas" style={{margin:0,fontFamily:"system-ui, sans-serif"}}>
+    <div className="gold-starfield" aria-hidden="true" />
     <SiteNavigation/>
     {children}<MeetingReminders/>
   </body></html>;
