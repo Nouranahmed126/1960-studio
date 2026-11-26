@@ -172,8 +172,8 @@ export default function Ribbons() {
             </div>)}
           </div> : <div className="ribbon-empty">
             {state.status === "loading" ? "Loading…" :
-              state.status === "signed-out" ? <Link href="/login">Sign in to view</Link> :
-              state.status === "restricted" ? "Approved members only" :
+              state.status === "signed-out" ? null :
+              state.status === "restricted" ? null :
               state.status === "unavailable" || ribbon?.unavailable ? "Couldn’t load records" :
               "No records to display"}
           </div>}
