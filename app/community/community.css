@@ -1138,3 +1138,23 @@ body main :is(section,div,article)[style*="color:#fff"] :is(h1,h2,h3,p,small,str
 
 /* No route may switch the document to a browser dark color scheme */
 @media(prefers-color-scheme:dark){html,body{color-scheme:light!important;background-color:var(--pch-bg)!important;color:var(--pch-purple)!important}}
+
+
+/* Both nested archive frame rails rotate independently around each photo */
+body .studio-museum .museum-photo::before{
+ inset:5px!important;border:1.5px solid transparent!important;
+ background:conic-gradient(from 180deg,#76558c,#d2b16c,#fff4cf,#b99acb,#76558c) border-box!important;
+ -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0)!important;
+ -webkit-mask-composite:xor!important;mask-composite:exclude!important;
+ animation:museumInnerFrameSpinFinal 14s linear infinite reverse!important;
+ box-shadow:0 0 0 1px #fff8!important;
+}
+body .studio-museum .museum-photo::after{
+ inset:0!important;
+ animation:museumOuterFrameSpinFinal 9s linear infinite!important;
+}
+@keyframes museumInnerFrameSpinFinal{to{transform:rotate(1turn)}}
+@keyframes museumOuterFrameSpinFinal{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){
+ body .studio-museum .museum-photo::before,body .studio-museum .museum-photo::after{animation:none!important}
+}
