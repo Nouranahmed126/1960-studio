@@ -22,6 +22,7 @@ export default function Home(){
      height={672}
      fetchPriority="high"
     />
+   <span className="hero-moving-film" aria-hidden="true"/>
    </h1>
   </header>
   <section className="reference-grid" aria-label="Studio sections">
