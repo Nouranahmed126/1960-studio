@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
 import { getVisitorToken } from "../../lib/plateau-visitor";
@@ -47,6 +48,16 @@ function youtubeId(value: string) {
 }
 
 export default function Feed() {
+  const router = useRouter();
+  const handleBack = () => {
+    const sameSiteReferrer = (() => {
+      try { return !!document.referrer && new URL(document.referrer).origin === window.location.origin; }
+      catch { return false; }
+    })();
+    const appHistoryIndex = Number(window.history.state?.idx ?? 0);
+    if (appHistoryIndex > 0 || sameSiteReferrer) window.history.back();
+    else router.push("/");
+  };
   const [viewer, setViewer] = useState<Viewer>();
   const [access, setAccess] = useState<"loading" | "guest" | "pending" | "offline" | "member">("loading");
   const [feed, setFeed] = useState(emptyFeed);
@@ -228,7 +239,7 @@ export default function Feed() {
   return <main className="gallery-shell plateau-feed">
     <div className="plateau-content">
       <div className="plateau-feed-heading">
-        <Link href="/" className="plateau-back" aria-label="العودة إلى الصفحة الرئيسية" title="رجوع">←</Link>
+        <button type="button" className="plateau-back" onClick={handleBack} aria-label="رجوع للصفحة السابقة" title="رجوع">←</button>
         <div className="plateau-feed-heading-copy">
           <img className="plateau-clapper-icon" src="/icon-timeline.svg" width="32" height="32" alt="" aria-hidden="true" />
           <h1 className="plateau-feed-title" dir="ltr">Timeline</h1>
