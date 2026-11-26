@@ -1785,3 +1785,255 @@ body:has(.studio-review-backdrop) .site-bottom-toggle,body:has(.studio-review-ba
 .cinema-home-stars-track>.cinema-home-star-card{flex:0 0 auto!important;scroll-snap-align:start;transform:none!important;animation:none!important}
 .cinema-home-stars-static:focus-visible{outline:2px solid #e2c28c;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.cinema-home-stars-track,.cinema-home-stars-track>*{animation:none!important;transition:none!important}}
+
+
+/* FINAL STUDIO 1960 LIGHT IDENTITY — remove legacy navy surfaces site-wide */
+:root{
+ --studio-bg:#f8f5fa;--studio-surface:#fffdfd;--studio-lavender:#eee6f3;
+ --studio-purple:#76558c;--studio-purple-deep:#493456;--studio-plum:#60466e;
+ --studio-gold:#d2b16c;--studio-line:#d9cde1;--studio-muted:#817488;
+}
+html,body{
+ background:radial-gradient(ellipse at 8% 0%,#eee5f4 0%,transparent 42%),
+ radial-gradient(ellipse at 96% 70%,#f2eaf5 0%,transparent 45%),
+ linear-gradient(145deg,#f8f5fa 0%,#fffdfd 58%,#f3edf6 100%)!important;
+ background-color:#f8f5fa!important;color:#493456!important;
+}
+body{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif!important}
+body main{color:#493456!important}
+body main h1,body main h2,body main h3,body main h4,
+body main strong,body main label{color:#493456}
+body main p,body main small{color:#786d80}
+body main section[style*="background"],body main article[style*="background"],
+body main fieldset,body main form[style*="background"]{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border-color:#d9cde1!important;color:#493456!important;
+ box-shadow:0 8px 26px #50376012!important;
+}
+body main input:not([type="checkbox"]),body main textarea,body main select{
+ background:#fff!important;color:#493456!important;border:1px solid #cbbbd8!important;
+}
+body main input::placeholder,body main textarea::placeholder{color:#a398aa!important}
+body .studio-nav,body .plateau-nav{background:rgba(255,253,253,.97)!important;color:#493456!important;border-color:#d2b16c!important}
+body .site-menu-panel{
+ background:linear-gradient(155deg,#fffdfd,#eee6f3)!important;
+ color:#493456!important;border:1px solid #d2b16c!important;
+ box-shadow:0 0 38px #49345625!important;
+}
+body .site-menu-panel a,body .site-menu-panel .site-menu-grid a{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border:1px solid #d9cde1!important;
+ box-shadow:0 3px 10px #4934560d!important;
+}
+body .site-menu-panel a[aria-current="page"]{
+ background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;color:#493456!important;
+ border-color:#c5a45f!important;
+}
+body .site-menu-panel>button{background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;color:#493456!important}
+body .site-menu-shade{background:#49345655!important}
+body .site-bottom-nav{
+ background:rgba(255,253,253,.97)!important;border:1px solid #d2b16c!important;
+ box-shadow:0 -5px 22px #49345614!important;
+}
+body .site-bottom-nav a,body .site-bottom-nav button{color:#60466e!important}
+body .site-bottom-nav a[aria-current="page"]{background:#eee6f3!important}
+body .site-menu-trigger{
+ background:linear-gradient(120deg,#f1dfb8,#d2b16c)!important;
+ color:#493456!important;border:1px solid #c5a45f!important;
+}
+
+/* Film departments and department cards */
+body .film-departments-page{background:transparent!important;color:#493456!important}
+body .film-departments-page>header{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ border:1px solid #d9cde1!important;color:#493456!important;
+}
+body .film-departments-page .film-department-card{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3) padding-box,
+ conic-gradient(from var(--department-angle,0deg),#76558c,#e8d8b2,#d2b16c,#b99acb,#76558c) border-box!important;
+ color:#493456!important;box-shadow:0 8px 24px #49345612!important;
+}
+body .film-departments-page .film-department-card h2,
+body .film-departments-page .film-department-card h3,
+body .film-departments-page .film-department-card p,
+body .film-departments-page .film-department-card strong{color:#493456!important}
+body .film-departments-page .film-department-icon{
+ background:#f3edf6!important;border-color:#d2b16c!important;color:#76558c!important;
+}
+
+/* Executive office, home cards and production rooms */
+body .executive-office,body .executive-office-content,
+body .film-command-room,body .delivery-register,
+body .student-awards-journal,body .student-public-scoreboard,
+body .student-discussion-panel,body .cinema-team-hero,
+body .cinema-team-panel,body .cinema-team-assignments article,
+body .cinema-team-deliveries>div{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ border:1px solid #d9cde1!important;color:#493456!important;
+ box-shadow:0 9px 26px #49345612!important;
+}
+body .executive-office-art{
+ background:radial-gradient(ellipse at 50% 15%,#d2b16c55,transparent 55%),
+ linear-gradient(120deg,#f2eaf5,#e7d9ed 48%,#fffdfd)!important;
+}
+body .executive-office-desk{background:linear-gradient(120deg,#d2b16c,#ead9b5)!important;border-color:#b99acb!important}
+body .executive-office-window{background:linear-gradient(145deg,#eee6f3,#fffdfd)!important;border-color:#b99acb!important}
+body .executive-office-link,body .executive-office-links a{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ border:1px solid #d2b16c!important;color:#493456!important;
+}
+body .executive-special-grid article,body .executive-star-card{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border-color:#d2b16c!important;color:#493456!important;
+}
+body .film-command-card,body .executive-office .film-command-card{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border:1px solid #d2b16c!important;color:#493456!important;
+}
+body .executive-office .cinematic-notebook,
+body .executive-office .cinematic-notebook.delivery-register,
+body .cinematic-notebook.delivery-register{
+ background:repeating-linear-gradient(0deg,#fffdfd 0px,#fffdfd 32px,#f0e9f5 33px,#fffdfd 34px)!important;
+ border:2px solid #d2b16c!important;border-left:8px solid #b99acb!important;
+ color:#493456!important;box-shadow:0 10px 28px #49345612!important;
+}
+body .cinematic-notebook h2,body .cinematic-notebook h3,
+body .cinematic-notebook p,body .cinematic-notebook label{color:#493456!important}
+body .cinema-team-stats>div,body .director-mini-stats a,
+body .director-roster-compact,body .director-roster-row{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border-color:#d2b16c!important;
+}
+body .cinema-team-stats>div strong,body .director-mini-stats strong,
+body .director-mini-stats small,body .director-roster-row strong,
+body .director-roster-row small{color:#60466e!important}
+body .cinema-team-member span{background:#e8d8b2!important;color:#493456!important}
+
+/* Archive / museum */
+body .museum-grid,body .museum-teaser,body .museum-teaser-grid{
+ background:linear-gradient(145deg,#f8f3fa,#eee6f3)!important;
+ border:1px solid #d2b16c!important;
+}
+body .museum-polaroid,body .museum-teaser-card{
+ background:#fffdfd!important;color:#493456!important;border:1px solid #d9cde1!important;
+}
+body .museum-photo{background:#f0e9f5!important;color:#76558c!important}
+body .museum-tabs button,body .museum-tools a{
+ background:#fffdfd!important;color:#60466e!important;border:1px solid #d9cde1!important;
+}
+body .museum-tabs button[aria-pressed="true"]{
+ background:#e8d8b2!important;color:#493456!important;border-color:#d2b16c!important;
+}
+
+/* Gallery composer, uploads and archive cards */
+body .gallery-upload,body .gallery-card,body .gallery-media{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border:1px solid #d9cde1!important;color:#493456!important;
+}
+body .gallery-upload label,body .gallery-info h2,body .gallery-info p,
+body .gallery-card h2,body .gallery-card p{color:#493456!important}
+body .gallery-upload input,body .gallery-upload textarea,body .gallery-upload select{
+ background:#fff!important;color:#493456!important;border-color:#cbbbd8!important;
+}
+body .gallery-upload label[for="gallery-file"]{
+ background:#f4eef7!important;color:#60466e!important;border:2px dashed #d2b16c!important;
+}
+body .gallery-filters button{background:#fffdfd!important;color:#60466e!important;border-color:#d9cde1!important}
+body .gallery-filters button[aria-pressed="true"]{background:#e8d8b2!important;color:#493456!important;border-color:#d2b16c!important}
+
+/* Team workspaces, submission forms and review dialogs */
+body main.cinema-team-room,body .cinema-team-room,
+body .mini-studio-room,body .studio-room-hero,
+body .studio-panel,body .studio-room-tabs,
+body .studio-submit-dock,body .studio-member-tile,
+body .studio-review-modal,body .studio-review-preview,
+body .studio-review-actions{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border-color:#d9cde1!important;color:#493456!important;
+ box-shadow:0 8px 24px #49345610!important;
+}
+body .studio-team-switcher a,body .studio-room-tabs button,
+body .studio-dock-actions a,body .studio-dock-actions button{
+ background:#fffdfd!important;color:#60466e!important;border-color:#d9cde1!important;
+}
+body .studio-team-switcher a[aria-current="page"],
+body .studio-room-tabs button.is-active{
+ background:#e8d8b2!important;color:#493456!important;border-color:#d2b16c!important;
+}
+body .studio-review-preview,body .studio-review-modal textarea{
+ background:#fff!important;color:#493456!important;border-color:#cbbbd8!important;
+}
+body .studio-review-modal .studio-review-actions{
+ background:linear-gradient(180deg,#f0e9f5,#fffdfd)!important;
+ border-top:1px solid #d2b16c!important;
+}
+body .studio-review-modal .studio-review-save{
+ background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;color:#493456!important;
+}
+body .studio-delivery-row,body .studio-delivery-info,
+body .studio-delivery-info b,body .studio-delivery-info small{color:#493456!important}
+
+/* Submission radar and archive management overlays */
+body .radar-overlay,body .archive-admin-modal-backdrop{background:#49345655!important}
+body .radar-inbox,body .radar-item,body .radar-filters button,
+body .radar-actions button,body .radar-actions a,body .radar-preview a{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border-color:#d9cde1!important;color:#493456!important;
+}
+body .radar-filters button[aria-pressed="true"]{background:#e8d8b2!important;color:#493456!important}
+body .radar-item-new{background:#f7edf1!important}
+body .archive-admin-panel,body .archive-admin-modal{
+ background:#fffdfd!important;color:#493456!important;border-color:#d2b16c!important;
+}
+body .archive-admin-row strong,body .archive-admin-modal label,
+body .archive-admin-modal h3{color:#493456!important}
+body .archive-admin-filters button[aria-pressed="true"],
+body .archive-admin-actions button:first-child{background:#76558c!important;color:#fff!important}
+
+/* Broadcast and media frames: plum/lavender rather than navy */
+body .broadcast-showcase,body .gold-broadcast{
+ background:linear-gradient(145deg,#f3edf6,#fffdfd)!important;
+ border-color:#d2b16c!important;box-shadow:0 10px 28px #49345612!important;
+}
+body .broadcast-bezel{background:linear-gradient(135deg,#e8d8b2,#b99acb)!important;border-color:#d2b16c!important}
+body .broadcast-screen{background:radial-gradient(ellipse,#76558c,#493456 78%)!important;border-color:#d2b16c!important}
+body .gold-tv-screen{background:#493456!important}
+body .gold-plug,body .gold-stamp-options button{
+ background:#fffdfd!important;color:#60466e!important;border-color:#d2b16c!important;
+}
+body .gold-stamp-options button.chosen{background:#e8d8b2!important;color:#493456!important}
+body .cinema-home-bento .cinema-home-micro,
+body .cinema-home-honor,body .home-stars .cinema-home-star-card{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;
+ color:#493456!important;border-color:#d9cde1!important;
+}
+body .cinema-home-stars-frame,body .museum-teaser-grid,
+body .cinema-broadcast-home .cinema-loop-window,
+body .cinema-broadcast-home .marquee-wrapper{background:#fffdfd!important;border-color:#d2b16c!important}
+body .cinema-broadcast-home .marquee-wrapper .marquee-item{background:#f0e9f5!important}
+body .cinema-broadcast-home .cinema-loop-message{color:#493456!important}
+body .cinematic-home-footer,body .cinematic-home-credit{color:#76558c!important}
+
+/* Remove navy from common inline-styled surfaces without changing their content or behavior */
+body main [style*="background:#0"],body main [style*="background: #0"],
+body main [style*="background:#1"],body main [style*="background: #1"],
+body main [style*="background:#2"],body main [style*="background: #2"],
+body main [style*="background:linear-gradient(135deg,#0"],
+body main [style*="background: linear-gradient(135deg, #0"],
+body main [style*="background:linear-gradient(145deg,#0"],
+body main [style*="background: linear-gradient(145deg, #0"]{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ border-color:#d9cde1!important;color:#493456!important;
+}
+body main [style*="background:#0"] *,body main [style*="background: #0"],
+body main [style*="background:#1"] *,body main [style*="background: #1"],
+body main [style*="background:#2"] *,body main [style*="background: #2"]{
+ color:#493456!important;
+}
+body .plateau-welcome{
+ background:linear-gradient(145deg,#fffdfd,#eee6f3)!important;color:#493456!important;
+}
+body .plateau-welcome::backdrop{background:#49345655!important}
+body .plateau-welcome button[type="submit"]{color:#493456!important}
+body .plateau-card{background:#fffdfd!important;color:#493456!important;border-color:#d9cde1!important}
+body .plateau-lightbox::backdrop{background:#49345688!important}
