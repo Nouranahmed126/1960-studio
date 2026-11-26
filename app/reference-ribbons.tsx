@@ -54,7 +54,7 @@ async function loadRibbons(db: StudioClient): Promise<RibbonState> {
   const keepsakePaths = keepsakes.map(item => item.image_path);
   const photoByMember = new Map(crewPhotos.map(photo => [photo.user_id, photo.photo_path]));
   const [galleryPhotos, crewBucketPhotos] = await Promise.all([
-    signStudioImages(db, "studio-gallery", [...keepsakePaths, galleryItem?.storage_path]),
+    signStudioImages(db, "studio-gallery", [galleryItem?.storage_path]).catch(() => new Map<string, string>()),
     signStudioImages(db, "crew-photos", [...crewPhotos.map(photo => photo.photo_path), ...keepsakePaths]),
   ]);
 
@@ -73,7 +73,7 @@ async function loadRibbons(db: StudioClient): Promise<RibbonState> {
   const keepsakeItems: RibbonItem[] = keepsakes.map(item => ({
     id: String(item.id),
     label: item.title,
-    image: galleryPhotos.get(item.image_path ?? "") ?? crewBucketPhotos.get(item.image_path ?? ""),
+    image: crewBucketPhotos.get(item.image_path ?? ""),
   }));
   if (galleryItem?.storage_path) {
     keepsakeItems.push({
@@ -166,14 +166,14 @@ export default function Ribbons() {
                 tabIndex={copy === 1 ? -1 : 0}
                 aria-label={item.label}
               >
-                {item.image && <img className={row.key === "keepsakes" ? "ribbon-artifact" : "ribbon-emblem"} src={item.image} alt="" loading="lazy"/>}
+                {item.image && <img className={row.key === "keepsakes" ? "ribbon-artifact" : "ribbon-emblem"} src={item.image} alt="" loading="eager" decoding="async"/>}
                 {(row.key !== "keepsakes" || !item.image) && <bdi>{item.label}</bdi>}
               </Link>)}
             </div>)}
           </div> : <div className="ribbon-empty">
             {state.status === "loading" ? "Loading…" :
-              state.status === "signed-out" ? null :
-              state.status === "restricted" ? null :
+              state.status === "signed-out" ? <Link href="/login">تسجيل الدخول لعرض محتوى الفريق</Link> :
+              state.status === "restricted" ? "محتوى خاص بأعضاء الفريق المعتمدين" :
               state.status === "unavailable" || ribbon?.unavailable ? "Couldn’t load records" :
               "No records to display"}
           </div>}
