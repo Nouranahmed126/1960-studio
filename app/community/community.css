@@ -685,3 +685,36 @@ body .plateau-feed .plateau-composer-preview button{min-height:34px;font-size:12
     min-height:64px!important;height:64px!important;padding-inline:8px!important;font-size:12px!important;
   }
 }
+
+
+/* Optional place tag in the Timeline composer and post cards. */
+body .plateau-feed .plateau-compose-line{
+  grid-template-columns:minmax(0,1fr) 40px 40px 40px 66px!important;
+}
+body .plateau-feed .plateau-compose-extra{
+  display:grid;gap:5px;margin:8px 2px 0;
+  color:#624477!important;font-size:12px;font-weight:650;
+}
+body .plateau-feed .plateau-compose-extra input{
+  box-sizing:border-box;width:100%;min-height:42px;
+  border:1px solid #d7c9e1!important;border-radius:11px;
+  padding:9px 11px;background:#fff!important;
+  color:#35243f!important;font:inherit;font-size:13px;
+}
+body .plateau-feed .plateau-compose-extra input::placeholder{color:#8a7a92!important}
+body .plateau-feed .plateau-post-location{
+  display:inline-flex;align-items:center;gap:6px;
+  max-width:calc(100% - 36px);margin:0 18px 10px;
+  padding:5px 10px;border:1px solid #e4d8eb;border-radius:999px;
+  background:#f7f1fa;color:#624477;font-size:12px;line-height:1.5;
+}
+body .plateau-feed .plateau-post-location svg{
+  width:15px;height:15px;flex:0 0 15px;fill:none;
+  stroke:#a98242;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+body .plateau-feed .plateau-post-location span{overflow-wrap:anywhere}
+@media(max-width:380px){
+  body .plateau-feed .plateau-compose-line{
+    grid-template-columns:minmax(0,1fr) 36px 36px 36px 58px!important;
+  }
+}
