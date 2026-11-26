@@ -217,3 +217,12 @@ body:has(.reference-hub){background:#fff8fb!important}
 /* Clip motion to the inner metallic frame, not the artwork's outer margin. */
 .reference-hub .reference-hero-artwork{isolation:isolate;overflow:hidden!important}
 .reference-hub .hero-moving-film{inset:auto 4% 12% 30%!important;width:auto!important;transform:rotate(-5deg);clip-path:inset(0 round 2px);}
+
+.reference-hub .reference-hero-artwork{clip-path:inset(0 round clamp(16px,3vw,40px))}
+.reference-hub .hero-moving-film,.reference-hub .reference-card:last-child .reference-film{background:url('/film-strip-3d-seamless.svg') repeat-x left center / 96px 100%!important;animation:film-asset-loop 2.8s linear infinite!important;pointer-events:none!important}
+.reference-hub .hero-moving-film{left:48%!important;right:7%!important;bottom:15%!important;height:clamp(9px,1.8vw,24px)!important;transform:rotate(-4deg)!important}
+.reference-hub .reference-card:last-child{overflow:hidden!important;isolation:isolate}
+.reference-hub .reference-card:last-child .reference-film{left:auto!important;right:8%!important;bottom:17%!important;width:14%!important;height:clamp(9px,1.5vw,18px)!important;transform:rotate(-12deg)!important}
+.reference-hub .reference-card:last-child .reference-film:before,.reference-hub .reference-card:last-child .reference-film:after{content:none!important}
+@keyframes film-asset-loop{from{background-position:0 center}to{background-position:-96px center}}
+@media(prefers-reduced-motion:reduce){.reference-hub .hero-moving-film,.reference-hub .reference-card:last-child .reference-film{animation:none!important}}
