@@ -2037,3 +2037,46 @@ body .plateau-welcome::backdrop{background:#49345655!important}
 body .plateau-welcome button[type="submit"]{color:#493456!important}
 body .plateau-card{background:#fffdfd!important;color:#493456!important;border-color:#d9cde1!important}
 body .plateau-lightbox::backdrop{background:#49345688!important}
+
+
+/* Team Museum — minimal title followed immediately by the photo archive */
+body .studio-museum{
+ max-width:1100px!important;margin:0 auto!important;
+ padding:22px 14px 90px!important;color:#493456!important;
+}
+body .studio-museum .museum-header-compact{
+ margin:0 0 12px!important;padding:0!important;text-align:center!important;
+}
+body .studio-museum .museum-header-compact h1{
+ margin:0!important;padding:0!important;
+ color:#493456!important;text-shadow:none!important;
+ font:800 clamp(25px,5.5vw,40px)/1.15 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+ letter-spacing:1.4px!important;
+}
+body .studio-museum .museum-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:12px!important;margin:0!important;padding:0!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+}
+body .studio-museum .museum-polaroid{
+ background:#fffdfd!important;color:#493456!important;
+ border:1px solid #d9cde1!important;border-radius:16px!important;
+ padding:8px!important;transform:none!important;
+ box-shadow:0 5px 16px #49345612!important;
+}
+body .studio-museum .museum-photo{
+ height:clamp(125px,34vw,230px)!important;
+ border-radius:11px!important;background:#f0e9f5!important;
+}
+body .studio-museum .museum-polaroid strong{
+ color:#493456!important;text-align:right!important;
+ font-size:13px!important;margin-top:8px!important;
+}
+body .studio-museum .museum-polaroid p{
+ color:#786d80!important;text-align:right!important;
+}
+@media(max-width:390px){
+ body .studio-museum{padding-inline:10px!important}
+ body .studio-museum .museum-grid{gap:9px!important}
+ body .studio-museum .museum-polaroid{padding:6px!important}
+}
