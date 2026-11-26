@@ -230,3 +230,113 @@ body .plateau-feed .plateau-compose-line button { min-height: 40px; padding: 4px
 body .plateau-feed .plateau-compose-line .plateau-compose-icon { display: grid; place-items: center; padding: 0; }
 .plateau-compose-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .plateau-compose-line .plateau-primary { min-width: 54px; }
+
+
+/* Studio 1960 — compact lavender / ivory / gold timeline refresh */
+body:has(.plateau-feed) .plateau-nav { display: none !important; }
+body:has(.plateau-feed) .gallery-shell.plateau-feed {
+  min-height: 100vh !important;
+  padding: 18px clamp(12px, 3vw, 28px) 48px !important;
+  background: linear-gradient(145deg, #f8f5fc 0%, #fff 52%, #f5f0fa 100%) !important;
+  color: #332344 !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+body:has(.plateau-feed) .plateau-content { width: min(100%, 820px); max-width: 820px; margin-inline: auto; }
+.plateau-feed-heading {
+  display: flex; align-items: center; gap: 12px;
+  margin: 0 0 16px; padding: 0;
+}
+body .plateau-feed .plateau-back {
+  display: inline-grid; place-items: center; flex: 0 0 34px;
+  width: 34px; height: 34px; min-height: 34px;
+  border: 1px solid #ded2e8; border-radius: 11px;
+  background: #fff !important; color: #56366d !important;
+  text-decoration: none; font-size: 20px; line-height: 1;
+  box-shadow: 0 2px 8px #59416d12;
+}
+.plateau-feed-heading-copy { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.plateau-feed .plateau-clapper-icon {
+  width: 25px; height: 25px; flex: 0 0 25px;
+  fill: none; stroke: #c39a45; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+body .plateau-feed .plateau-feed-title {
+  position: relative; margin: 0 !important; padding: 0 0 5px !important;
+  color: #49305e !important; font-size: clamp(20px, 3vw, 25px) !important;
+  font-weight: 800 !important; letter-spacing: -.035em;
+  line-height: 1.2 !important;
+}
+body .plateau-feed .plateau-feed-title::after {
+  content: ""; position: absolute; inset-inline-start: 0; bottom: 0;
+  width: 38px; height: 2px; border-radius: 9px;
+  background: linear-gradient(90deg, #d6b66d, #a88aba);
+}
+body .plateau-feed .plateau-composer.plateau-composer-slim {
+  display: block !important; padding: 12px !important; margin: 0 0 14px;
+  border: 1.5px solid #a78bb9 !important; border-radius: 19px !important;
+  background: linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(125deg, #8e6ca5, #ead8aa 48%, #b18ac2) border-box !important;
+  box-shadow: 0 5px 16px #60487512, inset 0 0 0 3px #f4edf8 !important;
+}
+body .plateau-feed .plateau-compose-line {
+  display: grid !important; grid-template-columns: minmax(0, 1fr) 48px 48px auto;
+  align-items: center; gap: 7px;
+}
+body .plateau-feed .plateau-compose-line textarea {
+  min-height: 48px !important; height: 48px; max-height: 112px;
+  margin: 0 !important; padding: 12px 13px !important;
+  border: 1px solid #e7deed !important; border-radius: 13px !important;
+  background: #fff !important; color: #44334f !important;
+  font-size: 13px !important; line-height: 1.5;
+  box-shadow: inset 0 1px 3px #5d47700b !important;
+}
+body .plateau-feed .plateau-compose-line textarea::placeholder { color: #777080 !important; opacity: 1; }
+body .plateau-feed .plateau-compose-line .plateau-compose-icon {
+  display: grid !important; place-items: center;
+  width: 48px !important; min-width: 48px; height: 48px !important; min-height: 48px !important;
+  padding: 0 !important; border: 1px solid #e6deeb !important; border-radius: 13px !important;
+  background: #fff !important; color: #493956 !important;
+  box-shadow: 0 2px 7px #4939560c !important;
+}
+body .plateau-feed .plateau-compose-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+body .plateau-feed .plateau-compose-line .plateau-primary {
+  min-width: 76px; min-height: 48px !important; height: 48px;
+  padding: 0 15px !important; border: 1px solid #c3a05e !important;
+  border-radius: 13px !important;
+  background: linear-gradient(135deg, #e7c96f 0%, #b58ac1 55%, #71458f 100%) !important;
+  color: #fff !important; font-size: 14px !important; font-weight: 800 !important;
+  box-shadow: 0 3px 9px #76518c2b !important;
+}
+body .plateau-feed .plateau-compose-line button:disabled { opacity: .58 !important; }
+body .plateau-feed .plateau-empty {
+  margin: 12px 0 !important; padding: 17px 15px !important;
+  border: 1px solid #dfd3e9 !important; border-radius: 15px !important;
+  background: #fff !important; color: #685777 !important;
+  text-align: center; font-size: 13px !important;
+  box-shadow: 0 3px 12px #6048750a !important;
+}
+body .plateau-feed .plateau-notice { border: 1px solid #e6d6ad; border-radius: 12px; color: #57452b !important; font-size: 12px; }
+body .plateau-feed .plateau-posts { gap: 13px !important; margin-block: 14px !important; }
+body .plateau-feed .plateau-card.plateau-post {
+  border: 1px solid #e5ddec !important; border-radius: 15px !important;
+  background: #fff !important; box-shadow: 0 3px 13px #5039650d !important;
+}
+@media (max-width: 560px) {
+  body:has(.plateau-feed) .gallery-shell.plateau-feed { padding: 14px 11px 36px !important; }
+  .plateau-feed-heading { gap: 9px; margin-bottom: 13px; }
+  body .plateau-feed .plateau-back { width: 32px; height: 32px; min-height: 32px; flex-basis: 32px; }
+  body .plateau-feed .plateau-clapper-icon { width: 22px; height: 22px; flex-basis: 22px; }
+  body .plateau-feed .plateau-feed-title { font-size: 20px !important; }
+  body .plateau-feed .plateau-composer.plateau-composer-slim { padding: 9px !important; border-radius: 16px !important; }
+  body .plateau-feed .plateau-compose-line { grid-template-columns: minmax(0, 1fr) 40px 40px 65px; gap: 5px; }
+  body .plateau-feed .plateau-compose-line textarea { min-height: 42px !important; height: 42px; padding: 9px !important; font-size: 12px !important; }
+  body .plateau-feed .plateau-compose-line .plateau-compose-icon { width: 40px !important; min-width: 40px; height: 42px !important; min-height: 42px !important; border-radius: 11px !important; }
+  body .plateau-feed .plateau-compose-icon svg { width: 20px; height: 20px; }
+  body .plateau-feed .plateau-compose-line .plateau-primary { min-width: 65px; height: 42px; min-height: 42px !important; padding-inline: 8px !important; font-size: 12px !important; }
+}
+@media (max-width: 360px) {
+  body .plateau-feed .plateau-compose-line { grid-template-columns: minmax(0, 1fr) 36px 36px 58px; gap: 4px; }
+  body .plateau-feed .plateau-compose-line .plateau-compose-icon { width: 36px !important; min-width: 36px; }
+  body .plateau-feed .plateau-compose-line .plateau-primary { min-width: 58px; padding-inline: 5px !important; }
+}
