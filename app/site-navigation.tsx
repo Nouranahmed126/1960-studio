@@ -6,7 +6,7 @@ import {usePathname} from "next/navigation";
 const groups=[
 {title:"الإدارة والقيادة",links:[["/","الرئيسية","⌂"],["/dashboard","حسابي","👤"],["/honor-board","الشرف","🏆"],["/crew","النجوم","⭐"],["/meetings","الاجتماعات","📅"]]},
 {title:"أقسام الفيلم",links:[["/teams/5","الكتابة والسيناريو","✍️"],["/teams/3","التصوير والإخراج","🎥"],["/teams/4","المونتاج","🎞️"],["/teams/1","التصميم والصوت","🎨"],["/teams/2","الإنتاج والممثلين","🎬"]]},
-{title:"الأرشيف والتواصل",links:[["/film","أعمال الفريق","🎬"],["/museum","متحف الفريق","📻"],["/gallery","الكواليس","📸"],["/production-hub","الإنتاج","🎬"],["/submissions","التسليمات","📥"]]}
+{title:"الأرشيف والتواصل",links:[["/museum","متحف الفريق","📻"],["/gallery","الكواليس","📸"],["/production-hub","الإنتاج","🎬"],["/submissions","التسليمات","📥"]]}
 ] as const;
 const quick=[["/","الرئيسية","⌂"],["/museum","متحف الفريق","📻"],["/sectors","الفرق","🎬"],["/gallery","الكواليس","📸"],["/dashboard","حسابي","👤"]] as const;
 export default function SiteNavigation(){
