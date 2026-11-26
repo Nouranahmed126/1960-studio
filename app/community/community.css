@@ -512,3 +512,98 @@ body .plateau-feed .plateau-credits{color:var(--studio-muted)!important}
   body main :is(h1,h2){overflow-wrap:anywhere}
   body .site-bottom-scroll a small{color:var(--studio-purple-deep)!important}
 }
+
+
+/* Legacy cinematic/team workspaces: retain layouts, switch every shell and panel to light. */
+:root{
+ --studio-night:#f7f3fa;--studio-navy:#76558c;--studio-blue:#eee5f4;
+ --studio-ivory:#493b52;--studio-champagne:#d2b16c;
+ --studio-glass:rgba(255,253,253,.94);--studio-glass-border:#ded2e8;
+ --hub-bg:#f7f3fa;--hub-navy:#76558c;--hub-deep:#eee5f4;
+ --hub-cream:#493b52;--hub-gold:#d2b16c;
+}
+body main.cinema-team-room,
+body main.cinema-team-room.mini-studio-room{
+ background:linear-gradient(145deg,#f7f3fa,#fffdfd 58%,#f0e9f5)!important;
+ color:var(--studio-plum)!important;
+ border:1px solid var(--studio-line)!important;
+ box-shadow:var(--studio-shadow)!important;
+}
+body .cinema-team-room :is(.cinema-team-hero,.cinema-team-panel,.cinema-team-stats>div,.cinema-team-assignments article,.cinema-team-deliveries>div,.cinema-team-member,.studio-room-hero,.studio-room-metrics>div,.studio-panel,.studio-member-tile,.studio-submit-dock,.studio-review-modal,.cinematic-notebook,.notebook-assignment-card,.notebook-file-row,.cinematic-notebook.delivery-register){
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:var(--studio-plum)!important;
+ border:1px solid var(--studio-line)!important;
+ box-shadow:var(--studio-shadow)!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body .cinema-team-room :is(h1,h2,h3,h4,strong,b,.studio-room-hero h1,.studio-panel-heading h2,.studio-task-line b,.studio-task-expanded b,.studio-member-copy b,.studio-delivery-info b,.notebook-assignment-head h3,.notebook-file-details strong){color:var(--studio-purple-deep)!important}
+body .cinema-team-room :is(p,small,label,span,.studio-task-line small,.studio-task-expanded small,.studio-member-copy small,.studio-delivery-info small,.studio-dock-foot,.studio-empty,.notebook-assignment-head small,.notebook-assignment-count){color:var(--studio-muted)!important}
+body .cinema-team-room :is(a,.studio-text-link,.studio-dock-foot a){color:var(--studio-purple-deep)!important}
+body .cinema-team-room :is(.cinema-team-tabs button,.studio-room-tabs button,.studio-room-tabs a,.notebook-tabs button,.studio-team-switcher a){
+ background:#f0e9f5!important;color:var(--studio-purple-deep)!important;border:1px solid var(--studio-line)!important;
+}
+body .cinema-team-room :is(.cinema-team-tabs button[aria-current=page],.studio-room-tabs button.is-active,.studio-team-switcher a[aria-current=page],.notebook-tabs button.active){
+ background:linear-gradient(135deg,#e9dced,#d2b16c)!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-gold)!important;
+}
+body .cinema-team-room .studio-room-topline{border-color:var(--studio-line)!important}
+body .cinema-team-room .studio-room-topline>a,
+body .cinema-team-room .studio-room-topline .studio-room-brand,
+body .cinema-team-room .studio-room-hero small,
+body .cinema-team-room .studio-panel-heading small,
+body .cinema-team-room .studio-room-metrics strong{color:var(--studio-purple-deep)!important}
+body .cinema-team-room .studio-room-metrics span{color:var(--studio-muted)!important}
+body .cinema-team-room .studio-team-switcher a[aria-current=page] small{color:var(--studio-purple-deep)!important}
+body .cinema-team-room .studio-room-tabs{background:#f0e9f5!important;border-color:var(--studio-line)!important}
+body .cinema-team-room .studio-task-line,
+body .cinema-team-room .studio-task-expanded,
+body .cinema-team-room .studio-delivery-row{border-color:var(--studio-line)!important}
+body .cinema-team-room .studio-task-line button,
+body .cinema-team-room .studio-member-tile button,
+body .cinema-team-room .studio-review-modal>header button{
+ background:#eee5f4!important;color:var(--studio-purple-deep)!important;border:1px solid var(--studio-line)!important;
+}
+body .cinema-team-room .studio-submit-dock textarea,
+body .executive-office .cinematic-notebook .notebook-quickbar input{
+ background:#fff!important;color:var(--studio-purple-deep)!important;
+}
+body .cinema-team-room .studio-dock-actions :is(a,button){
+ background:#eee5f4!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-line)!important;
+}
+body .cinema-team-room .studio-dock-actions button:last-child{
+ background:linear-gradient(135deg,#ead7a6,#d2b16c)!important;color:var(--studio-purple-deep)!important;
+}
+body .cinema-team-room .studio-review-backdrop{background:#493b5277!important}
+body .cinema-team-room .studio-review-actions{
+ background:linear-gradient(180deg,#fffdfdf2,#f0e9f5)!important;
+ border-color:var(--studio-gold)!important;box-shadow:0 -6px 18px #50376010!important;
+}
+body .cinema-team-room .studio-review-actions .studio-review-save{
+ background:linear-gradient(135deg,#ead7a6,#d2b16c)!important;color:var(--studio-purple-deep)!important;
+}
+body .cinema-team-room .studio-review-preview{background:#fbf8fd!important;color:var(--studio-plum)!important;border-color:var(--studio-line)!important}
+body .cinema-team-room .studio-delivery-row{color:var(--studio-plum)!important}
+body .cinema-team-room .studio-delivery-icon{background:#eee5f4!important}
+body .cinema-team-room .cinema-team-panel table :is(th,td),
+body .cinema-team-room .cinema-team-panel table :is(th,td) *{color:var(--studio-plum)!important;border-color:var(--studio-line)!important}
+body .cinema-team-room .cinema-live-status{color:var(--studio-muted)!important}
+body .cinema-team-room .cinema-live-status i,
+body .cinema-team-room .cinema-live-dot{box-shadow:none!important}
+body .cinema-team-room .gold-stamp-mini,
+body .cinema-team-room .gold-stamp-approved{background:#f1e4c5!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-gold)!important}
+
+/* Dashboard notebooks, student scoreboards, and archive cards */
+body .executive-office :is(.cinematic-notebook,.executive-special-grid article,.executive-office-link,.student-discussion-panel,.student-public-scoreboard,.scoreboard-assignment,.notebook-missing-panel,.notebook-assignment-card,.notebook-file-row,.director-roster-compact,.director-roster-row){
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;color:var(--studio-plum)!important;border-color:var(--studio-line)!important;box-shadow:var(--studio-shadow)!important;
+}
+body .executive-office :is(h1,h2,h3,strong,b,.director-roster-row strong,.director-mini-stats strong,.notebook-assignment-head h3,.notebook-file-details strong){color:var(--studio-purple-deep)!important}
+body .executive-office :is(p,small,label,span,.director-roster-compact,.director-roster-row,.notebook-assignment-head small,.notebook-assignment-count,.notebook-file-details span,.notebook-file-details small){color:var(--studio-muted)!important}
+body .executive-office :is(.notebook-tabs button,.notebook-quickbar,.notebook-quickbar label,.notebook-quickbar small){
+ background:#f0e9f5!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-line)!important;
+}
+body .executive-office .director-roster-row a{background:#76558c!important;color:#fff!important}
+body .executive-office .cinematic-notebook .notebook-assignment-people,
+body .executive-office .cinematic-notebook .notebook-assignment-people *{color:var(--studio-plum)!important}
+body .cinema-home-stars-frame::after{background:linear-gradient(90deg,#f7f3fa 0%,transparent 6%,transparent 94%,#f7f3fa 100%)!important}
+body .cinema-home-stars-static{scrollbar-color:#d2b16c #eee5f4!important}
+body .cinema-broadcast-home .marquee-wrapper .marquee-item{background:#eee5f4!important}
+body .cinema-broadcast-home .cinema-loop-message{color:var(--studio-purple-deep)!important}
