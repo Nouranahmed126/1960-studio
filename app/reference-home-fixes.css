@@ -213,3 +213,7 @@ body:has(.reference-hub){background:#fff8fb!important}
 .reference-hero-artwork{position:relative;overflow:hidden;border-radius:clamp(16px,3vw,40px)}
 .hero-moving-film{position:absolute;pointer-events:none;left:30%;bottom:7%;width:70%;height:clamp(7px,1.4vw,20px);transform:rotate(-5deg);background:repeating-linear-gradient(90deg,transparent 0 3px,#fff0b0 3px 7px,transparent 7px 10px) top/10px 18% repeat-x,repeating-linear-gradient(90deg,transparent 0 3px,#fff0b0 3px 7px,transparent 7px 10px) bottom/10px 18% repeat-x,repeating-linear-gradient(90deg,#80502299 0 36px,#ffe2a0 36px 40px) center/40px 60% repeat-x,linear-gradient(#a76b2a,#e9b967,#a76b2a);animation:approved-film-flow 1.6s linear infinite}
 @media(prefers-reduced-motion:reduce){.hero-moving-film{animation:none}}
+
+/* Clip motion to the inner metallic frame, not the artwork's outer margin. */
+.reference-hub .reference-hero-artwork{isolation:isolate;overflow:hidden!important}
+.reference-hub .hero-moving-film{inset:auto 4% 12% 30%!important;width:auto!important;transform:rotate(-5deg);clip-path:inset(0 round 2px);}
