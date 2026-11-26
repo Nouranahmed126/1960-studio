@@ -70,7 +70,7 @@ async function loadRibbons(db: StudioClient): Promise<RibbonState> {
     crewByName.set(name, crewByName.has(name) ? null : member);
   }
 
-  const keepsakeItems: RibbonItem[] = keepsakes.map(item => ({
+  const keepsakeItems: RibbonItem[] = keepsakes.filter(item => !!item.image_path).map(item => ({
     id: String(item.id),
     label: item.title,
     image: crewBucketPhotos.get(item.image_path ?? ""),
