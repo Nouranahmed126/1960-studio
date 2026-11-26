@@ -8,6 +8,7 @@ import MeetingReminders from "./meeting-reminders";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://plateau-crew-hub.vercel.app"),
+  icons: { icon: "/icon-timeline.svg", shortcut: "/icon-timeline.svg" },
   openGraph: { siteName: "Plateau Crew Hub" },
   title: { default: "Plateau Crew Hub", template: "%s · Plateau Crew Hub" },
   description: "مساحة الفريق الإبداعي لمشاركة التحديثات وإدارة المشروعات والتكليفات.",
