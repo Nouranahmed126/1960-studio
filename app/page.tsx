@@ -22,7 +22,6 @@ export default function Home(){
      height={672}
      fetchPriority="high"
     />
-   <span className="hero-moving-film" aria-hidden="true"/>
    </h1>
   </header>
   <section className="reference-grid" aria-label="Studio sections">
@@ -31,7 +30,6 @@ export default function Home(){
     <span className="reference-copy">{i===4&&<span className="reference-crown" aria-hidden="true">♛</span>}<strong>{item.label}</strong><small>{item.desc}</small></span>
     {i!==4&&<span className="reference-index" aria-hidden="true">{String(i+1).padStart(2,'0')}</span>}
     <span className="reference-arrow" aria-hidden="true">↗︎</span>
-    {i===4&&<span className="reference-film" aria-hidden="true"/>}
    </Link>)}
   </section>
   <Ribbons/>
