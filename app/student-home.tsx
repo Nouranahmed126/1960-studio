@@ -5,12 +5,12 @@ import {getSupabase} from "../lib/supabase-browser";
 type Crew={id:string;full_name:string};
 type Keepsake={id:number;title:string;image_path:string|null};
 type Honor={id:number;student_name:string};
-export default function StudentHome({bannerData}:{bannerData:string}){
+export default function StudentHome({bannerSrc}:{bannerSrc:string}){
  const [crew,setCrew]=useState<Crew[]>([]),[keepsakes,setKeepsakes]=useState<{id:number;title:string;url:string}[]>([]),[honors,setHonors]=useState<Honor[]>([]);
  useEffect(()=>{let live=true;void(async()=>{const db=getSupabase();if(!db)return;const [c,k,h]=await Promise.all([db.rpc("list_approved_crew"),db.from("studio_props").select("id,title,image_path").order("created_at",{ascending:false}).limit(30),db.from("studio_honors").select("id,student_name").order("created_at",{ascending:false}).limit(30)]);if(!live)return;if(!c.error)setCrew((c.data??[]) as Crew[]);if(!k.error){const rows=(k.data??[]) as Keepsake[];setKeepsakes(rows.filter(x=>x.image_path).map(x=>({id:x.id,title:x.title,url:db.storage.from("crew-photos").getPublicUrl(x.image_path!).data.publicUrl})));}if(!h.error)setHonors((h.data??[]) as Honor[]);})();return()=>{live=false}},[]);
  const cards=[{href:"/timeline",icon:"🎬",title:"Timeline",desc:"Studio updates and crew activity"},{href:"/dashboard",icon:"📋",title:"Assignments",desc:"Tasks, deadlines and progress"},{href:"/submissions",icon:"☁️",title:"Quick Submit",desc:"Send files, voice notes or written work"},{href:"/crew",icon:"🏆",title:"Film Stars & Honors",desc:"Meet the crew and celebrate achievements"},{href:"/dashboard",icon:"👤",title:"My Account",desc:"Your profile and personal submissions"}];
  return <main className="student-home-old" dir="ltr">
-  <img className="old-banner" src={bannerData} alt="Plateau Crew Hub — Crafted together, frame by frame" loading="eager" fetchPriority="high" decoding="async" onError={(event)=>{event.currentTarget.style.display="none";}}/>
+  <img className="old-banner" src={bannerSrc} alt="Plateau Crew Hub — Crafted together, frame by frame" loading="eager" fetchPriority="high" decoding="async" onError={(event)=>{event.currentTarget.style.display="none";}}/>
   <div className="old-divider"/>
   <section className="old-main-grid" aria-label="Student guide">
    {cards.map((c,i)=><Link key={c.title} href={c.href} className="old-main-card">
