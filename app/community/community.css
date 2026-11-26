@@ -340,3 +340,175 @@ body .plateau-feed .plateau-card.plateau-post {
   body .plateau-feed .plateau-compose-line .plateau-compose-icon { width: 36px !important; min-width: 36px; }
   body .plateau-feed .plateau-compose-line .plateau-primary { min-width: 58px; padding-inline: 5px !important; }
 }
+
+
+/* =========================================================
+   PLATEAU CREW HUB — unified light lavender / ivory / purple / gold
+   Global visual layer only: no component logic, routes, records,
+   Supabase bindings, permissions, or credit content are changed.
+   Imported by the root layout, so it covers every route.
+   ========================================================= */
+:root{
+  --studio-bg:#f7f3fa;
+  --studio-surface:#fffdfd;
+  --studio-surface-soft:#f0e9f5;
+  --studio-lavender:#e8deef;
+  --studio-purple:#76558c;
+  --studio-purple-deep:#503760;
+  --studio-plum:#493b52;
+  --studio-muted:#786d80;
+  --studio-gold:#d2b16c;
+  --studio-gold-soft:#f1e4c5;
+  --studio-line:#ded2e8;
+  --studio-shadow:0 5px 18px #513b6510;
+}
+html,body{
+  background:linear-gradient(145deg,#f7f3fa 0%,#fffdfd 55%,#f1eaf5 100%)!important;
+  color:var(--studio-plum)!important;
+}
+body{color:var(--studio-plum)!important}
+body a{color:var(--studio-purple-deep)}
+body :is(h1,h2,h3,h4,h5,h6,strong,b,legend){color:var(--studio-purple-deep)}
+body :is(p,small,label,time,li,summary){color:var(--studio-plum)}
+body .plateau-nav{
+  background:rgba(255,253,253,.97)!important;
+  color:var(--studio-purple-deep)!important;
+  border-bottom:1px solid var(--studio-gold)!important;
+  box-shadow:0 3px 14px #5037600b!important;
+}
+body .plateau-nav .plateau-brand,
+body .plateau-nav .plateau-primary-nav a,
+body .plateau-nav :is(.plateau-brand,.plateau-primary-nav a){
+  color:var(--studio-purple-deep)!important;
+}
+body .plateau-nav .plateau-primary-nav a:hover{color:#a17b3e!important}
+body .site-menu-trigger,body .site-bottom-toggle{
+  background:linear-gradient(135deg,#fffdfd,#eee5f4)!important;
+  color:var(--studio-purple-deep)!important;
+  border:1px solid var(--studio-gold)!important;
+  box-shadow:0 3px 12px #50376016!important;
+}
+body .site-menu-panel{
+  background:#fffdfd!important;
+  color:var(--studio-purple-deep)!important;
+  border-color:var(--studio-line)!important;
+}
+body .site-menu-panel a{background:#f1eaf5!important;color:var(--studio-purple-deep)!important}
+body .site-menu-panel a[aria-current=page]{background:#76558c!important;color:#fff!important}
+body .site-menu-panel h2,body .site-menu-header strong{color:var(--studio-purple-deep)!important}
+body .site-bottom-nav{
+  background:rgba(255,253,253,.96)!important;
+  border-top:1px solid var(--studio-gold)!important;
+  box-shadow:0 -5px 20px #50376012!important;
+}
+body .site-bottom-scroll a{color:var(--studio-purple-deep)!important}
+body .site-bottom-scroll a span{text-shadow:0 1px 0 #fff,0 2px 0 #d7c4e2,0 3px 0 #9c82ac,0 4px 3px #50376035!important}
+body .site-bottom-scroll a[aria-current=page]{background:#eee5f4!important;color:var(--studio-purple-deep)!important}
+
+/* Shared page shells and inline legacy navy containers */
+body main:not(.plateau-feed){
+  color:var(--studio-plum)!important;
+}
+body main :is(section,article,form,fieldset,aside,details)[style*="background"],
+body main :is(section,article,form,fieldset,aside,details)[style*="background-color"]{
+  background:var(--studio-surface)!important;
+  color:var(--studio-plum)!important;
+  border-color:var(--studio-line)!important;
+  box-shadow:var(--studio-shadow)!important;
+}
+body main :is(article,.gallery-card,.museum-polaroid,.studio-feature,.studio-review-modal,.studio-delivery-row,.studio-bundle-items button){
+  background:var(--studio-surface)!important;
+  color:var(--studio-plum)!important;
+  border-color:var(--studio-line)!important;
+}
+body main :is(input:not([type=checkbox]):not([type=radio]),textarea,select){
+  background:#fff!important;
+  color:var(--studio-purple-deep)!important;
+  border:1px solid #cbbbd8!important;
+  border-radius:10px!important;
+  box-shadow:inset 0 1px 2px #50376008!important;
+}
+body main :is(input,textarea,select)::placeholder{color:#96899d!important;opacity:1}
+body main :is(input[type=checkbox],input[type=radio]){accent-color:var(--studio-purple)}
+body main fieldset{background:#fbf8fd!important;border:1px solid var(--studio-line)!important}
+body main :is(button,[type=submit],.studio-primary,.studio-nav-link){
+  background:linear-gradient(135deg,#806195,#624575)!important;
+  color:#fff!important;
+  border:1px solid #d2b16c!important;
+  border-radius:11px!important;
+  box-shadow:0 3px 10px #5037601b!important;
+}
+body main :is(button,[type=submit]):hover:not(:disabled){filter:brightness(1.04)}
+body main :is(button,[type=submit]):disabled{opacity:.58}
+body main a:not(.plateau-primary){color:var(--studio-purple-deep)!important}
+body main :is(h1,h2,h3,h4){color:var(--studio-purple-deep)!important}
+body main :is(p,small,label,li,time){color:var(--studio-plum)}
+body main [role=alert],body main [role=status]{color:#72562c}
+body main :is(.studio-eyebrow,.studio-kicker,.museum-overline,.gallery-info span){color:#94713c!important}
+body main :is(.studio-footer,.museum-footnote,.cinematic-home-footer,.cinematic-home-credit){
+  color:#76677d!important;
+  border-color:var(--studio-line)!important;
+}
+body main :is(.studio-section,.gallery-header){border-color:var(--studio-line)!important}
+body main :is(.studio-feature-icon,.museum-tabs button[aria-pressed=true]){
+  background:#eee5f4!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-gold)!important;
+}
+body main .museum-tabs button:not([aria-pressed=true]){
+  background:#fff!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-line)!important;
+}
+body main .museum-tools a,body main .gallery-filters button{
+  background:#f0e9f5!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-line)!important;
+}
+body main .gallery-filters button[aria-pressed=true]{background:#76558c!important;color:#fff!important}
+body main .studio-honor-banner{
+  background:linear-gradient(120deg,#f1e4c5,#e9dced)!important;
+  color:var(--studio-purple-deep)!important;border:1px solid var(--studio-gold)!important;
+}
+body main .cinema-home-hero{background:transparent!important}
+body main .cinema-home-hero h1{color:var(--studio-purple-deep)!important}
+body main .cinema-home-credit{color:#8b7046!important}
+body main .cinematic-home-footer{color:var(--studio-muted)!important}
+body main .marquee-item{border-color:var(--studio-gold)!important}
+body main .marquee-item img{background:#eee5f4!important}
+
+/* Login and sign-up surfaces use the same light palette, including inline styles. */
+body main section[style*="#191e2a"],
+body main section[style*="#0f172a"],
+body main section[style*="#39303b"],
+body main section[style*="#10131c"]{
+  background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+  border:1px solid var(--studio-line)!important;
+  box-shadow:0 8px 26px #50376013!important;
+}
+body main input[style*="#10131c"],
+body main input[style*="#28262d"],
+body main textarea[style*="#10131c"]{
+  background:#fff!important;color:var(--studio-purple-deep)!important;border-color:#cbbbd8!important;
+}
+body main :is(a,button)[style*="#d5a66d"]{color:var(--studio-purple-deep)!important}
+body main button[style*="#d5a66d"]{
+  background:linear-gradient(135deg,#ead7a6,#d2b16c)!important;
+  color:#493b52!important;border:1px solid #c4a35f!important;
+}
+
+/* Timeline keeps its compact double-border composer and existing post behavior. */
+body .plateau-feed .plateau-card.plateau-post{background:#fff!important;border-color:var(--studio-line)!important}
+body .plateau-feed .plateau-avatar{background:#76558c!important;color:#fff!important}
+body .plateau-feed .plateau-lightbox{background:#fffdfd!important;color:var(--studio-purple-deep)!important;border-color:var(--studio-gold)!important}
+body .plateau-feed .plateau-lightbox::backdrop{background:#493b5277}
+body .plateau-feed .plateau-compose-line .plateau-primary{
+  background:linear-gradient(135deg,#e7c96f 0%,#b58ac1 55%,#71458f 100%)!important;
+  color:#fff!important;
+}
+body .plateau-feed .plateau-compose-line .plateau-compose-icon{
+  background:#fff!important;color:var(--studio-purple-deep)!important;
+}
+body .plateau-feed .plateau-empty{background:#fff!important;color:#685777!important}
+body .plateau-feed .plateau-credits{color:var(--studio-muted)!important}
+
+/* Keep compact responsive geometry and comfortable touch targets. */
+@media(max-width:760px){
+  body main:not(.plateau-feed){padding-inline:12px}
+  body main :is(h1,h2){overflow-wrap:anywhere}
+  body .site-bottom-scroll a small{color:var(--studio-purple-deep)!important}
+}
