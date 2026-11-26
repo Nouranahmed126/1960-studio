@@ -1,74 +1,27 @@
 "use client";
-
 import Link from "next/link";
-import {useEffect,useRef,useState} from "react";
-
-type Destination={href:string;icon:string;title:string;description:string;tag?:string};
-const slides:{eyebrow:string;title:string;description:string;items:Destination[]}[]=[
- {eyebrow:"ابدأ رحلتك",title:"كل اللي تحتاجه في مكان واحد",description:"اختار وجهتك مباشرة. كل قسم هيفتح لك مساحة العمل الخاصة بيه.",items:[
-  {href:"/dashboard",icon:"📋",title:"تكليفاتي ومتابعتي",description:"شوف المطلوب منك، المواعيد، وحالة تقدمك.",tag:"ابدأ من هنا"},
-  {href:"/submissions",icon:"📤",title:"سلّم شغلك",description:"ارفع ملفاتك وصورك وفيديوهاتك أو سجّل شرحك الصوتي."},
-  {href:"/sectors",icon:"🎬",title:"فريقي وأقسام الفيلم",description:"ادخل فريقك، تابع التكليفات وتواصل مع زملائك."},
-  {href:"/timeline",icon:"📰",title:"آخر أخبار الفريق",description:"تابع الإعلانات والتحديثات والكواليس الجديدة."}
- ]},
- {eyebrow:"الفريق والإنجازات",title:"عيش التجربة مع فريقك",description:"اتعرّف على زملائك، وشوف رحلة الفيلم والإنجازات اللي بنحققها مع بعض.",items:[
-  {href:"/crew",icon:"⭐",title:"نجوم الفريق",description:"تعرّف على أعضاء الطاقم وأدوارهم."},
-  {href:"/honor-board",icon:"🏆",title:"لوحة الشرف",description:"شوف التكريمات والإنجازات المميزة."},
-  {href:"/museum",icon:"🎞️",title:"متحف الفريق",description:"ذكريات ومحطات من رحلة العمل."},
-  {href:"/gallery",icon:"📸",title:"الكواليس والمعرض",description:"صور وفيديوهات ومشاهد من وراء الكاميرا."}
- ]},
- {eyebrow:"التنظيم والتواصل",title:"خليك دايمًا على اطلاع",description:"كل أدوات تنظيم الرحلة ومواعيدها في متناول إيدك.",items:[
-  {href:"/production-hub",icon:"🎬",title:"غرفة عمليات الإنتاج",description:"تابع مراحل الفيلم وخطة العمل والإعلانات."},
-  {href:"/meetings",icon:"📅",title:"الاجتماعات والمواعيد",description:"راجع مواعيد الاجتماعات والتفاصيل المهمة."},
-  {href:"/requests",icon:"💬",title:"الطلبات والاستفسارات",description:"قدّم طلبك أو تابع استفساراتك."},
-  {href:"/dashboard",icon:"👤",title:"حسابي الشخصي",description:"بياناتك، تقدمك، وتسليماتك."}
- ]}
-];
-
+import {useEffect,useState} from "react";
+import {getSupabase} from "../lib/supabase-browser";
+const banner="data:image/jpeg;base64,BASE64_HERO";
+type Crew={id:string;full_name:string};
+type Keepsake={id:number;title:string;image_path:string|null};
+type Honor={id:number;student_name:string};
 export default function StudentHome(){
- const track=useRef<HTMLDivElement>(null);
- const [active,setActive]=useState(0);
- const [signedIn,setSignedIn]=useState(false);
- useEffect(()=>{
-  const node=track.current;if(!node)return;
-  const observer=new IntersectionObserver(entries=>{
-   for(const entry of entries){if(entry.isIntersecting){const index=Number((entry.target as HTMLElement).dataset.slide);if(Number.isFinite(index))setActive(index);}}
-  },{root:node,threshold:.65});
-  Array.from(node.children).forEach(el=>observer.observe(el));
-  return()=>observer.disconnect();
- },[]);
- useEffect(()=>{
-  let alive=true;
-  import("../lib/supabase-browser").then(({getSupabase})=>{const db=getSupabase();if(!db)return;db.auth.getUser().then(({data})=>{if(alive)setSignedIn(!!data.user)});});
-  return()=>{alive=false};
- },[]);
- function go(index:number){const next=Math.max(0,Math.min(slides.length-1,index));track.current?.children[next]?.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"});setActive(next);}
- return <main className="student-home" dir="rtl">
-  <header className="student-home-topbar">
-   <Link href="/" className="student-home-brand" aria-label="Plateau Crew Hub - الرئيسية"><span className="student-home-brand-mark">🎬</span><span><strong>PLATEAU CREW HUB</strong><small>ONE CREW · ONE VISION</small></span></Link>
-   <div className="student-home-top-actions"><span className="student-home-status"><i/> مساحة الفريق الإبداعي</span><Link href={signedIn?"/dashboard":"/login"} className="student-home-account">{signedIn?"حسابي الشخصي":"تسجيل الدخول"} <span>←</span></Link></div>
-  </header>
-  <div className="student-home-workspace">
-   <div className="student-home-side-label"><span>دليل الطالب</span><b>0{active+1}</b><span className="student-home-side-rule"/></div>
-   <div className="student-home-track" ref={track} dir="rtl" aria-label="صفحات دليل الطالب">
-    {slides.map((slide,index)=><section className="student-home-slide" data-slide={index} key={slide.title} dir="rtl" aria-label={slide.title}>
-      <div className="student-home-slide-copy"><span className="student-home-eyebrow"><i/> {slide.eyebrow}</span><h1>{slide.title}</h1><p>{slide.description}</p></div>
-      <div className="student-home-tiles">
-       {slide.items.map((item,i)=><Link href={item.href} key={item.title} className="student-home-tile">
-        <span className="student-home-tile-number">0{i+1}</span><span className="student-home-tile-icon" aria-hidden="true">{item.icon}</span>
-        <span className="student-home-tile-copy"><strong>{item.title}</strong><small>{item.description}</small></span>
-        {item.tag&&<span className="student-home-tile-tag">{item.tag}</span>}<span className="student-home-tile-arrow" aria-hidden="true">←</span>
-       </Link>)}
-      </div>
-     </section>)}
-   </div>
-   <div className="student-home-controls" aria-label="التنقل بين صفحات الدليل">
-    <button type="button" onClick={()=>go(active+1)} disabled={active===slides.length-1} aria-label="الصفحة التالية">←</button>
-    <div className="student-home-dots">{slides.map((s,i)=><button key={s.title} type="button" onClick={()=>go(i)} className={active===i?"is-active":""} aria-label={"الانتقال إلى "+s.eyebrow} aria-current={active===i?"step":undefined}/>)}</div>
-    <span className="student-home-page-count">0{active+1} / 0{slides.length}</span>
-    <button type="button" onClick={()=>go(active-1)} disabled={active===0} aria-label="الصفحة السابقة">→</button>
-   </div>
-  </div>
-  <footer className="student-home-footer"><span>PLATEAU CREW HUB</span><span>اسحب يمين أو شمال للتنقل بين الدليل <b>↔</b></span><span>قصة بنبنيها سوا</span></footer>
+ const [crew,setCrew]=useState<Crew[]>([]),[keepsakes,setKeepsakes]=useState<{id:number;title:string;url:string}[]>([]),[honors,setHonors]=useState<Honor[]>([]);
+ useEffect(()=>{let live=true;void(async()=>{const db=getSupabase();if(!db)return;const [c,k,h]=await Promise.all([db.rpc("list_approved_crew"),db.from("studio_props").select("id,title,image_path").order("created_at",{ascending:false}).limit(30),db.from("studio_honors").select("id,student_name").order("created_at",{ascending:false}).limit(30)]);if(!live)return;if(!c.error)setCrew((c.data??[]) as Crew[]);if(!k.error){const rows=(k.data??[]) as Keepsake[];setKeepsakes(rows.filter(x=>x.image_path).map(x=>({id:x.id,title:x.title,url:db.storage.from("crew-photos").getPublicUrl(x.image_path!).data.publicUrl})));}if(!h.error)setHonors((h.data??[]) as Honor[]);})();return()=>{live=false}},[]);
+ const cards=[{href:"/timeline",icon:"🎬",title:"Timeline",desc:"Studio updates and crew activity"},{href:"/dashboard",icon:"📋",title:"Assignments",desc:"Tasks, deadlines and progress"},{href:"/submissions",icon:"☁️",title:"Quick Submit",desc:"Send files, voice notes or written work"},{href:"/crew",icon:"🏆",title:"Film Stars & Honors",desc:"Meet the crew and celebrate achievements"},{href:"/dashboard",icon:"👤",title:"My Account",desc:"Your profile and personal submissions"}];
+ return <main className="student-home-old" dir="ltr">
+  <img className="old-banner" src={banner} alt="Plateau Crew Hub — Crafted together, frame by frame"/>
+  <div className="old-divider"/>
+  <section className="old-main-grid" aria-label="Student guide">
+   {cards.map((c,i)=><Link key={c.title} href={c.href} className="old-main-card">
+    <span className="old-card-number">0{i+1}</span>{i===4&&<span className="old-crown">♛</span>}
+    <span className="old-card-icon">{c.icon}</span><span className="old-card-copy"><strong>{c.title}</strong><small>{c.desc}</small></span><span className="old-card-arrow">↗</span>
+   </Link>)}
+  </section>
+  <section className="old-strip"><div className="old-strip-title"><span>→</span> Studio Crew</div><div className="old-strip-track" dir="rtl">{crew.map(x=><span className="old-name-pill" key={x.id}>{x.full_name}</span>)}</div></section>
+  <section className="old-strip"><div className="old-strip-title"><span>←</span> 1960<br/>Keepsakes</div><div className="old-strip-track">{keepsakes.map(x=><Link href="/museum" className="old-keepsake" key={x.id} title={x.title}><img src={x.url} alt={x.title}/></Link>)}</div></section>
+  <section className="old-strip"><div className="old-strip-title"><span>→</span> Honors</div><div className="old-strip-track" dir="rtl">{honors.map(x=><span className="old-name-pill" key={x.id}>{x.student_name}</span>)}</div></section>
+  <footer className="old-footer"><div><small>ACADEMIC SUPERVISION</small><strong>Dr. Ahmed Abdelmoneim</strong></div><div><small>DESIGNED & DEVELOPED BY</small><strong>Nouran Ahmed</strong></div><div className="old-star">✦</div></footer>
  </main>;
 }
