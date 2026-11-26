@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <nav className="plateau-primary-nav" aria-label="الأقسام الرئيسية">
           <Link href="/">التايم لاين</Link>
           <Link href="/dashboard#assignments">التكليفات</Link>
-          <Link href="/film#quick-submission">تسليم سريع</Link>
+          <Link href="/submissions?kind=media">تسليم سريع</Link>
           <Link href="/honor-board">لوحة الشرف</Link>
           <Link href="/dashboard">حسابي</Link>
         </nav>
