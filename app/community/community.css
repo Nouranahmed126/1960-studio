@@ -854,3 +854,32 @@ body .honor-board-page .honor-board-form{border:1px solid var(--pch-gold)!import
 body .studio-museum .museum-polaroid{background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important}
 @media(max-width:700px){body .gallery-shell.plateau-feed{padding-inline:12px!important}body .plateau-posts{gap:14px!important}body .plateau-feed .plateau-card{border-radius:16px!important}}
 @media(prefers-reduced-motion:reduce){body main *,body .plateau-feed *{scroll-behavior:auto!important}}
+
+
+/* Catch remaining inline dark surfaces in older route components */
+body main div[style*="background:#0"],body main div[style*="background: #0"],
+body main div[style*="background:#1"],body main div[style*="background: #1"],
+body main div[style*="background:#2"],body main div[style*="background: #2"],
+body main div[style*="background:#3"],body main div[style*="background: #3"],
+body main div[style*="background:#4"],body main div[style*="background: #4"],
+body main div[style*="background:linear-gradient(135deg,#0"],
+body main div[style*="background:linear-gradient(135deg,#1"],
+body main div[style*="background:linear-gradient(135deg,#2"],
+body main div[style*="background:linear-gradient(135deg,#3"],
+body main div[style*="background:linear-gradient(145deg,#0"],
+body main div[style*="background:linear-gradient(145deg,#1"],
+body main div[style*="background:linear-gradient(145deg,#2"],
+body main div[style*="background:linear-gradient(145deg,#3"]{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border-color:#d9cde1!important;
+ box-shadow:0 6px 18px #49345612!important;
+}
+body main div[style*="background:#0"] *,
+body main div[style*="background:#1"] *,
+body main div[style*="background:#2"] *,
+body main div[style*="background:#3"] *,
+body main div[style*="background:#4"] *{color:#493456!important}
+body main :is(h1,h2,h3,h4,p,small,time,span,label,blockquote){text-shadow:none}
+body main :is(h1,h2,h3,h4){text-shadow:0 1px 0 #fff,0 3px 10px #49345612}
+body .plateau-feed .plateau-post-header :is(strong,span){color:#493456!important}
+body .plateau-feed .plateau-post-body{color:#493456!important}
