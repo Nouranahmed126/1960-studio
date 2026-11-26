@@ -136,3 +136,19 @@ body:has(.reference-hub){background:#fff8fb!important}
     line-height: 1;
   }
 }
+
+/* Final approved hero only; no changes to navigation or data. */
+.reference-hub .reference-hero{position:relative!important;display:grid!important;grid-template-columns:44% 56%!important;grid-template-rows:minmax(0,1fr)!important;aspect-ratio:2.42!important;height:auto!important;min-height:0!important;overflow:hidden!important;border-radius:clamp(18px,4vw,52px)!important;border-width:4px!important;box-shadow:inset 0 0 0 2px #fff4dc,0 4px 0 #593477,0 8px 20px #59347735!important}
+.reference-hub .reference-hero .reference-scene{inset:0 0 0 42%!important;width:58%!important;height:100%!important;background-size:contain!important;background-position:center right!important;mask-image:linear-gradient(90deg,transparent,#000 12%)!important;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%)!important}
+.reference-hub .reference-hero .reference-identity{grid-column:1!important;position:relative!important;align-self:center!important;width:100%!important;box-sizing:border-box!important;padding:0 0 0 8%!important;gap:clamp(8px,1.8vw,24px)!important;align-items:center!important}
+.reference-hub .reference-hero .reference-brand{position:relative!important;width:100%!important;gap:clamp(5px,1vw,16px)!important;justify-content:center!important}
+.reference-hub .reference-hero .reference-mark{flex:none!important;width:clamp(30px,8vw,110px)!important;font-size:clamp(22px,5.5vw,76px)!important}
+.reference-hub .reference-hero .reference-brand h1{font-size:clamp(17px,4.6vw,68px)!important;line-height:1.02!important;white-space:nowrap!important;text-shadow:0 2px #a680b5,0 4px 6px #43234f55!important}
+.reference-hub .reference-hero .reference-brand h1 em{font-style:normal!important;color:#7843a1!important;border-bottom:3px solid #c99a4e!important;border-radius:0 0 35% 25%!important}
+.reference-hub .reference-hero .reference-spark{position:absolute!important;right:0!important;top:-12%!important;color:#d4a54e!important;display:block!important}
+.reference-hub .reference-hero .reference-studio{display:none!important}
+.reference-hub .reference-hero .reference-slogan{width:100%!important;text-align:center!important;max-width:100%!important;margin:0!important;font-size:clamp(15px,3.3vw,48px)!important;line-height:1.05!important;color:#391344!important;text-wrap:balance}
+.reference-hub .reference-hero .reference-film{left:29%!important;width:77%!important;bottom:3%!important;height:clamp(10px,2.2vw,30px)!important;transform:rotate(-5deg)!important;border-radius:0!important;background:none!important;animation:none!important}
+.reference-hub .reference-hero .reference-film:before{inset:0!important;transform:none!important;translate:none!important;background:repeating-linear-gradient(90deg,transparent 0 3px,#fff0b0 3px 7px,transparent 7px 10px) top/10px 18% repeat-x,repeating-linear-gradient(90deg,transparent 0 3px,#fff0b0 3px 7px,transparent 7px 10px) bottom/10px 18% repeat-x,repeating-linear-gradient(90deg,#80502299 0 36px,#ffe2a0 36px 40px) center/40px 60% repeat-x,linear-gradient(#a76b2a,#e9b967,#a76b2a)!important;animation:approved-film-flow 1.6s linear infinite!important;will-change:background-position!important}
+@keyframes approved-film-flow{from{background-position:0 0,0 100%,0 50%,0 0}to{background-position:-40px 0,-40px 100%,-40px 50%,0 0}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-hero .reference-film:before{animation:none!important}}
