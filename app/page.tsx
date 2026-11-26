@@ -1,5 +1,5 @@
-import Feed from "./community/feed";
+import StudentHome from "./student-home";
 
 export default function Home() {
-  return <Feed />;
+  return <StudentHome />;
 }
