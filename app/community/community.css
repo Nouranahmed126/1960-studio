@@ -1191,3 +1191,41 @@ body .studio-museum .museum-photo::after{
 .student-home-old .old-footer .old-star{grid-column:1/-1;color:#bd963f;font-size:22px}
 @media(max-width:600px){.student-home-old{padding:20px 18px 45px}.student-home-old .old-banner{margin:8px 0 42px;border-radius:25px}.student-home-old .old-main-grid{gap:14px 16px}.student-home-old .old-main-card{min-height:146px;padding:18px 12px;gap:10px;border-radius:26px}.student-home-old .old-main-card:nth-child(5){min-height:135px}.student-home-old .old-card-icon{width:57px;height:57px;flex-basis:57px;font-size:29px}.student-home-old .old-card-copy strong{font-size:20px}.student-home-old .old-card-copy small{font-size:13px}.student-home-old .old-card-number{font-size:17px;top:10px;right:12px}.student-home-old .old-strip{height:94px;margin-top:21px}.student-home-old .old-strip-title{min-width:130px;width:32%;flex-basis:32%;font-size:17px;gap:6px}.student-home-old .old-name-pill{min-width:130px;font-size:17px;padding:10px 16px}.student-home-old .old-keepsake{width:140px;flex-basis:140px;height:70px}.student-home-old .old-footer{margin-top:30px}.student-home-old .old-footer strong{font-size:20px}}
 @media(max-width:360px){.student-home-old .old-main-card{padding:14px 9px;gap:8px}.student-home-old .old-card-icon{width:48px;height:48px;flex-basis:48px;font-size:25px}.student-home-old .old-card-copy strong{font-size:17px}.student-home-old .old-card-copy small{font-size:11px}}
+
+/* Exact mobile proportions from the approved Plateau home screenshot */
+.student-home-old{max-width:1180px!important;padding:20px 18px 52px!important}
+.student-home-old .old-banner{width:100%!important;height:auto!important;aspect-ratio:2.34/1!important;object-fit:cover!important;padding:4px!important;margin:8px 0 28px!important}
+.student-home-old .old-main-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px 16px!important}
+.student-home-old .old-main-card{min-width:0!important;min-height:116px!important;padding:14px 12px!important;gap:9px!important;overflow:hidden!important}
+.student-home-old .old-main-card:nth-child(5){min-height:92px!important}
+.student-home-old .old-card-icon{width:44px!important;height:44px!important;flex:0 0 44px!important;font-size:25px!important;border-radius:13px!important}
+.student-home-old .old-card-copy{flex:1 1 0!important;min-width:0!important;max-width:calc(100% - 53px)!important;gap:3px!important}
+.student-home-old .old-card-copy strong{font-size:16px!important;line-height:1.12!important;overflow-wrap:normal!important}
+.student-home-old .old-card-copy small{font-size:11px!important;line-height:1.35!important;overflow-wrap:anywhere!important}
+.student-home-old .old-card-number{font-size:13px!important;top:8px!important;right:10px!important}
+.student-home-old .old-card-arrow{font-size:22px!important;bottom:8px!important;left:10px!important}
+.student-home-old .old-crown{font-size:17px!important;top:7px!important;left:9px!important}
+.student-home-old .old-strip{height:52px!important;margin-top:16px!important;border-radius:22px!important}
+.student-home-old .old-strip-title{min-width:108px!important;width:32%!important;flex-basis:32%!important;font-size:13px!important;gap:5px!important;padding:4px!important}
+.student-home-old .old-strip-title span{font-size:18px!important}
+.student-home-old .old-strip-track{gap:10px!important;padding:5px 8px!important}
+.student-home-old .old-name-pill{min-width:105px!important;padding:6px 11px!important;font-size:13px!important}
+.student-home-old .old-keepsake{width:72px!important;height:38px!important;flex-basis:72px!important;border-radius:10px!important;border-width:2px!important}
+.student-home-old .old-footer{margin-top:20px!important;padding:16px 6px 4px!important}
+.student-home-old .old-footer small{font-size:8px!important;letter-spacing:2px!important}
+.student-home-old .old-footer strong{font-size:16px!important}
+@media(max-width:420px){
+ .student-home-old{padding:18px 10px 38px!important}
+ .student-home-old .old-main-grid{gap:11px 10px!important}
+ .student-home-old .old-main-card{min-height:104px!important;padding:12px 9px!important;gap:7px!important}
+ .student-home-old .old-main-card:nth-child(5){min-height:82px!important}
+ .student-home-old .old-card-icon{width:38px!important;height:38px!important;flex-basis:38px!important;font-size:22px!important}
+ .student-home-old .old-card-copy{max-width:calc(100% - 45px)!important}
+ .student-home-old .old-card-copy strong{font-size:14px!important}
+ .student-home-old .old-card-copy small{font-size:10px!important}
+ .student-home-old .old-card-number{font-size:12px!important;right:8px!important;top:6px!important}
+ .student-home-old .old-card-arrow{font-size:20px!important}
+ .student-home-old .old-strip{height:48px!important;margin-top:13px!important}
+ .student-home-old .old-strip-title{min-width:100px!important;font-size:12px!important}
+ .student-home-old .old-name-pill{min-width:96px!important;font-size:12px!important}
+}
