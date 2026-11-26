@@ -1,91 +1,184 @@
 "use client";
+
 import Link from "next/link";
-import {signStudioImages} from "../lib/studio-media";
-import {useCallback,useEffect,useState} from "react";
+import {useEffect, useState} from "react";
 import {getSupabase} from "../lib/supabase-browser";
+import {signStudioImages} from "../lib/studio-media";
 
-type CrewMember={id:string;full_name:string};
-type Honor={id:number;student_name:string;award:string;achievement:string;stars:number};
-type RibbonItem={id:string;label:string;image?:string;kind:"crew"|"artifact"|"honor"};
+type StudioClient = NonNullable<ReturnType<typeof getSupabase>>;
+type CrewMember = {id: string; full_name: string};
+type CrewPhoto = {user_id: string; photo_path: string | null};
+type Keepsake = {id: number; title: string; image_path: string | null};
+type Honor = {id: number; student_name: string};
+type GalleryItem = {id: number; title: string | null; storage_path: string | null};
+type RibbonItem = {id: string; label: string; image?: string};
+type LoadedRibbon = {items: RibbonItem[]; unavailable: boolean};
+type RibbonState =
+  | {status: "loading" | "signed-out" | "restricted" | "unavailable"}
+  | {status: "ready"; crew: LoadedRibbon; keepsakes: LoadedRibbon; honors: LoadedRibbon};
 
-function normalizeName(value:string){return value.normalize("NFKC").replace(/[ـ\s]+/g," ").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").trim().toLocaleLowerCase("ar");}
+const ribbons = [
+  {key: "crew", kind: "crew", label: "Studio Crew", href: "/crew", direction: "right"},
+  {key: "keepsakes", kind: "artifact", label: "1960 Keepsakes", href: "/museum", direction: "left"},
+  {key: "honors", kind: "honor", label: "Honors", href: "/honor-board", direction: "right"},
+] as const;
 
-export default function Ribbons(){
- const [crew,setCrew]=useState<RibbonItem[]>([]);
- const [artifacts,setArtifacts]=useState<RibbonItem[]>([]);
- const [honors,setHonors]=useState<RibbonItem[]>([]);
- const [loading,setLoading]=useState(true);
+function normalizeName(value: string) {
+  return value.normalize("NFKC").replace(/[ـ\s]+/g, " ").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").trim().toLocaleLowerCase("ar");
+}
 
- const load=useCallback(async()=>{
-  const db=getSupabase();if(!db){setLoading(false);return;}
-  const {data:{user}}=await db.auth.getUser();
-  if(!user){setCrew([]);setArtifacts([]);setHonors([]);setLoading(false);return;}
-  const profile=await db.from("profiles").select("app_role,approval_status").eq("id",user.id).maybeSingle();
-  if(!profile.data||(profile.data.app_role!=="supervisor"&&profile.data.approval_status!=="approved")){
-   setCrew([]);setArtifacts([]);setHonors([]);setLoading(false);return;
+async function loadRibbons(db: StudioClient): Promise<RibbonState> {
+  const {data: {user}, error} = await db.auth.getUser();
+  if (!user) return {status: error && error.name !== "AuthSessionMissingError" ? "unavailable" : "signed-out"};
+
+  const profile = await db.from("profiles").select("app_role,approval_status").eq("id", user.id).maybeSingle();
+  if (profile.error) return {status: "unavailable"};
+  if (profile.data?.app_role !== "supervisor" && profile.data?.approval_status !== "approved") {
+    return {status: "restricted"};
   }
-  const [crewResult,detailResult,propResult,honorResult,cassetteResult]=await Promise.all([
-   db.rpc("list_approved_crew"),
-   db.from("crew_profiles").select("user_id,photo_path"),
-   db.from("studio_props").select("id,title,image_path").not("image_path","is",null).neq("id",2).order("created_at",{ascending:false}).limit(60),
-   db.from("studio_honors").select("id,student_name,award,achievement,stars").order("created_at",{ascending:false}).limit(100),
-   db.from("project_gallery").select("id,title,storage_path").eq("id",1).maybeSingle()
+
+  const [crew, details, props, honors, cassette] = await Promise.all([
+    db.rpc("list_approved_crew"),
+    db.from("crew_profiles").select("user_id,photo_path"),
+    db.from("studio_props").select("id,title,image_path").neq("id", 2).order("created_at", {ascending: false}).limit(60),
+    db.from("studio_honors").select("id,student_name").order("created_at", {ascending: false}).limit(100),
+    db.from("project_gallery").select("id,title,storage_path").eq("id", 1).maybeSingle(),
   ]);
-  const members=(crewResult.data??[]) as CrewMember[];
-  const details=(detailResult.data??[]) as {user_id:string;photo_path:string|null}[];
-  const photoById=new Map<string,string>();
-  const photos=await signStudioImages(db,"crew-photos",details.map(d=>d.photo_path));
-  const propPaths=(propResult.data??[]).map(p=>p.image_path);
-  const galleryPhotos=await signStudioImages(db,"studio-gallery",propPaths);
-  const legacyPhotos=await signStudioImages(db,"crew-photos",propPaths.filter(p=>!galleryPhotos.has(p??"")));
-  for(const d of details){const url=photos.get(d.photo_path??"");if(url)photoById.set(d.user_id,url);}
-  const uniqueMembers=new Map<string,CrewMember>();
-  for(const m of members){const key=normalizeName(m.full_name);if(key&&!uniqueMembers.has(key))uniqueMembers.set(key,m);}
-  const crewItems:RibbonItem[]=[];
-  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
-  const artifactItems:RibbonItem[]=[];
-  for(const p of propResult.data??[]){const image=galleryPhotos.get(p.image_path??"")??legacyPhotos.get(p.image_path??"");if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
-  const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
-  if(cassette?.storage_path){const image=(await signStudioImages(db,"studio-gallery",[cassette.storage_path])).get(cassette.storage_path);if(image)artifactItems.push({id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"});}
-  const byName=new Map<string,string>();
-  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)byName.set(normalizeName(m.full_name),photo);}
-  const honorRows=(honorResult.data??[]) as Honor[];
-  const honorItems:RibbonItem[]=honorRows.map(h=>({id:String(h.id),label:h.student_name,image:byName.get(normalizeName(h.student_name)),kind:"honor"}));
-  setCrew(crewItems);setArtifacts(artifactItems);setHonors(honorItems);setLoading(false);
- },[]);
 
- useEffect(()=>{
-  let active=true;const db=getSupabase();if(!db){setLoading(false);return;}
-  const safeLoad=async()=>{if(active)await load()};void safeLoad();
-  const channel=db.channel("home-ribbons-live")
-   .on("postgres_changes",{event:"*",schema:"public",table:"crew_profiles"},()=>void safeLoad())
-   .on("postgres_changes",{event:"*",schema:"public",table:"studio_props"},()=>void safeLoad())
-   .on("postgres_changes",{event:"*",schema:"public",table:"studio_honors"},()=>void safeLoad())
-   .on("postgres_changes",{event:"*",schema:"public",table:"project_gallery"},()=>void safeLoad()).subscribe();
-  const auth=db.auth.onAuthStateChange(()=>{setTimeout(()=>void safeLoad(),0)});
-  const timer=setInterval(()=>void safeLoad(),45000);
-  return()=>{active=false;clearInterval(timer);auth.data.subscription.unsubscribe();void db.removeChannel(channel)};
- },[load]);
+  const members = (crew.data ?? []) as CrewMember[];
+  const crewPhotos = (details.data ?? []) as CrewPhoto[];
+  const keepsakes = (props.data ?? []) as Keepsake[];
+  const galleryItem = cassette.data as GalleryItem | null;
+  const awardRows = (honors.data ?? []) as Honor[];
 
- const rows=[
-  {label:"Studio Crew",items:crew,symbol:"✦",href:"/crew",direction:"right"},
-  {label:"1960 Keepsakes",items:artifacts,symbol:"◇",href:"/museum",direction:"left"},
-  {label:"Honors",items:honors,symbol:"★",href:"/honor-board",direction:"right"}
- ] as const;
- return <section className="reference-ribbons" aria-label="Studio highlights">
-  {rows.map((row,index)=><section className={"reference-ribbon ribbon-"+index} key={row.label} aria-label={row.label}>
-   <Link href={row.href} className="ribbon-heading"><span aria-hidden="true">{row.direction==="left"?"←":"→"}</span><strong>{row.label}</strong></Link>
-   <div className="ribbon-window">
-    {row.items.length?<div className={"reference-ribbon-track ribbon-track-"+index}>
-     {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
-      {row.items.map(item=><Link href={row.href} className={"ribbon-item ribbon-item-"+item.kind} key={item.id} tabIndex={copy===1?-1:0} aria-label={item.label}>
-       {item.image&&<img className={index===1?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy"/>}
-       {!item.image&&index!==1&&<span className="ribbon-initial" aria-hidden="true">{index===2?"★":item.label.trim().slice(0,1)}</span>}
-       {index!==1&&<bdi>{item.label}</bdi>}
-      </Link>)}
-     </div>)}
-    </div>:<div className="ribbon-empty">{loading?"Loading…":"Open section"}</div>}
-   </div>
-  </section>)}
- </section>;
+  const keepsakePaths = keepsakes.map(item => item.image_path);
+  const photoByMember = new Map(crewPhotos.map(photo => [photo.user_id, photo.photo_path]));
+  const [galleryPhotos, crewBucketPhotos] = await Promise.all([
+    signStudioImages(db, "studio-gallery", [...keepsakePaths, galleryItem?.storage_path]),
+    signStudioImages(db, "crew-photos", [...crewPhotos.map(photo => photo.photo_path), ...keepsakePaths]),
+  ]);
+
+  const crewItems = members.map(member => ({
+    id: member.id,
+    label: member.full_name,
+    image: crewBucketPhotos.get(photoByMember.get(member.id) ?? ""),
+  }));
+  const crewByName = new Map<string, RibbonItem | null>();
+  for (const member of crewItems) {
+    const name = normalizeName(member.label);
+    // An honor with a shared name cannot be matched to a unique portrait.
+    crewByName.set(name, crewByName.has(name) ? null : member);
+  }
+
+  const keepsakeItems: RibbonItem[] = keepsakes.map(item => ({
+    id: String(item.id),
+    label: item.title,
+    image: galleryPhotos.get(item.image_path ?? "") ?? crewBucketPhotos.get(item.image_path ?? ""),
+  }));
+  if (galleryItem?.storage_path) {
+    keepsakeItems.push({
+      id: "gallery-" + galleryItem.id,
+      label: galleryItem.title || "1960 Archive",
+      image: galleryPhotos.get(galleryItem.storage_path),
+    });
+  }
+
+  return {
+    status: "ready",
+    crew: {items: crewItems, unavailable: !!crew.error},
+    keepsakes: {items: keepsakeItems, unavailable: !!props.error || !!cassette.error},
+    honors: {
+      items: awardRows.map(award => ({
+        id: String(award.id),
+        label: award.student_name,
+        image: crewByName.get(normalizeName(award.student_name))?.image,
+      })),
+      unavailable: !!honors.error,
+    },
+  };
+}
+
+export default function Ribbons() {
+  const [state, setState] = useState<RibbonState>({status: "loading"});
+
+  useEffect(() => {
+    const db = getSupabase();
+    if (!db) {
+      setState({status: "unavailable"});
+      return;
+    }
+
+    let active = true;
+    let request = 0;
+    let authRefresh: ReturnType<typeof setTimeout> | undefined;
+    const refresh = async () => {
+      const current = ++request;
+      try {
+        const next = await loadRibbons(db);
+        if (active && current === request) setState(next);
+      } catch {
+        if (active && current === request) setState({status: "unavailable"});
+      }
+    };
+
+    void refresh();
+    const channel = db.channel("home-ribbons-live")
+      .on("postgres_changes", {event: "*", schema: "public", table: "crew_profiles"}, refresh)
+      .on("postgres_changes", {event: "*", schema: "public", table: "studio_props"}, refresh)
+      .on("postgres_changes", {event: "*", schema: "public", table: "studio_honors"}, refresh)
+      .on("postgres_changes", {event: "*", schema: "public", table: "project_gallery"}, refresh)
+      .subscribe();
+    const {data: {subscription}} = db.auth.onAuthStateChange(event => {
+      if (event === "INITIAL_SESSION") return;
+      clearTimeout(authRefresh);
+      if (event === "SIGNED_OUT") {
+        request++;
+        setState({status: "signed-out"});
+        return;
+      }
+      authRefresh = setTimeout(() => void refresh(), 0);
+    });
+    const timer = setInterval(() => void refresh(), 45000);
+    return () => {
+      active = false;
+      clearTimeout(authRefresh);
+      clearInterval(timer);
+      subscription.unsubscribe();
+      void db.removeChannel(channel);
+    };
+  }, []);
+
+  return <section className="reference-ribbons" aria-label="Studio highlights">
+    {ribbons.map((row, index) => {
+      const ribbon = state.status === "ready" ? state[row.key] : undefined;
+      return <section className={`reference-ribbon ribbon-${index}`} key={row.key} aria-label={row.label}>
+        <Link href={row.href} className="ribbon-heading">
+          <span aria-hidden="true">{row.direction === "left" ? "←" : "→"}</span>
+          <strong>{row.label}</strong>
+        </Link>
+        <div className="ribbon-window">
+          {ribbon?.items.length ? <div className={`reference-ribbon-track ribbon-track-${index}`}>
+            {[0, 1].map(copy => <div className="reference-ribbon-group" key={copy} aria-hidden={copy === 1}>
+              {ribbon.items.map(item => <Link
+                href={row.href}
+                className={`ribbon-item ribbon-item-${row.kind}`}
+                key={item.id}
+                tabIndex={copy === 1 ? -1 : 0}
+                aria-label={item.label}
+              >
+                {item.image && <img className={row.key === "keepsakes" ? "ribbon-artifact" : "ribbon-emblem"} src={item.image} alt="" loading="lazy"/>}
+                {(row.key !== "keepsakes" || !item.image) && <bdi>{item.label}</bdi>}
+              </Link>)}
+            </div>)}
+          </div> : <div className="ribbon-empty">
+            {state.status === "loading" ? "Loading…" :
+              state.status === "signed-out" ? <Link href="/login">Sign in to view</Link> :
+              state.status === "restricted" ? "Approved members only" :
+              state.status === "unavailable" || ribbon?.unavailable ? "Couldn’t load records" :
+              "No records to display"}
+          </div>}
+        </div>
+      </section>;
+    })}
+  </section>;
 }
