@@ -883,3 +883,32 @@ body main :is(h1,h2,h3,h4,p,small,time,span,label,blockquote){text-shadow:none}
 body main :is(h1,h2,h3,h4){text-shadow:0 1px 0 #fff,0 3px 10px #49345612}
 body .plateau-feed .plateau-post-header :is(strong,span){color:#493456!important}
 body .plateau-feed .plateau-post-body{color:#493456!important}
+
+
+/* Legacy route sections (including Quick Submit) also use inline dark backgrounds */
+body main section[style*="background:#0"],body main section[style*="background: #0"],
+body main section[style*="background:#1"],body main section[style*="background: #1"],
+body main section[style*="background:#2"],body main section[style*="background: #2"],
+body main section[style*="background:#3"],body main section[style*="background: #3"],
+body main section[style*="background:#4"],body main section[style*="background: #4"],
+body main section[style*="background:#5"],body main section[style*="background: #5"],
+body main section[style*="background:#6"],body main section[style*="background: #6"],
+body main section[style*="background:#7"],body main section[style*="background: #7"],
+body main section[style*="background:#8"],body main section[style*="background: #8"],
+body main section[style*="background:#9"],body main section[style*="background: #9"]{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border-color:#d9cde1!important;
+ box-shadow:0 8px 24px #49345612!important;
+}
+body main section[style*="background:#"] :is(h1,h2,h3,h4,p,small,span,label,strong,legend){
+ color:#493456!important;
+}
+body main div[style*="background:#5"],body main div[style*="background: #5"],
+body main div[style*="background:#6"],body main div[style*="background: #6"],
+body main div[style*="background:#7"],body main div[style*="background: #7"],
+body main div[style*="background:#8"],body main div[style*="background: #8"],
+body main div[style*="background:#9"],body main div[style*="background: #9"]{
+ background:linear-gradient(145deg,#fffdfd,#f0e9f5)!important;
+ color:#493456!important;border-color:#d9cde1!important;
+ box-shadow:0 6px 18px #49345612!important;
+}
