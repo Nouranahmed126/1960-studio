@@ -42,7 +42,7 @@ export default function Ribbons(){
   const uniqueMembers=new Map<string,CrewMember>();
   for(const m of members){const key=normalizeName(m.full_name);if(key&&!uniqueMembers.has(key))uniqueMembers.set(key,m);}
   const crewItems:RibbonItem[]=[];
-  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
+  for(const m of uniqueMembers.values()){const photo=photoById.get(m.id);if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});}
   const artifactItems:RibbonItem[]=[];
   for(const p of propResult.data??[]){const image=galleryPhotos.get(p.image_path??"")??legacyPhotos.get(p.image_path??"");if(image)artifactItems.push({id:String(p.id),label:p.title,image,kind:"artifact"});}
   const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
@@ -84,7 +84,7 @@ export default function Ribbons(){
        {index!==1&&<bdi>{item.label}</bdi>}
       </Link>)}
      </div>)}
-    </div>:<div className="ribbon-empty">{loading?"Loading…":index===0?"Crew photos will appear here":index===1?"Archive photos will appear here":"Honors will appear here"}</div>}
+    </div>:<div className="ribbon-empty">{loading?"Loading…":"Open section"}</div>}
    </div>
   </section>)}
  </section>;
