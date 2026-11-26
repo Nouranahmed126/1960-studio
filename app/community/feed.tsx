@@ -95,7 +95,7 @@ export default function Feed() {
     const db = getSupabase();
     if (!db) return;
     const requestId = ++refreshId.current;
-    const request = db.from("plateau_posts").select(postColumns)
+    const request = db.from("plateau_posts").select(postColumns).is("archived_at", null)
       .order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false })
       .order("id", { ascending: false }).limit(limit + 1);
     const result = await (signal ? request.abortSignal(signal) : request);
