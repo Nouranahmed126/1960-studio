@@ -2304,3 +2304,13 @@ body .studio-museum .museum-polaroid:nth-child(4n){
 @media(prefers-reduced-motion:reduce){
  body .studio-museum .museum-polaroid{animation:none!important;transition:none!important}
 }
+
+
+/* Museum: embossed title and two animated frames around every real photo */
+body .studio-museum .museum-header-compact h1{color:#493456!important;font-weight:900!important;letter-spacing:-.8px!important;text-shadow:1px 1px 0 #fff,2px 2px 0 #e8d8b2,3px 3px 0 #cdb4d7,4px 5px 0 #a98bb8,0 10px 18px #49345630!important}
+body .studio-museum .museum-photo{isolation:isolate!important;border:3px solid #fff!important;outline:2px solid #d2b16c!important;outline-offset:3px!important}
+body .studio-museum .museum-photo::before{content:""!important;position:absolute!important;inset:5px!important;z-index:3!important;pointer-events:none!important;border:1.5px solid #76558c!important;border-radius:10px 7px 12px 8px!important;box-shadow:inset 0 0 0 1px #fff9,0 0 0 1px #e8d8b2!important;animation:museumInnerFramePulse 4.8s ease-in-out infinite!important}
+body .studio-museum .museum-photo::after{content:""!important;position:absolute!important;inset:-3px!important;z-index:4!important;pointer-events:none!important;border:2px solid transparent!important;border-radius:inherit!important;background:conic-gradient(from 0deg,#d2b16c,#fff4cf,#76558c,#cdb4d7,#d2b16c) border-box!important;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0)!important;-webkit-mask-composite:xor!important;mask-composite:exclude!important;animation:museumOuterFrameSpin 9s linear infinite!important}
+@keyframes museumOuterFrameSpin{to{transform:rotate(1turn)}}
+@keyframes museumInnerFramePulse{0%,100%{border-color:#76558c;box-shadow:inset 0 0 0 1px #fff9,0 0 0 1px #e8d8b2}50%{border-color:#d2b16c;box-shadow:inset 0 0 0 1px #fff9,0 0 9px #d2b16c88}}
+@media(prefers-reduced-motion:reduce){body .studio-museum .museum-photo::before,body .studio-museum .museum-photo::after{animation:none!important}}
