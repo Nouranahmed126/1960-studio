@@ -52,13 +52,13 @@ export default function Login() {
       <h1>تسجيل الدخول</h1>
       <p className="studio-login-intro">لأعضاء مشروع التخرج والمشرفة.</p>
       <form onSubmit={submit} className="studio-login-form">
-        <label>اسم المستخدم للطالب أو البريد الإلكتروني للمشرفة<input type="text" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
+        <label>اسم المستخدم (الطالب) أو البريد الإلكتروني (المشرفة)<input type="text" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
         <label>كلمة المرور<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>
         <label className="studio-remember-login"><input type="checkbox" checked={rememberEmail} onChange={e=>setRememberEmail(e.target.checked)}/> تذكّر بريدي الإلكتروني على هذا الجهاز</label>
         <button type="submit" disabled={busy}>{busy?"جارٍ الدخول...":"دخول"}</button>
       </form>
       {message && <p role="alert" className="studio-login-message">{message}</p>}
-      <button type="button" onClick={()=>void resendConfirmation()}>إعادة إرسال التأكيد</button>
+      <button className="studio-resend-confirmation" type="button" disabled={busy} onClick={()=>void resendConfirmation()}>إعادة إرسال التأكيد</button>
       <p className="studio-login-note">سيظل تسجيل الدخول نشطًا على هذا الجهاز حتى تسجّلي الخروج. لا نحفظ كلمة المرور في المتصفح.</p>
       <p className="studio-login-register">طالب جديد؟ <a href="/register">إنشاء حساب وطلب الانضمام</a></p>
     </section>
