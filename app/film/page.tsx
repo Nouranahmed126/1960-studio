@@ -1,5 +1,7 @@
-import MuseumTeaser from "../museum-teaser";
-import SubmissionRadar from "../submission-radar";
-import HomeCrewStrip from "../home-crew-strip";
-import CinematicIntro from "../cinematic-intro";
-export default function Home(){return <main dir="rtl" className="studio-shell cinema-home-page cinema-broadcast-home" style={{maxWidth:1200}}><CinematicIntro/><header className="studio-nav cinema-home-header"><a className="studio-logo" href="/">Plateau Crew Hub</a></header><div id="quick-submission"><SubmissionRadar compact/></div><section className="cinema-home-hero" style={{textAlign:"center",padding:"14px 0 2px"}}><p className="studio-eyebrow">مشروع التخرج</p><h1 style={{fontSize:"clamp(52px,12vw,108px)",lineHeight:1,margin:"6px 0",letterSpacing:3}}>أعمال الفريق</h1></section><p className="cinematic-home-credit">الإشراف الأكاديمي على الفيلم: د/ أحمد عبدالمنعم <span aria-hidden="true">✦</span> تصميم وتطوير منصة Plateau Crew Hub: نوران أحمد</p><div className="cinema-dual-marquees"><HomeCrewStrip/><MuseumTeaser/></div><a href="/honor-board" className="studio-honor-banner cinema-home-honor" style={{display:"block",textDecoration:"none",fontWeight:800}}>🏆 لوحة شرف الفريق · نجوم الأسبوع وتكريمات الإخراج ←</a><footer className="cinematic-home-footer">Created & Designed by Nouran Ahmed · Plateau Crew Hub</footer></main>}
+import { redirect } from "next/navigation";
+
+// The former standalone showcase duplicated the three strips already on the main experience.
+// Keep old bookmarks working by sending visitors to the homepage; no gallery or archive data is deleted.
+export default function FilmPage() {
+  redirect("/");
+}
