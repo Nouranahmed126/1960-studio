@@ -1,0 +1,313 @@
+@property --reference-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.reference-hub{box-sizing:border-box;max-width:1169px;margin:auto;padding:20px clamp(12px,4vw,48px) 28px;color:#291538;background:radial-gradient(ellipse at 50% 20%,#fff8ef,transparent 55%),linear-gradient(135deg,#f7f3fc,#efe7fa);font-family:Arial,sans-serif}
+.reference-hub *{box-sizing:border-box}.reference-frame{position:relative;isolation:isolate;border:5px solid transparent;border-radius:40px;background:linear-gradient(135deg,#fff9f7,#eee1f6) padding-box,conic-gradient(from var(--reference-angle),#4a2c7a,#b38bd5,#ffe6a3,#8054a7,#4a2c7a) border-box;box-shadow:inset 0 0 0 3px #fff4ff,inset 0 0 0 6px #b18acb,0 4px 0 #45265f,0 12px 20px #59347740;overflow:hidden;animation:reference-orbit 8s linear infinite}.reference-frame:after{content:'';position:absolute;inset:3px;border:2px solid #c5a3e0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 -4px 10px #f8d580;animation:reference-glow 4s ease-in-out infinite alternate;z-index:3}.reference-hero{min-height:clamp(280px,38vw,440px);display:flex;align-items:center}.reference-identity{padding:30px 0 30px 4%;width:48%;z-index:2;position:relative}.reference-scene{position:absolute;inset:0 0 0 39%;background:url('/hero-1960-scene.png') center right/cover no-repeat;z-index:0}.reference-studio{font-weight:800;letter-spacing:.19em;font-size:clamp(10px,1.5vw,17px);color:#382047}.reference-brand{display:flex;align-items:center;gap:12px;position:relative}.reference-mark{display:grid;place-items:center;flex-shrink:0;background:linear-gradient(145deg,#c8a9e9,#7950a7);border:2px solid #e7c16a;border-radius:22%;box-shadow:inset 0 2px 4px white,0 5px 9px #5a36754d;width:clamp(42px,8vw,90px);aspect-ratio:1;font:bold clamp(30px,5vw,60px) Georgia;color:white;text-shadow:0 3px 4px #50306c}.reference-brand h1{font:bold clamp(24px,4.8vw,60px)/.98 Georgia,serif;margin:10px 0;color:#291538;text-shadow:0 3px 2px #a78bb9}.reference-brand em{font-style:normal;color:#7950a7;border-bottom:2px solid #c69a40;border-radius:0 0 35% 25%}.reference-spark,.reference-crown{color:#bc8b29;text-shadow:0 1px 2px #fff4c1}.reference-film{position:absolute;bottom:12px;left:20%;width:70%;height:20px;border-block:4px dashed #b98a43;background:repeating-linear-gradient(90deg,#e6b96550 0 22px,#a97735 22px 24px);transform:rotate(-8deg);pointer-events:none;animation:reference-film 9s linear infinite;z-index:1}.reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:26px}.reference-card{display:flex;align-items:center;gap:clamp(10px,2vw,25px);padding:25px 48px 25px 25px;min-height:clamp(120px,17vw,195px);text-decoration:none;transition:transform .2s}.reference-card:hover{transform:translateY(-3px)}.reference-card:focus-visible{outline:3px solid #a36b20;outline-offset:5px}.reference-icon{width:clamp(42px,10vw,130px);flex-shrink:0;position:relative;animation:reference-float 4s ease-in-out infinite}.reference-icon img{display:block;width:100%;height:auto}.reference-copy{display:flex;flex-direction:column;gap:8px;min-width:0;z-index:2}.reference-copy strong{font:bold clamp(17px,3vw,36px)/1.05 Georgia,serif;color:#291538;text-shadow:0 2px 1px #d5c0df}.reference-copy small{font-size:clamp(12px,1.8vw,22px);line-height:1.35;color:#3c2850}.reference-index,.reference-arrow{position:absolute;right:20px;color:#9264ba;font-weight:bold;z-index:2}.reference-index{top:16px;font-size:24px}.reference-arrow{bottom:18px;font-size:36px}.reference-card:last-child{grid-column:1/-1;background:linear-gradient(145deg,#fff9f7 60%,#f6dca0) padding-box,conic-gradient(from var(--reference-angle),#4a2c7a,#b38bd5,#ffe6a3,#8054a7,#4a2c7a) border-box}.reference-card:last-child .reference-film{left:78%;width:35%;transform:rotate(-25deg)}.reference-crown{font-size:24px;line-height:1}.reference-credits{display:flex;justify-content:center;align-items:center;gap:14px;text-align:center;margin:48px 0 16px;font-size:clamp(11px,1.5vw,17px);line-height:1.6}.reference-credits b{color:#693b98}@keyframes reference-orbit{to{--reference-angle:360deg}}@keyframes reference-glow{to{box-shadow:inset 0 4px 12px #ffdf8b}}@keyframes reference-float{50%{transform:translateY(-3px)}}@keyframes reference-film{to{background-position:240px 0}}@media(max-width:600px){.reference-hero{min-height:260px;border-radius:24px}.reference-identity{padding:18px 0 18px 10px;width:54%}.reference-scene{left:43%}.reference-brand{gap:5px}.reference-grid{gap:12px;margin-top:16px}.reference-card{min-height:120px;padding:16px 22px 16px 8px;border-radius:23px;gap:7px}.reference-index{right:8px;top:7px;font-size:12px}.reference-arrow{right:8px;bottom:7px;font-size:20px}.reference-credits{margin-top:24px}.reference-spark{display:none}}@media(max-width:360px){.reference-grid{grid-template-columns:1fr}.reference-hero{min-height:320px}.reference-identity{width:60%}}@media(prefers-reduced-motion:reduce){.reference-hub *,.reference-frame:after{animation:none!important;transition:none!important}}
+
+/* Scoped responsive correction */
+.reference-hub.reference-hub{width:100%;max-width:1169px;padding:14px clamp(10px,2vw,28px) 18px}
+.reference-hub .reference-hero{display:grid;grid-template-columns:43% 57%;min-height:0!important;aspect-ratio:2.35;align-items:center;border-radius:clamp(18px,3vw,34px)}
+.reference-hub .reference-identity{width:100%!important;padding:8% 0 8% 8%;position:relative;grid-column:1;z-index:2}
+.reference-hub .reference-scene{inset:0 0 0 39%;background-size:contain;background-position:center right;background-color:transparent;mask-image:linear-gradient(to right,transparent,#000 15%);-webkit-mask-image:linear-gradient(to right,transparent,#000 15%)}
+.reference-hub .reference-studio{color:#593d70!important;font-size:clamp(7px,1.2vw,14px)!important;letter-spacing:.12em!important;line-height:1.35;margin:0 0 10px!important}
+.reference-hub .reference-brand h1{font-size:clamp(17px,4vw,52px)!important;line-height:1.05!important;margin:0!important;white-space:nowrap}
+.reference-hub .reference-mark{width:clamp(25px,6vw,72px);font-size:clamp(18px,4vw,48px)}
+
+.reference-hub .reference-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(9px,2vw,22px);margin-top:16px}
+.reference-hub .reference-card{display:grid;grid-template-columns:26% minmax(0,1fr);align-items:center;gap:5%;min-height:0!important;height:auto!important;aspect-ratio:2.05;padding:12px 9% 12px 5%!important;border-radius:clamp(15px,2.6vw,30px);border-width:3px;box-shadow:inset 0 0 0 2px #fff4ff,inset 0 0 0 4px #b18acb,0 3px 0 #45265f,0 5px 9px #59347730}
+.reference-hub .reference-icon{width:100%!important;max-width:110px}
+.reference-hub .reference-copy{gap:4px;min-width:0}
+.reference-hub .reference-copy strong{font-size:clamp(12px,2.65vw,32px)!important;line-height:1.08!important;overflow-wrap:normal;letter-spacing:-.025em}
+.reference-hub .reference-copy small{font-size:clamp(8px,1.65vw,19px)!important;line-height:1.25!important}
+.reference-hub .reference-index{right:7px;top:5px;font-size:clamp(9px,1.6vw,20px)!important}
+.reference-hub .reference-arrow{right:8px;bottom:5px;font-size:clamp(12px,2.4vw,28px)!important;font-family:Arial,sans-serif;color:#7950a7!important}
+.reference-hub .reference-card:last-child{grid-template-columns:15% minmax(0,1fr);aspect-ratio:5.1;padding:10px 6%!important}
+.reference-hub .reference-crown{font-size:clamp(12px,2vw,24px)}
+.reference-hub .reference-film{height:12px;opacity:.55;bottom:5px;border-width:2px}
+.reference-hub .reference-credits{display:none}
+@media(max-width:600px){.reference-hub .reference-hero{aspect-ratio:1.85}.reference-hub .reference-card{aspect-ratio:1.85}.reference-hub .reference-card:last-child{aspect-ratio:4.2}.reference-hub .reference-frame:after{inset:2px;box-shadow:inset 0 -2px 5px #f8d580}.reference-hub .reference-brand{gap:4px}}
+
+.reference-hub .reference-ribbons{display:grid;gap:5px;margin:14px 0 0;padding:0;overflow:hidden;direction:ltr}
+.reference-hub .reference-ribbon{height:38px;display:flex;align-items:center;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.reference-hub .reference-ribbon-track{display:flex;width:max-content;flex:none;animation:studio-ribbon-scroll 35s linear infinite;will-change:transform}
+.reference-hub .ribbon-0 .reference-ribbon-track,.reference-hub .ribbon-2 .reference-ribbon-track{animation-direction:reverse}
+.reference-hub .ribbon-1 .reference-ribbon-track{animation-duration:40s}
+.reference-hub .ribbon-2 .reference-ribbon-track{animation-duration:44s}
+.reference-hub .reference-ribbon-group{display:flex;align-items:center;gap:8px;padding-right:8px;flex:none}
+.reference-hub .reference-ribbon-group a,.reference-hub .reference-ribbon-chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;border:1px solid #d8b96b;border-radius:999px;background:linear-gradient(135deg,#fffdf9,#eee4fa);padding:5px 12px;color:#4a2c7a!important;font:600 11px/1.3 Arial,sans-serif;text-decoration:none;box-shadow:0 1px 3px #4a2c7a15}
+.reference-hub .reference-ribbon-group span span,.reference-hub .reference-ribbon-group a span{color:#a87924;font-size:14px}
+.reference-hub .reference-ribbon:hover .reference-ribbon-track,.reference-hub .reference-ribbon:focus-within .reference-ribbon-track,.reference-hub .reference-ribbon:active .reference-ribbon-track{animation-play-state:paused}
+@keyframes studio-ribbon-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-ribbon-track{animation:none!important}.reference-hub .reference-ribbon{overflow-x:auto;mask-image:none;-webkit-mask-image:none}}
+
+.reference-hub .reference-ribbons{gap:10px;margin:15px 0 5px;padding:4px 1px 8px}
+.reference-hub .reference-ribbon{height:42px;box-sizing:border-box;display:grid;grid-template-columns:30% minmax(0,1fr);border:2px solid #9670b8;border-radius:18px;background:linear-gradient(165deg,#fffaf4,#f2e7f8);box-shadow:inset 0 0 0 2px #fff9ff,inset 0 -3px 5px #e5bd77,0 3px 0 #55326e,0 5px 7px #57337530;mask-image:none;-webkit-mask-image:none;overflow:hidden}
+.reference-hub .ribbon-heading{display:flex;align-items:center;gap:7px;padding:0 8px;border-right:1px solid #d7b977;color:#382047;min-width:0}
+.reference-hub .ribbon-heading strong{font:bold clamp(10px,2.6vw,20px)/1 Georgia,serif;text-align:center}
+.reference-hub .ribbon-heading>span{color:#7950a7;font-size:18px}
+.reference-hub .ribbon-window{min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.reference-hub .reference-ribbon-group{gap:16px;padding-right:16px}
+.reference-hub .ribbon-item{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#382047;font-size:clamp(10px,2.5vw,17px)}
+.reference-hub .ribbon-item>span{color:#b58a35;text-shadow:0 1px #fff,0 2px 2px #9a6b38}
+.reference-hub .ribbon-item a{background:none;border:0;padding:0;box-shadow:none;font:inherit;color:inherit!important;white-space:nowrap}
+.reference-hub .reference-crown{display:block;width:max-content;color:#b98424!important;font-size:clamp(19px,4vw,36px)!important;text-shadow:0 -1px #fff6bb,1px 2px #a66a18,2px 4px 4px #80511c55;transform:rotate(-12deg);animation:reference-float 4s ease-in-out infinite}
+.reference-hub .reference-film{height:clamp(10px,2vw,22px);border:0!important;opacity:.9;background:repeating-linear-gradient(90deg,transparent 0 12px,#a86d29 12px 14px),linear-gradient(0deg,#b98235 0 12%,#ffe2a0 12% 23%,#b98235 23% 29%,#f6dca080 29% 71%,#b98235 71% 77%,#ffe2a0 77% 88%,#b98235 88%);box-shadow:0 0 6px #ffc968;border-radius:40% 15% 35% 10%;pointer-events:none;z-index:3}
+.reference-hub .reference-card:last-child .reference-film{left:auto;right:-3%;width:26%;bottom:8%;transform:rotate(-22deg)}
+@media(prefers-reduced-motion:reduce){.reference-hub .ribbon-window{overflow-x:auto;mask-image:none}}
+
+.reference-hub .reference-film{background:repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) top 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,#70421c 0 3px,transparent 3px 15px) bottom 2px left/100% 3px no-repeat,repeating-linear-gradient(90deg,transparent 0 22px,#a56b2c 22px 24px) center/100% 55% no-repeat,linear-gradient(180deg,#a66a28,#ffdf8a 19%,#b77b32 28%,#f8d69a 45%,#d49a48 73%,#ffdf8a 84%,#996021);border:1px solid #a36b2b!important;box-shadow:0 2px 4px #70421c55,0 0 8px #ffce73;opacity:1}
+
+body:has(.reference-hub) > .plateau-site-credit{display:none!important}
+.reference-hub .reference-credits{display:flex!important;flex-direction:column;align-items:center;gap:12px;margin:18px auto 4px;padding:14px 8px;border-top:1px solid #d4af3766;text-align:center;color:#4a2c7a}
+.reference-hub .reference-credits div{display:flex;flex-direction:column;gap:3px;align-items:center}
+.reference-hub .reference-credits small{font:500 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#66536e}
+.reference-hub .reference-credits b{font:italic 500 clamp(21px,4.5vw,36px)/1.2 "Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive;color:#58317c;text-shadow:0 1px #fff;letter-spacing:.015em}
+
+.reference-hub .reference-film{background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2228%22%20viewBox%3D%220%200%2080%2028%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff0ae%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23a86b28%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23e8b85c%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2280%22%20height%3D%2228%22%20fill%3D%22url(%23g)%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%2234%22%20height%3D%2214%22%20rx%3D%221%22%20fill%3D%22%2377451e%22%20stroke%3D%22%23ffe2a0%22%2F%3E%3Crect%20x%3D%2243%22%20y%3D%227%22%20width%3D%2234%22%20height%3D%2214%22%20rx%3D%221%22%20fill%3D%22%2377451e%22%20stroke%3D%22%23ffe2a0%22%2F%3E%3Cg%20fill%3D%22%23fff4d3%22%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2244%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2244%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2254%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2254%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2264%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2264%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.5%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x center/auto 100%!important;height:clamp(16px,3vw,30px);border:1px solid #a36b2b!important;border-radius:3px;animation:reference-film 12s linear infinite;opacity:1;box-shadow:0 2px 5px #71421c66,0 0 7px #ffd17b}
+.reference-hub .reference-card:last-child .reference-film{width:25%;bottom:9%;right:-3%;z-index:1}
+.reference-hub .reference-credits{margin:8px auto 0!important;padding:7px 4px!important;gap:5px!important}
+.reference-hub .reference-credits div{gap:0!important}
+.reference-hub .reference-credits small{font-size:9px!important}
+.reference-hub .reference-credits b{font-size:clamp(17px,3.8vw,29px)!important;line-height:1.05!important}
+body:has(.reference-hub) .reference-hub{min-height:0!important;padding-bottom:8px!important}
+@media(max-width:600px){.reference-hub .reference-hero{aspect-ratio:2.05}.reference-hub .reference-card{aspect-ratio:2.15}.reference-hub .reference-card:last-child{aspect-ratio:5.1}.reference-hub .reference-grid{gap:9px;margin-top:10px}.reference-hub .reference-ribbons{gap:6px;margin:9px 0 0}.reference-hub .reference-ribbon{height:34px}.reference-hub .reference-identity{padding-block:3%}}
+
+.reference-hub.reference-hub{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23b68a38%22%20opacity%3D%22.05%22%20transform%3D%22translate(60%2060)%20rotate(-25)%22%3E%3Ccircle%20r%3D%2220%22%2F%3E%3Ccircle%20r%3D%224%22%2F%3E%3Ccircle%20cy%3D%22-11%22%20r%3D%225%22%2F%3E%3Ccircle%20cy%3D%2211%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%22-11%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2211%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),linear-gradient(135deg,#f7f3fc,#fff8e9);padding-top:8px!important}
+.reference-hub .reference-credits{display:grid!important;grid-template-columns:1fr 12px 1fr;gap:3px!important;align-items:center;margin:6px 0 0!important;padding:5px 0!important}
+.reference-hub .reference-credits:before{content:"✦";grid-column:2;grid-row:1;color:#b88b39;font-size:12px}
+.reference-hub .reference-credits div:first-child{grid-column:1;grid-row:1}
+.reference-hub .reference-credits div:last-child{grid-column:3;grid-row:1}
+.reference-hub .reference-credits b{font-size:clamp(13px,3.4vw,27px)!important;white-space:nowrap}
+.reference-hub .reference-credits small{font-size:clamp(6px,1.6vw,10px)!important;letter-spacing:.06em}
+.reference-hub .reference-film{background-size:auto 100%!important;background-repeat:repeat-x!important;border-radius:2px!important;min-height:16px;transform:rotate(-8deg);animation:none!important}
+.reference-hub .reference-card:last-child .reference-film{transform:rotate(-22deg);height:18px;bottom:8%;width:24%}
+@media(max-width:600px){.reference-hub .reference-grid{gap:7px;margin-top:8px}.reference-hub .reference-ribbons{gap:5px;margin-top:7px;padding-bottom:4px}.reference-hub .reference-ribbon{height:32px}.reference-hub .reference-hero{aspect-ratio:2.12}.reference-hub .reference-card{aspect-ratio:2.2}.reference-hub .reference-card:last-child{aspect-ratio:5.4}}
+
+/* Restore approved card proportions and reserve room for copy. */
+@media(max-width:600px){.reference-hub .reference-hero{aspect-ratio:1.85;min-height:180px}.reference-hub .reference-card{aspect-ratio:1.85}.reference-hub .reference-card:last-child{aspect-ratio:4.2;min-height:92px;padding-block:10px!important}.reference-hub .reference-grid{gap:9px;margin-top:12px}.reference-hub .reference-ribbons{gap:8px;margin-top:12px}.reference-hub .reference-ribbon{height:38px}.reference-hub .reference-identity{padding-bottom:22px!important}.reference-hub .reference-hero .reference-film{left:45%;width:58%;bottom:8px;transform:rotate(-7deg)}.reference-hub .reference-card:last-child .reference-copy{gap:2px}.reference-hub .reference-card:last-child .reference-crown{font-size:18px!important;line-height:1}.reference-hub .reference-card:last-child .reference-copy small{line-height:1.3!important}}
+
+/* Detail refinement; retain approved card dimensions. */
+.reference-hub .reference-scene{background-size:cover!important;background-position:center right!important;inset:0 0 0 39%;mask-image:linear-gradient(90deg,transparent,#000 18%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%)}
+.reference-hub .reference-identity{padding-block:4% 7%!important}
+
+.reference-hub .reference-studio{font-size:clamp(7px,1vw,12px)!important;margin:0!important;letter-spacing:.12em!important}
+.reference-hub .reference-card:last-child .reference-crown{font-size:clamp(22px,4vw,36px)!important;align-self:flex-start;margin-left:-2px;line-height:1;transform:rotate(-12deg)}
+.reference-hub .reference-ribbon{color:#382047!important;text-decoration:none!important;cursor:pointer}
+.reference-hub .ribbon-emblem{width:24px;height:24px;object-fit:contain;flex:none;filter:drop-shadow(0 1px 2px #b58a3555)}
+.reference-hub .reference-film{height:20px!important;background-size:57.142857px 20px!important;animation:reference-film-travel 5s linear infinite!important;pointer-events:none}
+.reference-hub .reference-hero .reference-film{left:44%;width:60%;bottom:9px;transform:rotate(-7deg)}
+.reference-hub .reference-card:last-child .reference-film{height:20px!important;right:-3%;bottom:9%;width:25%}
+@keyframes reference-film-travel{from{background-position:0 0}to{background-position:57.142857px 0}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
+
+.reference-hub .reference-identity{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:clamp(8px,2vw,22px);padding:5% 0 7% 8%!important}
+
+.reference-hub .reference-brand{margin:0!important}
+
+/* Full cinematic composition with independently animated film texture. */
+.reference-hub .reference-hero .reference-scene{inset:0!important;width:100%!important;height:100%!important;background-size:cover!important;background-position:center center!important;mask-image:none!important;-webkit-mask-image:none!important}
+.reference-hub .reference-hero .reference-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#faf3f6 0%,#faf3f6ed 18%,#faf3f6a0 29%,transparent 43%);pointer-events:none}
+.reference-hub .reference-identity{position:relative;z-index:2;justify-content:center;gap:12px;padding:4% 0 5% 5%!important}
+.reference-hub .reference-brand h1{text-shadow:0 1px #fff,0 2px #b99acb,0 3px #86649c,0 5px 8px #4a2c7a44!important}
+
+.reference-hub .reference-film{background-position:0 0;animation:reference-film-travel 3s linear infinite!important;will-change:background-position}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
+
+/* Crisp editorial lettering and real moving film texture */
+.reference-hub .reference-brand h1,.reference-hub .reference-brand h1 em{filter:none!important;text-shadow:0 1px 0 #fff!important;color:#43234f!important}
+.reference-hub .reference-brand h1 em{color:#69428c!important;border-bottom-color:#c49a52}
+.reference-hub .reference-hero .reference-scene:after{background:linear-gradient(90deg,#faf4f5 0%,#faf4f5 24%,#faf4f5ed 35%,#faf4f580 43%,transparent 53%)}
+.reference-hub .reference-film{background-position:0 0!important;animation:none!important;overflow:hidden;isolation:isolate}
+.reference-hub .reference-film:before{content:"";position:absolute;inset:0 -58px 0 0;background:inherit;background-size:57.142857px 20px!important;background-repeat:repeat-x!important;animation:film-track-motion 2.2s linear infinite!important;will-change:transform}
+@keyframes film-track-motion{from{transform:translateX(0)}to{transform:translateX(-57.142857px)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Final home-only composition: seamless periodic film, shared canvas. */
+body:has(.reference-hub){background:#fff!important;background-image:repeating-linear-gradient(125deg,transparent 0 78px,#c9b4e30d 79px 80px,transparent 81px 160px)!important;animation:hub-canvas-drift 24s linear infinite}
+@keyframes hub-canvas-drift{to{background-position:320px 0}}
+.reference-hub.reference-hub,.reference-hub .reference-grid,.reference-hub .reference-ribbons,.reference-hub .reference-credits{background:transparent!important}
+.reference-hub .reference-hero{border-color:#4a2c7a!important;background:#faf5fa!important;box-shadow:inset 0 0 0 2px #fff,0 4px 0 #392052,0 7px 12px #4a2c7a30!important}
+.reference-hub .reference-hero .reference-scene{inset:0 0 0 37%!important;width:63%!important;height:100%!important;background-size:100% auto!important;background-position:center center!important;background-repeat:no-repeat!important;mask-image:linear-gradient(90deg,transparent,#000 8%)!important;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%)!important}
+.reference-hub .reference-hero .reference-scene:after{display:none!important}
+.reference-hub .reference-identity{padding:0 0 0 5%!important;align-self:center}
+.reference-hub .reference-brand h1,.reference-hub .reference-brand h1 em{filter:none!important;text-shadow:0 1px #fff,0 2px #bca4cc!important}
+.reference-hub .reference-film{--film-period:60px;background:transparent!important;border:0!important;height:21px!important;overflow:hidden!important;box-shadow:none!important;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 94%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 94%,transparent)}
+.reference-hub .reference-film:before{inset:0!important;transform:none!important;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2228%22%20viewBox%3D%220%200%2080%2028%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff1b8%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23bc8438%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ffe4a0%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20fill%3D%22url(%23g)%22%20d%3D%22M0%200H80V28H0Z%22%2F%3E%3Cg%20fill%3D%22%23825124%22%20stroke%3D%22%23ffe4a0%22%20stroke-width%3D%221%22%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%2236%22%20height%3D%2214%22%20rx%3D%221%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%227%22%20width%3D%2236%22%20height%3D%2214%22%20rx%3D%221%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23fff9e8%22%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2232%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2232%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2262%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2262%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2272%22%20y%3D%222%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3Crect%20x%3D%2272%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%223%22%20rx%3D%22.6%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x 0 0 / 60px 21px!important;animation:hub-film-loop 1.8s linear infinite!important;will-change:background-position}
+@keyframes hub-film-loop{from{background-position:0 0}to{background-position:-60px 0}}
+.reference-hub .reference-hero .reference-film{left:26%;width:83%;bottom:8px}
+.reference-hub .reference-card:last-child .reference-film{width:33%;right:-5%}
+@media(prefers-reduced-motion:reduce){body:has(.reference-hub),.reference-hub .reference-film:before{animation:none!important}}
+
+/* Move the repeated film texture, not the clipped outer ribbon. */
+.reference-hub .reference-film:before{inset:0 -60px 0 0!important;transform:translateX(0);animation:hub-film-belt 2.4s linear infinite!important;will-change:transform}
+@keyframes hub-film-belt{from{translate:0 0}to{translate:-60px 0}}
+.reference-hub .ribbon-emblem{border-radius:50%;object-fit:cover;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Photo-first ribbons; preserve the approved main cards. */
+.reference-hub .reference-ribbon.ribbon-0,.reference-hub .reference-ribbon.ribbon-2{height:46px!important}
+.reference-hub .reference-ribbon.ribbon-1{height:66px!important}
+.reference-hub .ribbon-0 .ribbon-emblem{width:34px!important;height:34px!important;border:1px solid #c39a4d;border-radius:50%;object-fit:cover}
+.reference-hub .ribbon-1 .ribbon-item{padding:0 4px!important;gap:0!important}
+.reference-hub .ribbon-artifact{display:block;width:76px;height:50px;object-fit:contain;background:#fff9ee;border:1px solid #d3ae64;border-radius:7px;box-shadow:0 2px 4px #4a2c7a33;flex:none}
+.reference-hub .ribbon-2 .ribbon-item{border:1px solid #c9a25d;border-radius:999px;padding:3px 10px!important;background:linear-gradient(145deg,#fffaf0,#e8daf5);box-shadow:0 2px 3px #4a2c7a33;gap:5px!important}
+.reference-hub .ribbon-2 .ribbon-emblem{width:25px!important;height:25px!important}
+.reference-hub .reference-film:before{inset:0 -120px 0 0!important;transform:none!important;translate:none!important;animation:film-conveyor 1.5s linear infinite!important;will-change:transform}
+@keyframes film-conveyor{from{transform:translate3d(0,0,0)}to{transform:translate3d(-60px,0,0)}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Final data-driven ribbon presentation: image-first, compact and seamless. */
+.reference-hub .reference-ribbon{grid-template-columns:minmax(112px,22%) minmax(0,1fr)!important;height:48px!important;min-width:0}
+.reference-hub .reference-ribbon.ribbon-1{height:68px!important}
+.reference-hub .reference-ribbon .ribbon-heading{height:100%;text-decoration:none;min-width:0}
+.reference-hub .reference-ribbon .ribbon-window{min-width:0;width:100%;height:100%;overflow:hidden}
+.reference-hub .reference-ribbon-track{display:flex;width:max-content;height:100%;animation:studio-ribbon-loop 32s linear infinite;will-change:transform}
+.reference-hub .ribbon-0 .reference-ribbon-track,.reference-hub .ribbon-2 .reference-ribbon-track{animation-direction:reverse}
+.reference-hub .ribbon-1 .reference-ribbon-track{animation-duration:38s}
+.reference-hub .reference-ribbon-group{display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:0 8px;flex:none;height:100%}
+.reference-hub .ribbon-item{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;white-space:nowrap;text-decoration:none;color:#382047!important;font:600 12px/1.2 Arial,sans-serif}
+.reference-hub .ribbon-emblem{width:34px;height:34px;object-fit:cover;border-radius:50%;border:1.5px solid #d4af37;box-shadow:0 2px 5px #4a2c7a30;background:#fff}
+.reference-hub .ribbon-item-honor{padding:4px 10px;border:1px solid #d4af37;border-radius:999px;background:linear-gradient(145deg,#fffdf5,#eee2fa);box-shadow:0 2px 4px #4a2c7a20}
+.reference-hub .ribbon-item-honor .ribbon-emblem{width:25px;height:25px}
+.reference-hub .ribbon-artifact{display:block;width:76px;height:54px;object-fit:contain;border:1px solid #d4af37;border-radius:9px;background:#fffdf8;box-shadow:0 2px 5px #4a2c7a25;padding:2px}
+.reference-hub .ribbon-empty{display:flex;align-items:center;height:100%;padding:0 14px;color:#8a7898;font-size:11px;white-space:nowrap}
+@keyframes studio-ribbon-loop{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.reference-hub .reference-ribbon:hover .reference-ribbon-track,.reference-hub .reference-ribbon:focus-within .reference-ribbon-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-ribbon-track{animation:none!important}.reference-hub .ribbon-window{overflow-x:auto}}
+/* 35mm perforations move continuously across the actual filmstrip. */
+.reference-hub .reference-film{
+ background-image:
+  repeating-linear-gradient(90deg,#70421c 0 7px,transparent 7px 18px),
+  repeating-linear-gradient(90deg,#70421c 0 7px,transparent 7px 18px),
+  linear-gradient(180deg,#9a6429 0%,#f6d58e 17%,#b47b35 25%,#f4d49a 50%,#b47b35 75%,#f6d58e 83%,#8f5a23 100%)!important;
+ background-size:18px 3px,18px 3px,100% 100%!important;
+ background-position:0 0,0 100%,0 0!important;
+ background-repeat:repeat-x,repeat-x,no-repeat!important;
+ animation:studio-filmstrip-flow 1.8s linear infinite!important;
+}
+.reference-hub .reference-film:before{content:none!important;animation:none!important}
+@keyframes studio-filmstrip-flow{from{background-position:0 0,0 100%,0 0}to{background-position:18px 0,18px 100%,0 0}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film{animation:none!important}}
+
+/* Reference-image match: full-width cinematic hero, editorial identity and generous cards. */
+body:has(.reference-hub){background:#fff8fb!important;color:#321b3d!important}
+body:has(.reference-hub) .reference-hub.reference-hub{
+ width:100%!important;max-width:1600px!important;margin:0 auto!important;
+ padding:clamp(12px,2.1vw,32px) clamp(12px,2.2vw,34px) 22px!important;
+ background:radial-gradient(ellipse at 50% 0%,#fff0f5 0%,transparent 58%),linear-gradient(145deg,#fff8fa,#f7effb 60%,#fff8ec)!important;
+}
+.reference-hub .reference-hero{
+ width:100%;aspect-ratio:2.42;min-height:0!important;height:auto!important;
+ border-radius:clamp(24px,3vw,48px)!important;border-width:5px!important;
+ box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 7px #b98bd2,0 5px 0 #45265f,0 12px 24px #59347735!important;
+}
+.reference-hub .reference-hero .reference-scene{
+ inset:0 0 0 36%!important;width:64%!important;height:100%!important;
+ background-image:url('/hero-1960-scene.png')!important;background-size:cover!important;
+ background-position:center 48%!important;background-repeat:no-repeat!important;
+ mask-image:linear-gradient(90deg,transparent 0%,#000 10%)!important;
+ -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 10%)!important;
+}
+.reference-hub .reference-identity{
+ width:47%!important;display:flex!important;flex-direction:column!important;
+ align-items:flex-start!important;justify-content:center!important;gap:clamp(8px,1.5vw,20px)!important;
+ padding:4% 0 4% 7%!important;z-index:2!important;
+}
+
+.reference-hub .reference-brand{gap:clamp(8px,1.5vw,20px)!important;align-items:center!important}
+.reference-hub .reference-mark{
+ width:clamp(48px,8.2vw,112px)!important;border-radius:24%!important;
+ border:2px solid #e5bf68!important;box-shadow:inset 0 2px 5px #fff,0 7px 14px #5a367550!important;
+ font-size:clamp(34px,6vw,78px)!important;
+}
+.reference-hub .reference-brand h1{
+ font-size:clamp(27px,5.15vw,76px)!important;line-height:.98!important;
+ letter-spacing:-.035em!important;color:#32143d!important;
+ text-shadow:0 2px #fff,0 4px 8px #4a2c7a30!important;
+}
+.reference-hub .reference-brand h1 em{color:#71458f!important;border-bottom:3px solid #c69a4e!important}
+.reference-hub .reference-spark{font-size:clamp(24px,4vw,54px)!important;align-self:flex-start}
+
+.reference-hub .reference-studio{
+ display:flex!important;align-items:center!important;gap:12px!important;
+ margin:0 0 0 clamp(10px,2vw,24px)!important;padding-top:10px!important;
+ border-top:1px solid #dfd0dc!important;color:#4b2c53!important;
+ font:800 clamp(10px,1.5vw,18px)/1.4 Arial,sans-serif!important;letter-spacing:.24em!important;
+}
+.reference-hub .reference-studio span{color:#bd8d38!important}
+.reference-hub .reference-film{left:24%!important;width:84%!important;bottom:8px!important;height:clamp(17px,2.2vw,30px)!important}
+.reference-hub .reference-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:clamp(16px,2vw,28px)!important;margin-top:clamp(22px,2.2vw,34px)!important;
+}
+.reference-hub .reference-card{
+ aspect-ratio:2.05!important;min-height:0!important;padding:clamp(18px,2.3vw,34px)!important;
+ grid-template-columns:27% minmax(0,1fr)!important;gap:clamp(12px,1.7vw,24px)!important;
+ border-radius:clamp(24px,3vw,42px)!important;border-width:5px!important;
+ box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 6px #b58acb,0 5px 0 #45265f,0 10px 18px #59347730!important;
+}
+.reference-hub .reference-icon{width:100%!important;max-width:130px!important}
+.reference-hub .reference-copy{gap:8px!important}
+.reference-hub .reference-copy strong{font-size:clamp(20px,2.7vw,39px)!important;line-height:1.06!important}
+.reference-hub .reference-copy small{font-size:clamp(12px,1.55vw,21px)!important;line-height:1.4!important}
+.reference-hub .reference-index{right:clamp(14px,2vw,28px)!important;top:clamp(12px,1.7vw,22px)!important;font-size:clamp(17px,2.2vw,30px)!important}
+.reference-hub .reference-arrow{right:clamp(14px,2vw,28px)!important;bottom:clamp(12px,1.7vw,22px)!important;font-size:clamp(22px,2.8vw,38px)!important}
+.reference-hub .reference-card:last-child{aspect-ratio:5.05!important;grid-template-columns:16% minmax(0,1fr)!important;padding:clamp(15px,2vw,28px) clamp(24px,3vw,42px)!important}
+.reference-hub .reference-credits{
+ display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;
+ gap:clamp(12px,3vw,42px)!important;margin:clamp(24px,3vw,42px) auto 4px!important;
+ padding:18px 12px 8px!important;border-top:1px solid #d7c4d9!important;
+}
+.reference-hub .reference-credits div{display:flex!important;flex-direction:column!important;align-items:center!important;gap:5px!important}
+.reference-hub .reference-credits small{font-size:clamp(9px,1vw,13px)!important;letter-spacing:.16em!important}
+.reference-hub .reference-credits b{font-size:clamp(20px,2.5vw,34px)!important}
+.reference-hub .reference-credit-star{color:#bd8d38!important;font-size:26px!important}
+@media(max-width:700px){
+ body:has(.reference-hub) .reference-hub.reference-hub{padding:10px 10px 16px!important}
+ .reference-hub .reference-hero{aspect-ratio:1.55!important;border-radius:23px!important;border-width:4px!important}
+ .reference-hub .reference-hero .reference-scene{inset:0 0 0 37%!important;width:63%!important;background-position:54% center!important}
+ .reference-hub .reference-identity{width:57%!important;padding:4% 0 4% 5%!important;gap:7px!important}
+ .reference-hub .reference-brand{gap:5px!important}
+ .reference-hub .reference-mark{width:clamp(31px,8vw,48px)!important;font-size:clamp(23px,6vw,35px)!important}
+ .reference-hub .reference-brand h1{font-size:clamp(19px,5.1vw,30px)!important}
+ .reference-hub .reference-spark{display:none!important}
+ .reference-hub .reference-studio{font-size:clamp(8px,2vw,11px)!important;letter-spacing:.15em!important;margin-left:8px!important;padding-top:5px!important}
+ .reference-hub .reference-film{height:14px!important;bottom:5px!important}
+ .reference-hub .reference-grid{gap:10px!important;margin-top:14px!important}
+ .reference-hub .reference-card{aspect-ratio:1.65!important;padding:12px 18px 12px 9px!important;grid-template-columns:25% minmax(0,1fr)!important;gap:7px!important;border-radius:20px!important;border-width:3px!important}
+ .reference-hub .reference-icon{max-width:70px!important}
+ .reference-hub .reference-copy{gap:4px!important}
+ .reference-hub .reference-copy strong{font-size:clamp(13px,3.6vw,19px)!important}
+ .reference-hub .reference-copy small{font-size:clamp(9px,2.35vw,12px)!important}
+ .reference-hub .reference-index{font-size:12px!important;right:8px!important;top:7px!important}
+ .reference-hub .reference-arrow{font-size:19px!important;right:8px!important;bottom:6px!important}
+ .reference-hub .reference-card:last-child{aspect-ratio:4.1!important;grid-template-columns:16% minmax(0,1fr)!important;padding:10px 16px!important}
+ .reference-hub .reference-credits{gap:8px!important;margin-top:18px!important;padding-top:12px!important}
+ .reference-hub .reference-credits small{font-size:7px!important}
+ .reference-hub .reference-credits b{font-size:clamp(14px,3.5vw,20px)!important}
+ .reference-hub .reference-credit-star{font-size:17px!important}
+}
+@media(max-width:370px){
+ .reference-hub .reference-hero{aspect-ratio:1.4!important}
+ .reference-hub .reference-brand h1{font-size:18px!important}
+ .reference-hub .reference-card{aspect-ratio:1.45!important}
+ .reference-hub .reference-copy small{font-size:8px!important}
+}
+
+/* Compact reference composition and Safari-safe moving film. */
+.reference-hub .reference-hero{aspect-ratio:2.42!important;grid-template-columns:42% 58%;grid-template-rows:minmax(0,1fr);border-width:3px!important;box-shadow:0 4px 12px #59347735!important}
+.reference-hub .reference-hero .reference-scene{inset:0 0 0 42%!important;width:58%!important;background-size:contain!important;background-position:center right!important;mask-image:none!important;-webkit-mask-image:none!important}
+.reference-hub .reference-identity{width:100%!important;min-width:0;min-height:0;padding:0 0 0 5%!important;gap:clamp(3px,.8vw,12px)!important}
+.reference-hub .reference-hero .reference-film{left:28%!important;width:74%!important;bottom:3px!important;transform:rotate(-5deg);border-radius:50% 10% 40% 10%!important}
+.reference-hub .reference-film{animation:none!important;background:transparent!important}
+.reference-hub .reference-film:before{content:""!important;position:absolute;inset:0 -36px 0 0!important;transform:none;translate:none!important;background:repeating-linear-gradient(90deg,#70421c 0 6px,transparent 6px 18px) top left/18px 3px repeat-x,repeating-linear-gradient(90deg,#70421c 0 6px,transparent 6px 18px) bottom left/18px 3px repeat-x, repeating-linear-gradient(90deg,transparent 0 16px,#9a6429 16px 18px) center/18px 65% repeat-x,linear-gradient(#bd8438,#ffe2a0,#b47b35)!important;animation:reference-belt-fixed 1.2s linear infinite!important;will-change:transform}
+@keyframes reference-belt-fixed{from{transform:translate3d(0,0,0)}to{transform:translate3d(-18px,0,0)}}
+.reference-hub .reference-card:last-child .reference-film{left:auto!important;right:-3%!important;width:18%!important;bottom:5px!important;z-index:1!important}
+.reference-hub .reference-card:last-child .reference-copy{position:relative;z-index:4}
+@media(max-width:700px){.reference-hub .reference-hero{aspect-ratio:2.42!important;border-radius:15px!important}.reference-hub .reference-brand h1{font-size:clamp(13px,3.8vw,27px)!important}.reference-hub .reference-mark{width:clamp(22px,6vw,42px)!important;font-size:clamp(16px,4.5vw,30px)!important}.reference-hub .reference-studio{font-size:clamp(6px,1.5vw,10px)!important;margin:0!important;padding-top:2px!important;gap:3px!important}.reference-hub .reference-hero .reference-film{height:9px!important}.reference-hub .reference-card{aspect-ratio:1.95!important;padding:8px 15px 8px 7px!important}.reference-hub .reference-card:last-child{aspect-ratio:4.8!important}}
+@media(prefers-reduced-motion:reduce){.reference-hub .reference-film:before{animation:none!important}}
+
+/* Sculpted honors and legible crew names */
+.reference-hub .ribbon-item-crew,.reference-hub .ribbon-item-honor{display:inline-flex!important;align-items:center;gap:7px;flex-shrink:0;white-space:nowrap;color:#352046!important}
+.reference-hub .ribbon-item-honor{border-radius:999px!important;border:1px solid #a96c21!important;background:linear-gradient(165deg,#fff5cc 0%,#e7bd69 40%,#b77929 72%,#f5d994 100%)!important;box-shadow:inset 0 2px 3px #fff9dc,inset 0 -3px 4px #75400c66,0 3px 5px #48260e55!important;padding:4px 12px!important}
+.reference-hub .ribbon-item bdi{color:#352046!important;font-weight:700!important;white-space:nowrap!important}
+.reference-hub .ribbon-initial{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#f4e4c5;color:#694222;font-weight:700;flex-shrink:0}
+.reference-hub .ribbon-item-honor .ribbon-emblem{border-radius:50%;border:1px solid #fff2b6;object-fit:cover}

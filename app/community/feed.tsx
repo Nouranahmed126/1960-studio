@@ -95,7 +95,7 @@ export default function Feed() {
     const db = getSupabase();
     if (!db) return;
     const requestId = ++refreshId.current;
-    const request = db.from("plateau_posts").select(postColumns)
+    const request = db.from("plateau_posts").select(postColumns).is("archived_at", null)
       .order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false })
       .order("id", { ascending: false }).limit(limit + 1);
     const result = await (signal ? request.abortSignal(signal) : request);
@@ -103,7 +103,7 @@ export default function Feed() {
     if (result.error) { setNotice("تعذّر تحميل المنشورات. جرّب التحديث."); return; }
     const posts = (result.data ?? []) as Post[];
     const visible = posts.slice(0, limit);
-    const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : []);
+    const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : (post.legacy_media ?? []).map(media => media.path));
     const paths = [...new Set(newPaths)];
     const now = Date.now();
     const shouldSign = (path: string) => (mediaCache.current.get(path)?.refreshAfter ?? 0) <= now;
@@ -220,7 +220,15 @@ export default function Feed() {
 
   return <main className="gallery-shell plateau-feed">
     <div className="plateau-content">
-      <h1 className="plateau-feed-title">التايم لاين</h1>
+      <header className="plateau-timeline-heading">
+        <Link href="/" className="plateau-timeline-back" aria-label="العودة للرئيسية" title="العودة للرئيسية">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7"/></svg>
+        </Link>
+        <div className="plateau-timeline-heading-copy">
+          <h1 className="plateau-feed-title" dir="ltr">Timeline <span aria-hidden="true">🎬</span></h1>
+          <span className="plateau-timeline-gold-rule" aria-hidden="true"/>
+        </div>
+      </header>
       {access === "loading" && <p role="status">جارٍ التحميل…</p>}
       {access === "guest" && <div className="plateau-guest-bar"><Link href="/login">سجّل الدخول للنشر</Link></div>}
       {access === "pending" && <p className="plateau-guest-bar">النشر بعد اعتماد الحساب.</p>}
@@ -228,7 +236,7 @@ export default function Feed() {
       {viewer && <form className="plateau-card plateau-composer plateau-composer-slim" onSubmit={publish}>
         <div className="plateau-compose-line">
           <textarea aria-label="اكتب منشور" rows={body.includes("\n") ? 3 : 1} maxLength={4000} disabled={!!busy} value={body}
-            onChange={event => setBody(event.target.value)} placeholder="شارك الآن…" />
+            onChange={event => setBody(event.target.value)} placeholder="شارك تحديثاً أو كواليس مع الفريق..." />
           <input ref={mediaInput} type="file" accept={Object.keys(mediaTypes).join(",")} aria-label="رفع صورة أو فيديو" hidden
             onChange={event => {
               const selected = event.target.files?.[0];
@@ -259,10 +267,10 @@ export default function Feed() {
       </form>}
       {actionError && <p role="alert" className="plateau-notice">{actionError}</p>}
       {notice && <p role="status" className="plateau-notice">{notice} <button onClick={() => void refresh()}>تحديث</button></p>}
-      {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات.</p>}
+      {refreshVersion > 0 && !feed.posts.length && <p className="plateau-empty">لسه مفيش منشورات في التايم لاين — ابدأ أول تحديث أو شارك لقطة من الكواليس</p>}
       <section className="plateau-posts" aria-label="منشورات الفريق">
         {feed.posts.slice(0, limit).map(post => {
-          const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : post.legacy_media;
+          const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : (post.legacy_media ?? []);
           return <article className="plateau-card plateau-post" key={post.id}>
             <header className="plateau-post-header">
               <span aria-hidden="true" className="plateau-avatar">{post.author_name.trim().slice(0, 1) || "P"}</span>
@@ -295,10 +303,6 @@ export default function Feed() {
         })}
       </section>
       {feed.posts.length > limit && <button className="plateau-more" onClick={() => setLimit(previous => previous + pageSize)}>منشورات أقدم</button>}
-      <footer className="plateau-credits">
-        <span>الإشراف الأكاديمي: <span className="plateau-credit-name">د. أحمد عبد المنعم</span></span>
-        <span>تصميم وتطوير: <span className="plateau-credit-name">نوران أحمد</span></span>
-      </footer>
     </div>
     <dialog ref={dialog} className="plateau-lightbox" onClose={() => setLightbox("")}>
       <form method="dialog"><button aria-label="إغلاق الصورة">إغلاق</button></form>

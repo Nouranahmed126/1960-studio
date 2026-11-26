@@ -5,6 +5,7 @@ import "./globals.css";
 import "./community/community.css";
 import SiteNavigation from "./site-navigation";
 import MeetingReminders from "./meeting-reminders";
+import StudioMotionLayer from "./studio-motion-layer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://plateau-crew-hub.vercel.app"),
@@ -16,11 +17,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return <html lang="ar" dir="rtl"><body style={{margin:0,fontFamily:"system-ui, sans-serif"}}>
+    <StudioMotionLayer/>
     <header className="plateau-nav">
       <div>
         <Link href="/" className="plateau-brand" dir="ltr">Plateau Crew Hub</Link>
         <nav className="plateau-primary-nav" aria-label="الأقسام الرئيسية">
-          <Link href="/">التايم لاين</Link>
+          <Link href="/timeline">التايم لاين</Link>
           <Link href="/dashboard#assignments">التكليفات</Link>
           <Link href="/film#quick-submission">تسليم سريع</Link>
           <Link href="/honor-board">لوحة الشرف</Link>

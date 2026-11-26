@@ -1,6 +1,8 @@
 "use client";
 import {useEffect,useState} from "react";
+import {signStudioImages} from "../lib/studio-media";
 import {getSupabase} from "../lib/supabase-browser";
+import MovingReel from "./moving-reel";
 type Member={id:string;full_name:string};
 type Detail={user_id:string;photo_path:string|null};
 export default function HomeCrewStrip(){
@@ -13,7 +15,9 @@ export default function HomeCrewStrip(){
  if(crew.error){setStatus("login");return}
  const paths=(details.data??[]) as Detail[];
  const urls:Record<string,string>={};
- for(const d of paths)if(d.photo_path)urls[d.user_id]=db.storage.from("crew-photos").getPublicUrl(d.photo_path).data.publicUrl;
+ const signed=await signStudioImages(db,"crew-photos",paths.map(d=>d.photo_path));
+ if(!active)return;
+ for(const d of paths){const url=signed.get(d.photo_path??"");if(url)urls[d.user_id]=url;}
  const photoOwners=new Set(Object.keys(urls));
  const unique=new Map<string,Member>();
  for(const m of (crew.data??[]) as Member[]){const key=m.full_name.trim().replace(/\s+/g," ").toLocaleLowerCase("ar");const prev=unique.get(key);if(!prev||(!photoOwners.has(prev.id)&&photoOwners.has(m.id)))unique.set(key,m)}
