@@ -117,9 +117,9 @@ export default function Ribbons(){
  },[load]);
 
  const rows=[
-  {label:"Studio Crew",items:crew,symbol:"✦",href:"/crew",direction:"right"},
-  {label:"1960 Keepsakes",items:artifacts,symbol:"◇",href:"/museum",direction:"left"},
-  {label:"Honors",items:honors,symbol:"★",href:"/honor-board",direction:"right"}
+  {index:0,label:"Studio Crew",items:crew,href:"/crew",direction:"right"},
+  {index:1,label:"1960 Keepsakes",items:artifacts,href:"/museum",direction:"left"},
+  {index:2,label:"Honors",items:honors,href:"/honor-board",direction:"right"}
  ] as const;
  const visibleRows=rows.filter(row=>row.items.length>0);
 
@@ -136,14 +136,14 @@ export default function Ribbons(){
  if(!visibleRows.length)return null;
 
  return <section className="reference-ribbons" aria-label="Studio highlights">
-  {visibleRows.map((row,index)=><section className={"reference-ribbon ribbon-"+index} key={row.label} aria-label={row.label}>
+  {visibleRows.map(row=><section className={"reference-ribbon ribbon-"+row.index} key={row.label} aria-label={row.label}>
    <Link href={row.href} className="ribbon-heading"><span aria-hidden="true">{row.direction==="left"?"←":"→"}</span><strong>{row.label}</strong></Link>
    <div className="ribbon-window">
     <div className={"reference-ribbon-track ribbon-track-"+index}>
      {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
       {row.items.map(item=><Link href={row.href} prefetch className={"ribbon-item ribbon-item-"+item.kind} key={copy+"-"+item.kind+"-"+item.id} tabIndex={copy===1?-1:0} aria-label={item.label} title={item.label}>
-       {item.image&&<img className={index===1?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
-       {index!==1&&(item.kind==="honor"&&!item.image?<span className="ribbon-honor-star" aria-hidden="true">★</span>:<bdi>{item.label}</bdi>)}
+       {item.image&&<img className={item.kind==="artifact"?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
+       {item.kind!=="artifact"&&(item.kind==="honor"&&!item.image?<span className="ribbon-honor-star" aria-hidden="true">★</span>:<bdi>{item.label}</bdi>)}
       </Link>)}
      </div>)}
     </div>
