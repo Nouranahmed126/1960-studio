@@ -1,0 +1,18 @@
+/* Isolated additive homepage banner. Existing hero, grid, ribbons and footer untouched. */
+.reference-hub a.reference-bts-card {
+ display:grid!important;grid-template-columns:minmax(0,1fr) 46%;align-items:center;
+ position:relative;width:100%;min-width:0;min-height:116px;margin:12px 0 8px;
+ padding:0!important;border:3px solid transparent!important;border-radius:19px!important;
+ background:linear-gradient(115deg,#fffdfb,#f0e7f7) padding-box,conic-gradient(from var(--reference-angle),#77528e,#c6a45e,#e8d6ee,#c6a45e,#77528e) border-box!important;
+ color:#493456!important;text-decoration:none!important;overflow:hidden;
+ box-shadow:inset 0 0 0 2px #fff,0 3px 0 #6c4a83,0 7px 15px #49345619!important;
+}
+.reference-hub a.reference-bts-card:after{inset:3px!important;border:1px solid #c5a25e!important;box-shadow:none!important;pointer-events:none}
+.reference-hub .reference-bts-copy{display:grid;align-content:center;justify-items:start;gap:5px;min-width:0;padding:16px 8px 16px 18px;position:relative;z-index:2}
+.reference-hub .reference-bts-copy strong{color:#493456!important;font-family:inherit!important;font-size:clamp(17px,4.3vw,30px)!important;font-weight:850!important;line-height:1.16;text-shadow:none!important}
+.reference-hub .reference-bts-copy small{color:#685675!important;font-size:clamp(10px,2.4vw,14px)!important;line-height:1.4;font-weight:550;text-shadow:none!important}
+.reference-hub .reference-bts-enter{color:#785b2b!important;font-size:11px;font-weight:800;letter-spacing:.04em;margin-top:3px}
+.reference-hub .reference-bts-art{width:100%!important;height:100%!important;min-height:116px;display:block;object-fit:cover;object-position:center;pointer-events:none}
+.reference-hub a.reference-bts-card:focus-visible{outline:2px solid #785b2b;outline-offset:4px}
+@media(max-width:420px){.reference-hub a.reference-bts-card{min-height:102px;margin:10px 0 7px;grid-template-columns:minmax(0,1fr) 43%;border-radius:15px!important}.reference-hub .reference-bts-copy{padding:12px 5px 12px 12px;gap:4px}.reference-hub .reference-bts-art{min-height:102px}}
+@media(prefers-reduced-motion:reduce){.reference-hub a.reference-bts-card,.reference-hub a.reference-bts-card:after{animation:none!important}}

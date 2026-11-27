@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import './reference-hub.css';
+import './behind-the-scenes-card.css';
 import Ribbons from './reference-ribbons';
 
 const destinations = [
@@ -35,5 +36,9 @@ export default function Home(){
    </Link>)}
   </section>
   <Ribbons/>
+  <Link href="/gallery" className="reference-frame reference-bts-card" aria-label="Behind the Scenes">
+   <span className="reference-bts-copy"><strong>Behind the Scenes</strong><small>Set moments &amp; studio prep</small><span className="reference-bts-enter" aria-hidden="true">Explore ↗</span></span>
+   <img className="reference-bts-art" src="/behind-the-scenes-banner.svg" alt="" width={720} height={300} decoding="async" loading="lazy"/>
+  </Link>
  </main>;
 }
