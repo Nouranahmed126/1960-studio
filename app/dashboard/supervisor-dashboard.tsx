@@ -129,7 +129,7 @@ export default function SupervisorDashboard(props: Props) {
       <header className="sv-topbar">
         <div className="sv-greeting">
           <span className="sv-eyebrow">PLATEAU CREW HUB</span>
-          <h1>أهلاً د/ {profile.full_name}</h1>
+          <h1>أهلاً د/ {profile.full_name.replace(/^\s*(?:د\s*\/\s*)+/u, "").trim()}</h1>
         </div>
         <button type="button" className="sv-logout" onClick={onLogout}>تسجيل خروج</button>
       </header>
