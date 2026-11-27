@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import SubmissionRadar from "../submission-radar";
 import SupervisorArchive from "../supervisor-archive";
 import SupervisorDashboard from "./supervisor-dashboard";
-import { getSupabase } from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 type Profile={id:string;full_name:string;approval_status:string;app_role:string};
 type Team={id:number;name:string};
 type Star={id:string;full_name:string};
@@ -46,7 +46,7 @@ export default function Dashboard(){
  const load=useCallback(async()=>{
   const db=getSupabase();
   if(!db){setMessage("إعدادات Supabase غير مكتملة.");return;}
-  const {data:{user},error}=await db.auth.getUser();
+  const {data:{user},error}=await getAuthUser();
   if(error||!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("id,full_name,approval_status,app_role").eq("id",user.id).single();
   if(p.error||!p.data){setMessage("تعذر قراءة حسابك. راجعي إعدادات قاعدة البيانات.");return;}
