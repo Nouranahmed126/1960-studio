@@ -14,7 +14,7 @@ export default function Login() {
     if (!db) return;
     let active = true;
     void db.auth.getSession().then(({ data: { session } }) => {
-      if (active && session?.user) window.location.replace("/");
+      if (active && session?.user) window.location.replace(session.user.app_metadata?.must_change_password === true ? "/change-password" : "/");
     });
     return () => { active = false; };
   }, []);
@@ -28,14 +28,14 @@ export default function Login() {
     try {
       const value = username.trim();
       const email = value.includes("@") ? value : value.toLowerCase() + "@students.1960.invalid";
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         setMessage(error.message.toLowerCase().includes("email not confirmed")
           ? "Email not confirmed."
           : "Unable to sign in.");
         return;
       }
-      window.location.replace("/");
+      window.location.replace(data.user?.app_metadata?.must_change_password === true ? "/change-password" : "/");
     } catch {
       setMessage("Unable to sign in.");
     } finally {
@@ -73,6 +73,7 @@ export default function Login() {
             {busy ? "…" : "Login"}
           </button>
           {message && <p className="studio-login-error" role="alert">{message}</p>}
+          <p style={{ margin: "10px 0 0", color: "#6d5a75", fontSize: 14, textAlign: "center", lineHeight: 1.7 }}>نسيت بيانات الدخول؟ تواصلي مع المشرفة لاستعادة اسم المستخدم أو طلب كلمة مرور مؤقتة.</p>
         </form>
       </section>
     </main>

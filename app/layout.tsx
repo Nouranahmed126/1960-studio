@@ -4,6 +4,7 @@ import "./globals.css";
 import "./community/community.css";
 import SiteNavigation from "./site-navigation";
 import MeetingReminders from "./meeting-reminders";
+import PasswordChangeGuard from "./password-change-guard";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://plateau-crew-hub.vercel.app"),
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return <html lang="ar" dir="rtl"><body className="site-gold-canvas" style={{margin:0,fontFamily:"system-ui, sans-serif"}}>
     <div className="gold-starfield" aria-hidden="true" />
+    <PasswordChangeGuard/>
     <SiteNavigation/>
     {children}<MeetingReminders/>
   </body></html>;
