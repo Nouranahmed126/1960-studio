@@ -31,7 +31,7 @@ const mediaTypes: Record<string, string> = {
 };
 const dateFormatter = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium", timeStyle: "short" });
 const postColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location";
-const memberPostColumns = postColumns + ",user_id";
+const memberPostColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location,user_id" as const;
 const zeroCounts = { likes: 0, comments: 0, liked: false };
 const pageSize = 20;
 
