@@ -2314,3 +2314,226 @@ body .studio-museum .museum-photo::after{content:""!important;position:absolute!
 @keyframes museumOuterFrameSpin{to{transform:rotate(1turn)}}
 @keyframes museumInnerFramePulse{0%,100%{border-color:#76558c;box-shadow:inset 0 0 0 1px #fff9,0 0 0 1px #e8d8b2}50%{border-color:#d2b16c;box-shadow:inset 0 0 0 1px #fff9,0 0 9px #d2b16c88}}
 @media(prefers-reduced-motion:reduce){body .studio-museum .museum-photo::before,body .studio-museum .museum-photo::after{animation:none!important}}
+
+
+/* Plateau Archive — white sculpted 3D photo tiles with tap-to-reveal captions */
+body .studio-museum .museum-header-compact h1{
+  color:#493456!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-weight:800!important;
+  letter-spacing:0!important;
+  text-shadow:none!important;
+  -webkit-text-stroke:0!important;
+}
+body .studio-museum .museum-grid{
+  perspective:1450px!important;
+  perspective-origin:50% 38%!important;
+  transform-style:preserve-3d!important;
+  align-items:start!important;
+  gap:24px 19px!important;
+  overflow:visible!important;
+  padding:12px 8px 28px!important;
+}
+body .studio-museum .museum-polaroid{
+  position:relative!important;
+  isolation:isolate!important;
+  min-width:0!important;
+  padding:9px!important;
+  overflow:visible!important;
+  border:1px solid #c9a85f!important;
+  border-radius:19px 15px 21px 16px!important;
+  background:#fff!important;
+  color:#493456!important;
+  transform-style:preserve-3d!important;
+  backface-visibility:hidden!important;
+  transform-origin:center center!important;
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px #fff9,
+    0 5px 0 -1px #e4d4ae,
+    0 12px 0 -4px #c4a66b,
+    0 18px 28px #49345624,
+    0 30px 42px #49345612!important;
+  animation:museumCardFloatStrong 7.2s ease-in-out infinite!important;
+  transition:transform .45s cubic-bezier(.2,.75,.2,1),box-shadow .45s ease!important;
+}
+body .studio-museum .museum-polaroid::before{
+  content:""!important;
+  position:absolute!important;
+  inset:7px -8px -13px 8px!important;
+  z-index:-2!important;
+  border:1px solid #b89550!important;
+  border-radius:inherit!important;
+  background:linear-gradient(145deg,#fffdf6 0%,#e9dfc8 52%,#c9aa6b 100%)!important;
+  transform:translate3d(0,0,-23px) rotateZ(.35deg)!important;
+  box-shadow:0 17px 25px #49345625,2px 5px 0 #b89550!important;
+}
+body .studio-museum .museum-polaroid::after{
+  content:""!important;
+  position:absolute!important;
+  inset:5px 7px auto auto!important;
+  z-index:2!important;
+  width:28px!important;
+  height:4px!important;
+  border-radius:99px!important;
+  background:linear-gradient(90deg,#f7e8bc,#c69c4c)!important;
+  opacity:.95!important;
+  transform:translateZ(34px) rotate(35deg)!important;
+  box-shadow:0 2px 5px #49345622!important;
+}
+body .studio-museum button.museum-photo-trigger{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:clamp(150px,37vw,255px)!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  border:3px solid #fff!important;
+  border-radius:14px 11px 16px 12px!important;
+  outline:2px solid #d2b16c!important;
+  outline-offset:2px!important;
+  background:#fff!important;
+  color:#493456!important;
+  text-align:right!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  transform:translateZ(27px) rotateX(-2deg)!important;
+  transform-style:preserve-3d!important;
+  box-shadow:
+    0 2px 0 #fff inset,
+    0 7px 12px #24152e22,
+    0 15px 22px #4934561c!important;
+  transition:transform .38s cubic-bezier(.2,.75,.2,1),box-shadow .38s ease!important;
+}
+body .studio-museum .museum-photo img{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  object-fit:cover!important;
+  transform:translateZ(5px) scale(1.025)!important;
+  transition:transform .55s cubic-bezier(.2,.75,.2,1),filter .55s ease!important;
+}
+body .studio-museum .museum-photo-caption{
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:flex-end!important;
+  gap:5px!important;
+  padding:13px 12px 12px!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,#25142b00 16%,#25142b12 42%,#25142beF 100%)!important;
+  color:#fff!important;
+  transform:translate3d(0,13px,18px)!important;
+  transition:opacity .28s ease,transform .32s ease,visibility .28s ease!important;
+  font-family:"Cairo","IBM Plex Sans Arabic",Tahoma,system-ui,sans-serif!important;
+  text-shadow:none!important;
+}
+body .studio-museum .museum-photo-caption strong{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  color:#fff!important;
+  text-align:right!important;
+  font-family:"Cairo","IBM Plex Sans Arabic",Tahoma,system-ui,sans-serif!important;
+  font-size:clamp(13px,2.8vw,17px)!important;
+  font-weight:900!important;
+  line-height:1.4!important;
+  text-shadow:none!important;
+  transform:translateZ(3px)!important;
+  overflow-wrap:anywhere!important;
+}
+body .studio-museum .museum-photo-caption small{
+  display:inline-flex!important;
+  width:max-content!important;
+  max-width:100%!important;
+  padding:3px 8px!important;
+  border:1px solid #e5c77e!important;
+  border-radius:999px!important;
+  background:#fff3d51c!important;
+  color:#ffe5a5!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  line-height:1.4!important;
+}
+body .studio-museum .museum-photo-caption em{
+  display:-webkit-box!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-style:normal!important;
+  line-height:1.5!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  text-shadow:none!important;
+}
+body .studio-museum .museum-photo-trigger.is-expanded .museum-photo-caption,
+body .studio-museum .museum-photo-trigger:focus-visible .museum-photo-caption{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translate3d(0,0,18px)!important;
+}
+body .studio-museum .museum-photo-trigger.is-expanded img{
+  transform:translateZ(4px) scale(1.07)!important;
+  filter:brightness(.76) saturate(1.06)!important;
+}
+body .studio-museum .museum-photo-trigger:focus-visible{
+  outline:3px solid #76558c!important;
+  outline-offset:5px!important;
+}
+body .studio-museum .museum-photo-trigger:active{
+  transform:translateZ(31px) rotateX(0deg) scale(.985)!important;
+}
+@keyframes museumCardFloatStrong{
+  0%,100%{transform:translate3d(0,0,0) rotateX(7deg) rotateY(-7deg) rotateZ(-1deg)}
+  50%{transform:translate3d(0,-6px,8px) rotateX(9deg) rotateY(-4deg) rotateZ(-1.4deg)}
+}
+@keyframes museumCardFloatStrongReverse{
+  0%,100%{transform:translate3d(0,-2px,0) rotateX(6deg) rotateY(7deg) rotateZ(1deg)}
+  50%{transform:translate3d(0,5px,8px) rotateX(8deg) rotateY(4deg) rotateZ(1.4deg)}
+}
+body .studio-museum .museum-polaroid:nth-child(4n+2),
+body .studio-museum .museum-polaroid:nth-child(4n){
+  animation-name:museumCardFloatStrongReverse!important;
+}
+@media(hover:hover) and (pointer:fine){
+  body .studio-museum .museum-polaroid:hover,
+  body .studio-museum .museum-polaroid:focus-within{
+    animation-play-state:paused!important;
+    transform:translate3d(0,-9px,28px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1.025)!important;
+    z-index:6!important;
+    box-shadow:0 2px 0 #fff inset,0 8px 0 -1px #e4d4ae,0 15px 0 -4px #c4a66b,0 27px 38px #49345638!important;
+  }
+  body .studio-museum .museum-polaroid:hover .museum-photo-trigger{
+    transform:translateZ(34px) rotateX(0deg)!important;
+  }
+}
+@media(max-width:600px){
+  body .studio-museum{padding-inline:12px!important}
+  body .studio-museum .museum-grid{gap:21px 13px!important;padding:10px 4px 25px!important}
+  body .studio-museum .museum-polaroid{padding:7px!important;border-radius:16px 13px 18px 14px!important}
+  body .studio-museum button.museum-photo-trigger{height:clamp(145px,40vw,205px)!important}
+  body .studio-museum .museum-photo-caption{padding:10px 9px 9px!important}
+  body .studio-museum .museum-photo-caption strong{font-size:13px!important}
+  body .studio-museum .museum-photo-caption em{font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body .studio-museum .museum-polaroid{animation:none!important;transition:none!important}
+  body .studio-museum .museum-photo-trigger,
+  body .studio-museum .museum-photo img,
+  body .studio-museum .museum-photo-caption{transition:none!important}
+}
