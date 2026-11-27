@@ -20,8 +20,8 @@ export default function HonorBoard(){
   if(!publicDb)return;
   const {data:{user}}=await getAuthUser();
   if(user&&db){
-   const p=await db.from("profiles").select("app_role").eq("id",user.id).single();
-   setSupervisor(p.data?.app_role==="supervisor");
+   const p=await db.from("profiles").select("app_role").eq("id",user.id).maybeSingle();
+   setSupervisor(!p.error&&p.data?.app_role==="supervisor");
   }else{
    setSupervisor(false);
   }
@@ -49,6 +49,8 @@ export default function HonorBoard(){
   if(!db)return;
   const {data:{user}}=await getAuthUser();
   if(!user){setStatus("سجّلي الدخول بحساب المشرفة لإضافة تكريم.");return;}
+  const profile=await db.from("profiles").select("app_role").eq("id",user.id).maybeSingle();
+  if(profile.error||profile.data?.app_role!=="supervisor"){setSupervisor(false);setStatus("إضافة التكريم متاحة للمشرفة المعتمدة فقط.");return;}
   const r=await db.from("studio_honors").insert({
    student_name:name.trim(),achievement:achievement.trim(),award,stars,
    note:note.trim()||null,created_by:user.id
@@ -61,6 +63,10 @@ export default function HonorBoard(){
   if(!window.confirm("حذف هذا التكريم؟"))return;
   const db=getSupabase();
   if(!db)return;
+  const {data:{user}}=await getAuthUser();
+  if(!user){setStatus("سجّلي الدخول بحساب المشرفة لحذف التكريم.");return;}
+  const profile=await db.from("profiles").select("app_role").eq("id",user.id).maybeSingle();
+  if(profile.error||profile.data?.app_role!=="supervisor"){setSupervisor(false);setStatus("حذف التكريم متاح للمشرفة المعتمدة فقط.");return;}
   const r=await db.from("studio_honors").delete().eq("id",id);
   if(r.error)setStatus(r.error.message);
   else await load();
@@ -69,7 +75,7 @@ export default function HonorBoard(){
  return <main dir="rtl" className="honor-board-page" style={{maxWidth:1000,margin:"auto",padding:"35px 20px 110px"}}>
   <a href="/">← الرئيسية</a>
   <p style={{color:"#e9afc2"}}>Plateau Crew Hub</p>
-  <h1>🏆 لوحة شرف الفريق</h1>
+  <h1 className="honor-board-title">🏆 لوحة شرف الفريق</h1>
   <p>نجوم الأسبوع وتكريمات الإخراج — تقدير لكل إنجاز يستحق التصفيق 🎬</p>
   {status&&<p role="status">{status}</p>}
   {supervisor&&<form className="honor-board-form" onSubmit={add} style={{display:"grid",gap:12,padding:20,border:"1px solid #8a6074",borderRadius:18,margin:"25px 0"}}>
