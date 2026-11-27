@@ -12,19 +12,19 @@ const destinations = [
 
 export default function Home(){
  return <main className="reference-hub" dir="ltr">
-  <header className="reference-frame reference-hero">
-   <div className="reference-scene" aria-hidden="true"/>
-   <div className="reference-identity">
-    <p className="reference-kicker">A CREATIVE PRODUCTION<br/>COMMUNITY</p>
-    <div className="reference-brand">
-     <span className="reference-mark">P</span>
-     <h1>Plateau<br/><em>Crew Hub</em></h1>
-     <span className="reference-spark" aria-hidden="true">✦</span>
-    </div>
-    <p className="reference-lead">One crew. One vision.<br/>A story in the making.</p>
-    <div className="reference-studio"><span aria-hidden="true">—</span> STUDIO 1960</div>
-   </div>
-   <div className="reference-film" aria-hidden="true"/>
+  <header className="reference-frame reference-hero" aria-label="Plateau Crew Hub">
+   <img
+    className="reference-banner-image"
+    src="/plateau-crew-hub-hero-reference.jpg"
+    alt="Plateau Crew Hub — Crafted together, frame by frame."
+    width={1584}
+    height={672}
+    loading="eager"
+    fetchPriority="high"
+    decoding="async"
+   />
+   <span className="reference-hero-star" aria-hidden="true">✦</span>
+   <span className="reference-hero-flare" aria-hidden="true">✧</span>
   </header>
   <section className="reference-grid" aria-label="Studio sections">
    {destinations.map((item,i)=><Link className="reference-frame reference-card" href={item.href} key={item.href}>
@@ -38,7 +38,6 @@ export default function Home(){
   <Ribbons/>
   <footer className="reference-credits" dir="ltr">
    <div><small>Academic Supervision</small><b>Dr. Ahmed Abdelmoneim</b></div>
-   <span className="reference-credit-star" aria-hidden="true">✦</span>
    <div><small>Designed &amp; Developed by</small><b>Nouran Ahmed</b></div>
   </footer>
  </main>;
