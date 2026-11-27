@@ -465,22 +465,24 @@ export default function Submissions() {
         </div>
       )}
 
-      {!authReady ? (
+      {!authReady && (
         <section className="submission-card submission-login-required" aria-live="polite">
           <div className="submission-card-heading">
             <span className="submission-step">🔐</span>
             <div><h2>جارٍ استعادة جلستك</h2><p>نتحقق من تسجيل الدخول المحفوظ على هذا المتصفح…</p></div>
           </div>
         </section>
-      ) : authRequired ? (
+      )}
+      {authReady && authRequired && (
         <section className="submission-card submission-login-required">
           <div className="submission-card-heading">
             <span className="submission-step">🔐</span>
-            <div><h2>تسجيل الدخول مطلوب</h2><p>سجّلي الدخول مرة واحدة على هذا الرابط والمتصفح، وستظل جلستك محفوظة.</p></div>
+            <div><h2>معاينة الصفحة متاحة</h2><p>يمكنك مشاهدة كل الأقسام الآن. لتفعيل الحفظ والرفع، سجّلي الدخول مرة واحدة على هذا الرابط والمتصفح وستظل جلستك محفوظة.</p></div>
           </div>
-          <button type="button" className="submission-button submission-button-primary" onClick={() => window.location.assign("/login?next=%2Fsubmissions")}>تسجيل الدخول والعودة للتسليمات</button>
+          <button type="button" className="submission-button submission-button-primary" onClick={() => window.location.assign("/login?next=%2Fsubmissions")}>تسجيل الدخول وتفعيل التسليمات</button>
         </section>
-      ) : user && (
+      )}
+      {authReady && (
         <>
           <section className="submission-card submission-card-details">
             <div className="submission-card-heading">
@@ -490,11 +492,11 @@ export default function Submissions() {
             <div className="submission-fields">
               <label className="submission-field">
                 <span>عنوان التسليم</span>
-                <input id="submission-title" maxLength={160} placeholder="مثال: معالجة المشهد الأول" value={title} onChange={(event) => setTitle(event.target.value)} />
+                <input id="submission-title" maxLength={160} placeholder="مثال: معالجة المشهد الأول" disabled={!user} value={title} onChange={(event) => setTitle(event.target.value)} />
               </label>
               <label className="submission-field">
                 <span>الفريق</span>
-                <select id="submission-team" value={team} onChange={(event) => setTeam(event.target.value)}>
+                <select id="submission-team" disabled={!user} value={team} onChange={(event) => setTeam(event.target.value)}>
                   <option value="">اختاري فريقك</option>
                   {teams.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
                 </select>
@@ -510,18 +512,18 @@ export default function Submissions() {
             <div className="submission-fields">
               <label className="submission-field">
                 <span>نوع التسليم</span>
-                <select value={category} onChange={(event) => setCategory(event.target.value)}>
+                <select disabled={!user} value={category} onChange={(event) => setCategory(event.target.value)}>
                   {categories.map((item) => <option key={item}>{item}</option>)}
                 </select>
               </label>
               <label className="submission-field submission-field-full">
                 <span>النص</span>
-                <textarea rows={5} maxLength={20000} placeholder="اكتبي النص هنا…" value={body} onChange={(event) => setBody(event.target.value)} />
+                <textarea disabled={!user} rows={5} maxLength={20000} placeholder="اكتبي النص هنا…" value={body} onChange={(event) => setBody(event.target.value)} />
                 <small className="submission-field-note">{body.length.toLocaleString("ar-EG")} / 20,000 · 20 حرفًا على الأقل للحفظ</small>
               </label>
             </div>
             <div className="submission-card-footer">
-              <button className="submission-button submission-button-primary" disabled={saving || !team || title.trim().length < 3 || body.trim().length < 20} onClick={() => void submit()}>
+              <button className="submission-button submission-button-primary" disabled={!user || saving || !team || title.trim().length < 3 || body.trim().length < 20} onClick={() => void submit()}>
                 {saving ? "جارٍ الحفظ…" : "حفظ التسليم"}
               </button>
             </div>
@@ -554,6 +556,7 @@ export default function Submissions() {
                   key={assetType}
                   className="submission-file-input"
                   type="file"
+                  disabled={!user}
                   multiple
                   accept={fileAccept}
                   onChange={(event) => setFiles(Array.from(event.target.files ?? []))}
@@ -573,7 +576,7 @@ export default function Submissions() {
               <div className="submission-card-footer">
                 <button
                   className="submission-button submission-button-primary"
-                  disabled={!team || title.trim().length < 3 || !files.length || uploadBusy}
+                  disabled={!user || !team || title.trim().length < 3 || !files.length || uploadBusy}
                   onClick={() => void uploadMany()}
                 >
                   {uploadBusy ? "جارٍ رفع الملفات…" : "رفع " + files.length + " عناصر"}
@@ -587,13 +590,13 @@ export default function Submissions() {
                 <div className="submission-tool-title"><span aria-hidden="true">↗</span><h3>إضافة رابط</h3></div>
                 <label className="submission-field">
                   <span>الرابط</span>
-                  <input type="url" dir="ltr" placeholder="https://…" value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} />
+                  <input type="url" disabled={!user} dir="ltr" placeholder="https://…" value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} />
                 </label>
                 <label className="submission-field">
                   <span>اسم المصدر <small>اختياري</small></span>
-                  <input placeholder="اسم مختصر للرابط" value={sourceLabel} maxLength={160} onChange={(event) => setSourceLabel(event.target.value)} />
+                  <input disabled={!user} placeholder="اسم مختصر للرابط" value={sourceLabel} maxLength={160} onChange={(event) => setSourceLabel(event.target.value)} />
                 </label>
-                <button type="button" className="submission-button submission-button-secondary" disabled={saving || !sourceUrl.trim()} onClick={() => void submitLink()}>
+                <button type="button" className="submission-button submission-button-secondary" disabled={!user || saving || !sourceUrl.trim()} onClick={() => void submitLink()}>
                   {saving ? "جارٍ الحفظ…" : "حفظ الرابط"}
                 </button>
               </div>
@@ -604,17 +607,17 @@ export default function Submissions() {
                   <i className="submission-recording-dot" aria-hidden="true" />
                 </div>
                 <div className="submission-voice-actions">
-                  <button type="button" className="submission-button submission-button-secondary" disabled={recording || uploadBusy} onClick={() => void startRecording()}>بدء التسجيل</button>
-                  <button type="button" className="submission-button submission-button-quiet" disabled={!recording} onClick={stopRecording}>إيقاف</button>
+                  <button type="button" className="submission-button submission-button-secondary" disabled={!user || recording || uploadBusy} onClick={() => void startRecording()}>بدء التسجيل</button>
+                  <button type="button" className="submission-button submission-button-quiet" disabled={!user || !recording} onClick={stopRecording}>إيقاف</button>
                 </div>
                 {audio && (
                   <div className="submission-audio-tools">
                     <audio controls preload="metadata" src={audioUrl} />
                     <div className="submission-voice-actions">
-                      <button type="button" className="submission-button submission-button-primary" disabled={uploadBusy} onClick={() => void uploadAsset(audio, true)}>
+                      <button type="button" className="submission-button submission-button-primary" disabled={!user || uploadBusy} onClick={() => void uploadAsset(audio, true)}>
                         {uploadBusy ? "جارٍ الإرسال…" : "إرسال التسجيل"}
                       </button>
-                      <button type="button" className="submission-button submission-button-quiet" disabled={uploadBusy || recording} onClick={downloadRecording}>حفظ نسخة</button>
+                      <button type="button" className="submission-button submission-button-quiet" disabled={!user || uploadBusy || recording} onClick={downloadRecording}>حفظ نسخة</button>
                       <button type="button" className="submission-text-button" disabled={uploadBusy || recording} onClick={discardRecording}>حذف</button>
                     </div>
                     <span className="submission-voice-saved">{voiceSaved ? "تم الحفظ في الموقع ✓" : "التسجيل لم يُرسل بعد"}</span>
