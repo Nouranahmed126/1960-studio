@@ -85,10 +85,10 @@ export default function Feed() {
     if (!db) { setAccess("offline"); return; }
     let active = true;
     async function identify() {
-      const { data: { user }, error } = await db!.auth.getUser();
+      const { data: { user } } = await getAuthUser();
       if (!active) return;
       if (!user) {
-        setAccess(error && error.name !== "AuthSessionMissingError" ? "offline" : "guest");
+        setAccess("guest");
         return;
       }
       const profile = await db!.from("profiles").select("approval_status,app_role").eq("id", user.id).single();
