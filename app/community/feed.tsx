@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { getSupabase } from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 import { getVisitorToken } from "../../lib/plateau-visitor";
 import PostInteractions, { type InteractionCounts } from "../gallery/post-interactions";
 
