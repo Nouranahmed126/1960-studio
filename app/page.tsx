@@ -36,9 +36,14 @@ export default function Home(){
    </Link>)}
   </section>
   <Ribbons/>
-  <Link href="/gallery" className="reference-frame reference-bts-card" aria-label="Behind the Scenes">
-   <span className="reference-bts-copy"><strong>Behind the Scenes</strong><small>Set moments &amp; studio prep</small><span className="reference-bts-enter" aria-hidden="true">Explore ↗</span></span>
-   <img className="reference-bts-art" src="/behind-the-scenes-banner.svg" alt="" width={720} height={300} decoding="async" loading="lazy"/>
-  </Link>
+  <section className="reference-bts-section" aria-label="Behind the Scenes">
+   <Link href="/gallery" className="reference-frame reference-bts-card" aria-label="Behind the Scenes">
+    <span className="reference-bts-scene" aria-hidden="true">
+     <img className="reference-bts-art" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Filming%2C_movie_camera_Fortepan_93266.jpg/960px-Filming%2C_movie_camera_Fortepan_93266.jpg" alt="" width={960} height={618} decoding="async" loading="lazy"/>
+    </span>
+    <span className="reference-bts-copy"><strong>Behind the Scenes</strong><small>Every frame has a story.</small><span className="reference-bts-enter" aria-hidden="true">↗</span></span>
+   </Link>
+   <small className="reference-bts-credit"><a href="https://commons.wikimedia.org/wiki/File:Filming,_movie_camera_Fortepan_93266.jpg">1962 archival photo · FOTO:FORTEPAN / Inkey Tibor</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> · tinted and cropped</small>
+  </section>
  </main>;
 }

@@ -1,18 +1,43 @@
-/* Isolated additive homepage banner. Existing hero, grid, ribbons and footer untouched. */
-.reference-hub a.reference-bts-card {
- display:grid!important;grid-template-columns:minmax(0,1fr) 46%;align-items:center;
- position:relative;width:100%;min-width:0;min-height:116px;margin:12px 0 8px;
- padding:0!important;border:3px solid transparent!important;border-radius:19px!important;
- background:linear-gradient(115deg,#fffdfb,#f0e7f7) padding-box,conic-gradient(from var(--reference-angle),#77528e,#c6a45e,#e8d6ee,#c6a45e,#77528e) border-box!important;
- color:#493456!important;text-decoration:none!important;overflow:hidden;
- box-shadow:inset 0 0 0 2px #fff,0 3px 0 #6c4a83,0 7px 15px #49345619!important;
+/* Scoped to the single homepage card; existing hero, grid, ribbons and footer untouched. */
+.reference-hub .reference-bts-section{min-width:0;width:100%;margin:clamp(12px,1.8vw,22px) 0 6px}
+.reference-hub a.reference-bts-card{
+ display:grid!important;grid-template-columns:minmax(0,1fr);align-items:center;
+ position:relative;isolation:isolate;width:100%;min-width:0;min-height:clamp(130px,18vw,222px);margin:0;
+ padding:0!important;border:3px solid transparent!important;border-radius:clamp(18px,2.5vw,32px)!important;
+ background:linear-gradient(110deg,#fffefa,#f0e5f8 60%,#d6b78a) padding-box,conic-gradient(from var(--reference-angle,0deg),#56366e,#e9ca83,#9e77bd,#fff1bd,#56366e) border-box!important;
+ color:#392249!important;text-decoration:none!important;overflow:hidden;
+ box-shadow:inset 0 0 0 2px #fff,0 4px 0 #56366e,0 7px 0 #c8a25e,0 12px 18px #49345625!important;
+ transition:transform .25s ease,box-shadow .25s ease;
 }
-.reference-hub a.reference-bts-card:after{inset:3px!important;border:1px solid #c5a25e!important;box-shadow:none!important;pointer-events:none}
-.reference-hub .reference-bts-copy{display:grid;align-content:center;justify-items:start;gap:5px;min-width:0;padding:16px 8px 16px 18px;position:relative;z-index:2}
-.reference-hub .reference-bts-copy strong{color:#493456!important;font-family:inherit!important;font-size:clamp(17px,4.3vw,30px)!important;font-weight:850!important;line-height:1.16;text-shadow:none!important}
-.reference-hub .reference-bts-copy small{color:#685675!important;font-size:clamp(10px,2.4vw,14px)!important;line-height:1.4;font-weight:550;text-shadow:none!important}
-.reference-hub .reference-bts-enter{color:#785b2b!important;font-size:11px;font-weight:800;letter-spacing:.04em;margin-top:3px}
-.reference-hub .reference-bts-art{width:100%!important;height:100%!important;min-height:116px;display:block;object-fit:cover;object-position:center;pointer-events:none}
+.reference-hub a.reference-bts-card:before,.reference-hub a.reference-bts-card:after{
+ content:""!important;position:absolute!important;inset:4px!important;padding:1.4px!important;border:0!important;border-radius:inherit!important;
+ background:conic-gradient(from var(--reference-inner-angle,0deg),#fff3c8,#c9a052,#aa7fc5,#fff3c8,#8660a1,#d9b45f,#fff3c8)!important;
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;-webkit-mask-composite:xor!important;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;mask-composite:exclude!important;
+ animation:reference-inner-orbit 8.5s linear infinite!important;z-index:4!important;pointer-events:none!important;box-shadow:none!important;
+}
+.reference-hub a.reference-bts-card:after{inset:8px!important;padding:1px!important;animation-direction:reverse!important;animation-duration:11s!important}
+.reference-hub .reference-bts-scene{
+ position:absolute;inset:0 0 0 36%;z-index:0;overflow:hidden;
+ background:radial-gradient(ellipse at 85% 8%,#f9d99e,#a47c93 65%,#5d3e65);
+}
+.reference-hub .reference-bts-art{display:block;width:100%!important;height:100%!important;object-fit:cover;object-position:45% 42%;filter:sepia(.75) contrast(1.07) brightness(.91);pointer-events:none}
+.reference-hub .reference-bts-scene:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 86% 6%,#ffe1a360,transparent 55%),linear-gradient(0deg,#55334a48,transparent 48%),linear-gradient(90deg,#f5eaf5 0%,#f5eaf588 12%,transparent 38%)}
+.reference-hub .reference-bts-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;min-width:0;width:58%;max-width:58%;padding:clamp(18px,3vw,36px);position:relative;z-index:2}
+.reference-hub .reference-bts-copy strong{color:#392249!important;font-family:inherit!important;font-size:clamp(20px,3.15vw,42px)!important;font-weight:850!important;line-height:1.08;text-shadow:none!important;overflow-wrap:normal}
+.reference-hub .reference-bts-copy small{color:#634c73!important;font-size:clamp(10px,1.35vw,17px)!important;line-height:1.4;font-weight:600;text-shadow:none!important}
+.reference-hub .reference-bts-enter{display:grid;place-items:center;width:28px;height:28px;border:1px solid #c49a4b;border-radius:50%;background:#fff9e7;color:#6b4d25!important;font-size:18px;font-weight:800;margin-top:4px}
+.reference-hub .reference-bts-credit{display:block;text-align:right;font-size:9px;line-height:1.35;color:#655475;padding:10px 4px 0;overflow-wrap:anywhere}
+.reference-hub .reference-bts-credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .reference-hub a.reference-bts-card:focus-visible{outline:2px solid #785b2b;outline-offset:4px}
-@media(max-width:420px){.reference-hub a.reference-bts-card{min-height:102px;margin:10px 0 7px;grid-template-columns:minmax(0,1fr) 43%;border-radius:15px!important}.reference-hub .reference-bts-copy{padding:12px 5px 12px 12px;gap:4px}.reference-hub .reference-bts-art{min-height:102px}}
-@media(prefers-reduced-motion:reduce){.reference-hub a.reference-bts-card,.reference-hub a.reference-bts-card:after{animation:none!important}}
+@media(hover:hover){.reference-hub a.reference-bts-card:hover{transform:translateY(-2px);box-shadow:0 5px 0 #56366e,0 9px 0 #c8a25e,0 15px 22px #49345635!important}}
+@media(max-width:480px){
+ .reference-hub a.reference-bts-card{min-height:126px;border-radius:18px!important}
+ .reference-hub .reference-bts-copy{width:59%;max-width:59%;padding:15px 8px 15px 14px;gap:5px}
+ .reference-hub .reference-bts-copy strong{font-size:clamp(18px,5vw,23px)!important}
+ .reference-hub .reference-bts-scene{inset-inline-start:40%}
+ .reference-hub .reference-bts-art{object-position:43% 42%}
+ .reference-hub .reference-bts-enter{width:22px;height:22px;font-size:14px;margin-top:1px}
+ .reference-hub .reference-bts-credit{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.reference-hub a.reference-bts-card,.reference-hub a.reference-bts-card:before,.reference-hub a.reference-bts-card:after{animation:none!important;transition:none!important;transform:none!important}}
