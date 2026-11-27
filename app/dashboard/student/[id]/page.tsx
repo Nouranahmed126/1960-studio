@@ -8,6 +8,7 @@ import { getSupabase } from "../../../../lib/supabase-browser";
 type Profile = { id: string; full_name: string; approval_status: string; app_role: string };
 type Team = { id: number; name: string };
 type Assignment = { id: number; title: string; due_at: string | null; archived_at: string | null };
+type AssignmentTeam = { assignment_id: number; team_id: number };
 type Classification = { source_type: string; source_id: number; assignment_id: number | null; team_id: number | null };
 type Attachment = {
   id: number; uploaded_by: string; file_name: string; storage_path: string | null;
@@ -71,6 +72,8 @@ export default function StudentReviewPage() {
   const studentId = params?.id || "";
   const [student, setStudent] = useState<Profile | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [studentTeamIds, setStudentTeamIds] = useState<number[]>([]);
+  const [assignmentTeams, setAssignmentTeams] = useState<AssignmentTeam[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +101,7 @@ export default function StudentReviewPage() {
       }
 
       const [supervisorResult, studentResult, teamsResult, assignmentsResult,
-        contributionsResult, submissionsResult, worksResult, filesResult, classificationsResult] = await Promise.all([
+        contributionsResult, submissionsResult, worksResult, filesResult, teamMembersResult, assignmentTeamsResult, classificationsResult] = await Promise.all([
         db.from("profiles").select("app_role").eq("id", user.id).single(),
         db.from("profiles").select("id,full_name,approval_status,app_role").eq("id", studentId).single(),
         db.from("teams").select("id,name").order("id"),
@@ -107,6 +110,8 @@ export default function StudentReviewPage() {
         db.from("submissions").select("id,assignment_id,team_id,submitted_by,content,submitted_at,created_at").eq("submitted_by", studentId).order("created_at", { ascending: false }).limit(1000),
         db.from("work_submissions").select("id,student_id,team_id,title,category,body,created_at").eq("student_id", studentId).order("created_at", { ascending: false }).limit(1000),
         db.from("attachments").select("id,uploaded_by,file_name,storage_path,external_url,file_type,description,created_at,team_id,contribution_id").eq("uploaded_by", studentId).order("created_at", { ascending: false }).limit(1000),
+        db.from("team_members").select("team_id").eq("user_id", studentId),
+        db.from("assignment_teams").select("assignment_id,team_id"),
         db.from("submission_classifications").select("source_type,source_id,assignment_id,team_id"),
       ]);
 
@@ -123,7 +128,7 @@ export default function StudentReviewPage() {
 
       const queryErrors = [
         teamsResult.error, assignmentsResult.error, contributionsResult.error,
-        submissionsResult.error, worksResult.error, filesResult.error, classificationsResult.error,
+        submissionsResult.error, worksResult.error, filesResult.error, teamMembersResult.error, assignmentTeamsResult.error, classificationsResult.error,
       ].filter(Boolean);
       if (queryErrors.length) {
         setError("تعذر تحميل بعض التسليمات. حدّثي الصفحة وحاولي مرة أخرى.");
@@ -215,6 +220,8 @@ export default function StudentReviewPage() {
 
       setStudent(studentResult.data as Profile);
       setTeams((teamsResult.data || []) as Team[]);
+      setStudentTeamIds((teamMembersResult.data || []).map(x => x.team_id));
+      setAssignmentTeams((assignmentTeamsResult.data || []) as AssignmentTeam[]);
       setAssignments(assignmentRows);
       setItems(normalized);
       setLoading(false);
@@ -227,20 +234,17 @@ export default function StudentReviewPage() {
   }, [studentId]);
 
   const grouped = useMemo(() => {
+    const assignedIds = new Set(assignmentTeams.filter(link => studentTeamIds.includes(link.team_id)).map(link => link.assignment_id));
     const groups = assignments
+      .filter(assignment => assignedIds.has(assignment.id) || items.some(item => item.assignmentId === assignment.id))
       .map(assignment => ({
         assignment,
         items: items.filter(item => item.assignmentId === assignment.id),
       }))
-      .filter(group => group.items.length > 0)
-      .sort((a, b) => {
-        const aDate = Math.max(...a.items.map(x => new Date(x.createdAt).getTime()));
-        const bDate = Math.max(...b.items.map(x => new Date(x.createdAt).getTime()));
-        return bDate - aDate;
-      });
+      .sort((a, b) => a.assignment.id - b.assignment.id);
     const unassigned = items.filter(item => !item.assignmentId);
     return { groups, unassigned };
-  }, [assignments, items]);
+  }, [assignments, assignmentTeams, studentTeamIds, items]);
 
   const selectedItems = selectedAssignment === "unassigned"
     ? grouped.unassigned
@@ -298,8 +302,9 @@ export default function StudentReviewPage() {
               <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 99, background: "#eee4f4", color: "#6b4b7b", fontSize: 12, fontWeight: 800 }}>ملف الطالب</span>
               <h2 style={{ margin: "9px 0 4px", fontSize: 23 }}>{student.full_name}</h2>
               <p style={{ margin: 0, color: "#786982" }}>
-                {items.length} تسليم · {new Set(items.map(x => x.assignmentId).filter(Boolean)).size} تكليف مرتبط
+                {items.length} تسليم · {grouped.groups.length} تكليف مخصص لفرق الطالب
               </p>
+              <p style={{ margin: "6px 0 0", color: "#88788e", fontSize: 13 }}>{teams.filter(t => studentTeamIds.includes(t.id)).map(t => t.name).join(" · ") || "لم يتم ربط الطالب بفريق بعد"}</p>
             </div>
             <div style={{ color: "#8b7b91", fontSize: 13 }}>
               {student.approval_status === "approved" ? "✓ حساب معتمد" : "حالة الحساب: " + student.approval_status}
@@ -333,7 +338,7 @@ export default function StudentReviewPage() {
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginTop: 10 }}>
                     <span style={{ background: "#eee5f3", color: "#654b73", borderRadius: 99, padding: "4px 9px", fontSize: 12, fontWeight: 800 }}>{group.items.length} تسليم</span>
-                    {latest && <small style={{ color: "#88788e" }}>آخر تسليم: {dateLabel(latest)}</small>}
+                    {latest ? <small style={{ color: "#88788e" }}>آخر تسليم: {dateLabel(latest)}</small> : <small style={{ color: "#88788e" }}>لم يسلّم بعد</small>}
                   </div>
                 </button>
               );
@@ -361,7 +366,7 @@ export default function StudentReviewPage() {
                 <button type="button" style={mutedButton} onClick={() => { setSelectedAssignment(null); setExpandedItem(null); }}>إغلاق التكليف</button>
               </div>
 
-              <div style={{ display: "grid", gap: 10 }}>
+              {selectedItems.length === 0 ? <p style={{ color: "#88788e", margin: 0 }}>لا توجد ملفات أو تسليمات مرتبطة بهذا التكليف حتى الآن.</p> : <div style={{ display: "grid", gap: 10 }}>
                 {selectedItems.map(item => (
                   <article key={item.key} style={{ border: "1px solid #e6dcea", borderRadius: 14, padding: 13, background: "#fff" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
@@ -391,7 +396,7 @@ export default function StudentReviewPage() {
                     )}
                   </article>
                 ))}
-              </div>
+              </div>}
             </section>
           )}
         </>}
