@@ -6,23 +6,6 @@ import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 import "./submissions.css";
 
 type Team = { id: number; name: string };
-type Attachment = {
-  id: number;
-  file_name: string;
-  storage_path: string | null;
-  team_id: number | null;
-  created_at: string;
-  uploaded_by: string;
-};
-type Submission = {
-  id: number;
-  student_id: string;
-  team_id: number | null;
-  title: string;
-  category: string;
-  body: string;
-  created_at: string;
-};
 
 const categories = [
   "سيناريو",
@@ -37,19 +20,15 @@ const categories = [
   "أخرى",
 ];
 
-const filters = [
-  ["all", "الكل", "⌕"],
-  ["image", "صور", "▧"],
-  ["video", "فيديو", "▶"],
-  ["audio", "صوتيات", "♫"],
-] as const;
+const methods = [["file","ملفات","▧"],["link","رابط","↗"],["voice","صوت","♫"],["text","نص","≡"]] as const;
+type Method = typeof methods[number][0];
 
 export default function Submissions() {
-  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [method, setMethod] = useState<Method | null>(null);
   const [files, setFiles] = useState<File[]>([]);
-  const [assetType, setAssetType] = useState("all");
+  const [fileAccept, setFileAccept] = useState<string | undefined>(undefined);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const [sourceUrl, setSourceUrl] = useState("");
-  const [sourceLabel, setSourceLabel] = useState("");
   const [uploadProgress, setUploadProgress] = useState("");
   const [uploadBusy, setUploadBusy] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -61,21 +40,18 @@ export default function Submissions() {
   const [audioUrl, setAudioUrl] = useState("");
   const [voiceStatus, setVoiceStatus] = useState("");
   const [voiceSaved, setVoiceSaved] = useState(false);
-  const [names, setNames] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   const [user, setUser] = useState("");
   const [authReady, setAuthReady] = useState(false);
   const [authRequired, setAuthRequired] = useState(false);
   const [supervisor, setSupervisor] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
-  const [items, setItems] = useState<Submission[]>([]);
   const [title, setTitle] = useState("");
   const [team, setTeam] = useState("");
   const [category, setCategory] = useState("سيناريو");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  const [selected, setSelected] = useState<number | null>(null);
 
   async function load() {
     const db = getSupabase();
@@ -93,60 +69,48 @@ export default function Submissions() {
     }
 
     setAuthRequired(false);
-    setUser(currentUser.id);
-    const [profile, teamResult, submissions, attachmentResult] = await Promise.all([
-      db.from("profiles").select("app_role").eq("id", currentUser.id).single(),
-      db.from("teams").select("id,name").order("id"),
-      db.from("work_submissions")
-        .select("id,student_id,team_id,title,category,body,created_at")
-        .order("created_at", { ascending: false })
-        .limit(100),
-      db.from("attachments")
-        .select("id,file_name,storage_path,team_id,created_at,uploaded_by")
-        .order("created_at", { ascending: false })
-        .limit(100),
-    ]);
-
-    if (attachmentResult.data) setAttachments(attachmentResult.data as Attachment[]);
-    setSupervisor(profile.data?.app_role === "supervisor");
-    if (teamResult.data) setTeams(teamResult.data);
-    if (submissions.data) {
-      setItems(submissions.data);
-      if (profile.data?.app_role === "supervisor") {
-        const ids = [...new Set(submissions.data.map((item) => item.student_id))];
-        if (ids.length) {
-          const people = await db.from("profiles").select("id,full_name").in("id", ids);
-          if (people.data) {
-            setNames(Object.fromEntries(people.data.map((person) => [person.id, person.full_name || "طالب"])));
-          }
-        }
-      }
+    if (currentUser.app_metadata?.must_change_password === true) {
+      window.location.replace("/change-password");
+      return;
     }
+    const profile = await db.from("profiles").select("app_role,approval_status").eq("id", currentUser.id).single();
+    if (profile.error || profile.data?.approval_status !== "approved") {
+      setError("التسليم متاح بعد اعتماد الحساب.");
+      setAuthReady(true);
+      return;
+    }
+    const isSupervisor = profile.data.app_role === "supervisor";
+    setSupervisor(isSupervisor);
+    const [teamResult, membershipResult] = await Promise.all([
+      db.from("teams").select("id,name").order("id"),
+      db.from("team_members").select("team_id").eq("user_id",currentUser.id),
+    ]);
+    if (teamResult.error || membershipResult.error) {
+      setError("تعذر تحميل الفرق. حدّثي الصفحة.");
+      setAuthReady(true);
+      return;
+    }
+    const allowedIds = new Set((membershipResult.data ?? []).map(x=>x.team_id));
+    const allowed = (teamResult.data ?? []).filter(t=>isSupervisor || allowedIds.has(t.id));
+    setTeams(allowed);
+    setTeam(previous=>allowed.some(t=>String(t.id)===previous)?previous:allowed.length===1?String(allowed[0].id):"");
+    setUser(currentUser.id);
     setAuthReady(true);
   }
 
   useEffect(() => {
-    void load();
     const params = new URLSearchParams(window.location.search);
     const requestedTeam = params.get("team");
     if (requestedTeam) setTeam(requestedTeam);
     const kind = params.get("kind");
-    if (kind === "media") setAssetType("media");
-    else if (kind === "file") setAssetType("all");
-    if (kind === "link") {
-      window.setTimeout(() => document.getElementById("link-dock")?.scrollIntoView({ behavior: "smooth", block: "center" }), 350);
-    }
-    if (kind === "voice") {
-      window.setTimeout(() => document.getElementById("voice-dock")?.scrollIntoView({ behavior: "smooth", block: "center" }), 350);
-    }
-    if (kind === "file" || kind === "media") {
-      window.setTimeout(() => document.getElementById("upload-files")?.scrollIntoView({ behavior: "smooth", block: "center" }), 350);
-    }
+    if (kind === "media") {setMethod("file");setFileAccept("image/*,video/*");}
+    else if (kind === "file" || kind === "link" || kind === "voice" || kind === "text") setMethod(kind);
+    void load();
   }, []);
 
   async function submit() {
     const db = getSupabase();
-    if (!db || !user || !team || title.trim().length < 3) return;
+    if (!db || !user || !team || title.trim().length < 3 || body.trim().length < 20 || saving) return;
     setSaving(true);
     setError("");
     setNotice("");
@@ -164,7 +128,6 @@ export default function Submissions() {
     }
     setBody("");
     setNotice("تم حفظ التسليم بنجاح ✓");
-    await load();
   }
 
   async function uploadAsset(asset: File | Blob, voice = false, keepSelection = false) {
@@ -232,7 +195,6 @@ export default function Submissions() {
     } else {
       setNotice("تم حفظ الملف ✓");
     }
-    if (!keepSelection) await load();
   }
 
   async function uploadMany() {
@@ -281,9 +243,9 @@ export default function Submissions() {
 
     setUploadBusy(false);
     setFiles((previous) => previous.slice(done));
+    setFileInputKey(value=>value+1);
     setUploadProgress("");
     if (done) setNotice("تم رفع " + done + " من " + files.length + " عناصر بنجاح ✓");
-    await load();
   }
 
   async function submitLink() {
@@ -298,8 +260,8 @@ export default function Submissions() {
       setError("سجّلي الدخول أولًا لحفظ الرابط.");
       return;
     }
-    if (!team) {
-      setError("اختاري الفريق أولًا.");
+    if (!team || title.trim().length < 3) {
+      setError("اكتبي عنوان التسليم واختاري الفريق أولًا.");
       document.getElementById("submission-team")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
@@ -316,7 +278,7 @@ export default function Submissions() {
       return;
     }
 
-    const linkTitle = sourceLabel.trim() || title.trim() || ("رابط من " + hostname);
+    const linkTitle = title.trim() || ("رابط من " + hostname);
     setSaving(true);
     const result = await db.from("work_submissions").insert({
       student_id: user,
@@ -324,18 +286,16 @@ export default function Submissions() {
       title: linkTitle,
       category: "روابط ومصادر",
       body: normalized,
-    }).select("id").single();
+    });
     setSaving(false);
 
-    if (result.error || !result.data) {
+    if (result.error) {
       setError("تعذر حفظ الرابط: " + (result.error?.message || "لم يتم تأكيد الحفظ"));
       return;
     }
 
     setSourceUrl("");
-    setSourceLabel("");
     setNotice("تم حفظ الرابط بنجاح ✓");
-    await load();
   }
 
   async function startRecording() {
@@ -426,276 +386,57 @@ export default function Submissions() {
     setVoiceStatus("تم طلب تنزيل النسخة الاحتياطية. تأكدي من حفظها على جهازك.");
   }
 
-  async function openAsset(storagePath: string) {
-    const db = getSupabase();
-    if (!db) return;
-    const result = await db.storage.from("studio-files").createSignedUrl(storagePath, 60);
-    if (result.error || !result.data?.signedUrl) {
-      setError("تعذر فتح الملف.");
-      return;
-    }
-    window.open(result.data.signedUrl, "_blank", "noopener,noreferrer");
-  }
-
-  const fileAccept = assetType === "image"
-    ? "image/*"
-    : assetType === "video"
-      ? "video/*"
-      : assetType === "audio"
-        ? "audio/*"
-        : assetType === "media"
-          ? "image/*,video/*"
-          : undefined;
+  const busy = saving || uploadBusy || recording;
+  const ready = Boolean(user && team && title.trim().length >= 3);
 
   return (
-    <main className="submissions-page" dir="rtl">
-      <header className="submissions-header">
-        <a className="submissions-back" href="/production-hub">← غرفة الإنتاج</a>
-        <div className="submissions-title">
-          <span className="submissions-eyebrow">PLATEAU CREW HUB · WORKSPACE</span>
-          <h1>التسليمات</h1>
-          <p>اكتبي، ارفعي، وراجعي تسليماتك.</p>
-        </div>
+    <main className="quick-submit-clean" dir="rtl">
+      <header className="qs-header" dir="ltr">
+        <a className="qs-back" href="/" aria-label="Back to home">←</a>
+        <h1>Quick Submit</h1>
       </header>
-
-      {(error || notice) && (
-        <div className={"submission-feedback" + (error ? " is-error" : " is-success")} role={error ? "alert" : "status"}>
-          <span aria-hidden="true">{error ? "!" : "✦"}</span>
-          <p>{error || notice}</p>
-        </div>
-      )}
-
-      {!authReady && (
-        <section className="submission-card submission-login-required" aria-live="polite">
-          <div className="submission-card-heading">
-            <span className="submission-step">🔐</span>
-            <div><h2>جارٍ استعادة جلستك</h2><p>نتحقق من تسجيل الدخول المحفوظ على هذا المتصفح…</p></div>
+      {!authReady && <p className="qs-status" role="status">جارٍ التحميل…</p>}
+      {authReady && authRequired && <section className="qs-login"><a href="/login?next=%2Fsubmissions">تسجيل الدخول للتسليم</a></section>}
+      {authReady && user && (
+        <section className="qs-card">
+          <div className="qs-fields">
+            <label>عنوان التسليم<input id="submission-title" maxLength={160} placeholder="عنوان التكليف" disabled={busy} value={title} onChange={e=>setTitle(e.target.value)}/></label>
+            <label>الفريق<select id="submission-team" disabled={busy} value={team} onChange={e=>setTeam(e.target.value)}>
+              <option value="">اختاري الفريق</option>
+              {teams.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+            </select></label>
           </div>
+          <div className="qs-methods" role="group" aria-label="طريقة التسليم">
+            {methods.map(([value,label,icon])=><button key={value} type="button" disabled={busy} aria-pressed={method===value} onClick={()=>{setMethod(method===value?null:value);setError("");setNotice("");}}><span aria-hidden="true">{icon}</span>{label}</button>)}
+          </div>
+          {method==="file" && <div className="qs-panel" id="upload-files">
+            <label className="qs-file-picker">＋ اختاري الملفات<input key={fileInputKey} type="file" multiple accept={fileAccept} disabled={busy} onChange={e=>setFiles(Array.from(e.target.files??[]))}/></label>
+            <small>حتى 50 ميجابايت لكل ملف.</small>
+            {files.length>0&&<div className="qs-file-list">{files.map((file,index)=><span key={index}>{file.name}</span>)}<button type="button" className="qs-secondary" disabled={busy} onClick={()=>{setFiles([]);setFileInputKey(v=>v+1);}}>إلغاء الاختيار</button></div>}
+            <button className="qs-send" disabled={!ready||busy||!files.length} onClick={()=>void uploadMany()}>{uploadBusy?"جارٍ الرفع…":"إرسال"+(files.length?" ("+files.length+")":"")}</button>
+            {uploadProgress&&<p className="qs-status" role="status">{uploadProgress}</p>}
+          </div>}
+          {method==="link" && <div className="qs-panel" id="link-dock">
+            <label>الرابط<input type="url" dir="ltr" placeholder="https://…" disabled={busy} value={sourceUrl} onChange={e=>setSourceUrl(e.target.value)}/></label>
+            <button className="qs-send" disabled={!ready||busy||!sourceUrl.trim()} onClick={()=>void submitLink()}>{saving?"جارٍ الإرسال…":"إرسال"}</button>
+          </div>}
+          {method==="voice" && <div className="qs-panel" id="voice-dock">
+            {!recording?<button type="button" className="qs-secondary" disabled={!ready||saving||uploadBusy} onClick={()=>void startRecording()}>● بدء التسجيل</button>:<button type="button" className="qs-stop" onClick={stopRecording}>■ إيقاف التسجيل</button>}
+            {recording&&<p className="qs-status" role="status">جارٍ التسجيل…</p>}
+            {audio&&<><audio controls preload="metadata" src={audioUrl}/><div className="qs-voice-actions"><button type="button" className="qs-secondary" disabled={busy} onClick={downloadRecording}>حفظ نسخة</button><button type="button" className="qs-secondary" disabled={busy} onClick={discardRecording}>حذف التسجيل</button></div><button className="qs-send" disabled={!ready||busy||voiceSaved} onClick={()=>void uploadAsset(audio,true)}>{uploadBusy?"جارٍ الإرسال…":voiceSaved?"تم الإرسال ✓":"إرسال"}</button></>}
+            {voiceStatus&&<p className="qs-status" role="status">{voiceStatus}</p>}
+            {recordError&&<p className="qs-error" role="alert">{recordError}</p>}
+          </div>}
+          {method==="text" && <div className="qs-panel">
+            <label>نوع النص<select value={category} disabled={busy} onChange={e=>setCategory(e.target.value)}>{categories.map(item=><option key={item}>{item}</option>)}</select></label>
+            <label>النص<textarea rows={4} maxLength={20000} placeholder="اكتبي النص هنا…" disabled={busy} value={body} onChange={e=>setBody(e.target.value)}/></label>
+            <small>20 حرفًا على الأقل.</small>
+            <button className="qs-send" disabled={!ready||busy||body.trim().length<20} onClick={()=>void submit()}>{saving?"جارٍ الإرسال…":"إرسال"}</button>
+          </div>}
         </section>
       )}
-      {authReady && authRequired && (
-        <section className="submission-card submission-login-required">
-          <div className="submission-card-heading">
-            <span className="submission-step">🔐</span>
-            <div><h2>معاينة الصفحة متاحة</h2><p>يمكنك مشاهدة كل الأقسام الآن. لتفعيل الحفظ والرفع، سجّلي الدخول مرة واحدة على هذا الرابط والمتصفح وستظل جلستك محفوظة.</p></div>
-          </div>
-          <button type="button" className="submission-button submission-button-primary" onClick={() => window.location.assign("/login?next=%2Fsubmissions")}>تسجيل الدخول وتفعيل التسليمات</button>
-        </section>
-      )}
-      {authReady && (
-        <>
-          <section className="submission-card submission-card-details">
-            <div className="submission-card-heading">
-              <span className="submission-step">01</span>
-              <div><h2>بيانات التسليم</h2><p>العنوان والفريق</p></div>
-            </div>
-            <div className="submission-fields">
-              <label className="submission-field">
-                <span>عنوان التسليم</span>
-                <input id="submission-title" maxLength={160} placeholder="مثال: معالجة المشهد الأول" disabled={!user} value={title} onChange={(event) => setTitle(event.target.value)} />
-              </label>
-              <label className="submission-field">
-                <span>الفريق</span>
-                <select id="submission-team" disabled={!user} value={team} onChange={(event) => setTeam(event.target.value)}>
-                  <option value="">اختاري فريقك</option>
-                  {teams.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                </select>
-              </label>
-            </div>
-          </section>
-
-          <section className="submission-card submission-card-writing">
-            <div className="submission-card-heading">
-              <span className="submission-step">02</span>
-              <div><h2>كتابة نص <small>اختياري</small></h2><p>اختاري النوع واكتبي النص</p></div>
-            </div>
-            <div className="submission-fields">
-              <label className="submission-field">
-                <span>نوع التسليم</span>
-                <select disabled={!user} value={category} onChange={(event) => setCategory(event.target.value)}>
-                  {categories.map((item) => <option key={item}>{item}</option>)}
-                </select>
-              </label>
-              <label className="submission-field submission-field-full">
-                <span>النص</span>
-                <textarea disabled={!user} rows={5} maxLength={20000} placeholder="اكتبي النص هنا…" value={body} onChange={(event) => setBody(event.target.value)} />
-                <small className="submission-field-note">{body.length.toLocaleString("ar-EG")} / 20,000 · 20 حرفًا على الأقل للحفظ</small>
-              </label>
-            </div>
-            <div className="submission-card-footer">
-              <button className="submission-button submission-button-primary" disabled={!user || saving || !team || title.trim().length < 3 || body.trim().length < 20} onClick={() => void submit()}>
-                {saving ? "جارٍ الحفظ…" : "حفظ التسليم"}
-              </button>
-            </div>
-          </section>
-
-          <section className="submission-card submission-card-tools" id="upload-files">
-            <div className="submission-card-heading">
-              <span className="submission-step">03</span>
-              <div><h2>الملفات والروابط والصوت</h2><p>اختاري طريقة الإرسال</p></div>
-            </div>
-
-            <div className="submission-filter-row" role="group" aria-label="نوع الملفات">
-              {filters.map(([value, label, icon]) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={"submission-filter" + (assetType === value ? " is-active" : "")}
-                  aria-pressed={assetType === value}
-                  onClick={() => { setAssetType(value); setFiles([]); }}
-                >
-                  <span aria-hidden="true">{icon}</span>{label}
-                </button>
-              ))}
-            </div>
-
-            <div className="submission-upload-box">
-              <label className="submission-field">
-                <span>اختيار الملفات</span>
-                <input
-                  key={assetType}
-                  className="submission-file-input"
-                  type="file"
-                  disabled={!user}
-                  multiple
-                  accept={fileAccept}
-                  onChange={(event) => setFiles(Array.from(event.target.files ?? []))}
-                />
-              </label>
-              {files.length > 0 && (
-                <div className="submission-file-list">
-                  <div className="submission-file-count">تم اختيار {files.length} عناصر</div>
-                  {files.map((file, index) => (
-                    <div className="submission-file-row" key={index}>
-                      <span>{file.name}</span><small>{(file.size / 1048576).toFixed(1)} MB</small>
-                    </div>
-                  ))}
-                  <button type="button" className="submission-text-button" onClick={() => setFiles([])}>إلغاء التحديد</button>
-                </div>
-              )}
-              <div className="submission-card-footer">
-                <button
-                  className="submission-button submission-button-primary"
-                  disabled={!user || !team || title.trim().length < 3 || !files.length || uploadBusy}
-                  onClick={() => void uploadMany()}
-                >
-                  {uploadBusy ? "جارٍ رفع الملفات…" : "رفع " + files.length + " عناصر"}
-                </button>
-              </div>
-              {uploadProgress && <p className="submission-progress" role="status">{uploadProgress}</p>}
-            </div>
-
-            <div className="submission-tools-grid">
-              <div className="submission-tool-panel" id="link-dock">
-                <div className="submission-tool-title"><span aria-hidden="true">↗</span><h3>إضافة رابط</h3></div>
-                <label className="submission-field">
-                  <span>الرابط</span>
-                  <input type="url" disabled={!user} dir="ltr" placeholder="https://…" value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} />
-                </label>
-                <label className="submission-field">
-                  <span>اسم المصدر <small>اختياري</small></span>
-                  <input disabled={!user} placeholder="اسم مختصر للرابط" value={sourceLabel} maxLength={160} onChange={(event) => setSourceLabel(event.target.value)} />
-                </label>
-                <button type="button" className="submission-button submission-button-secondary" disabled={!user || saving || !sourceUrl.trim()} onClick={() => void submitLink()}>
-                  {saving ? "جارٍ الحفظ…" : "حفظ الرابط"}
-                </button>
-              </div>
-
-              <div className={"submission-tool-panel submission-voice-panel" + (recording ? " is-recording" : "")} id="voice-dock" data-recording={recording}>
-                <div className="submission-tool-title">
-                  <span aria-hidden="true">♫</span><h3>تسجيل صوتي</h3>
-                  <i className="submission-recording-dot" aria-hidden="true" />
-                </div>
-                <div className="submission-voice-actions">
-                  <button type="button" className="submission-button submission-button-secondary" disabled={!user || recording || uploadBusy} onClick={() => void startRecording()}>بدء التسجيل</button>
-                  <button type="button" className="submission-button submission-button-quiet" disabled={!user || !recording} onClick={stopRecording}>إيقاف</button>
-                </div>
-                {audio && (
-                  <div className="submission-audio-tools">
-                    <audio controls preload="metadata" src={audioUrl} />
-                    <div className="submission-voice-actions">
-                      <button type="button" className="submission-button submission-button-primary" disabled={!user || uploadBusy} onClick={() => void uploadAsset(audio, true)}>
-                        {uploadBusy ? "جارٍ الإرسال…" : "إرسال التسجيل"}
-                      </button>
-                      <button type="button" className="submission-button submission-button-quiet" disabled={!user || uploadBusy || recording} onClick={downloadRecording}>حفظ نسخة</button>
-                      <button type="button" className="submission-text-button" disabled={uploadBusy || recording} onClick={discardRecording}>حذف</button>
-                    </div>
-                    <span className="submission-voice-saved">{voiceSaved ? "تم الحفظ في الموقع ✓" : "التسجيل لم يُرسل بعد"}</span>
-                  </div>
-                )}
-                {recording && <p className="submission-recording-live" role="status">● جارٍ التسجيل الآن</p>}
-                {voiceStatus && <p className="submission-status-line" role="status">{voiceStatus}</p>}
-                {recordError && <p className="submission-inline-error" role="alert">{recordError}</p>}
-              </div>
-            </div>
-          </section>
-        </>
-      )}
-
-      <section className="submission-card submission-history">
-        <div className="submission-card-heading">
-          <span className="submission-step">04</span>
-          <div><h2>التسليمات السابقة</h2><p>{items.length} تسليم</p></div>
-        </div>
-
-        {items.length === 0 ? (
-          <div className="submission-empty">لا توجد تسليمات حتى الآن.</div>
-        ) : (
-          <div className="submission-history-list">
-            {items.map((item) => (
-              <article className="submission-history-item" key={item.id}>
-                <div className="submission-history-main">
-                  <strong>{item.title}</strong>
-                  <div className="submission-history-meta">
-                    <span>{supervisor ? (names[item.student_id] ?? "طالب") : "تسليمي"}</span>
-                    <span>{item.category}</span>
-                    <span>{teams.find((entry) => entry.id === item.team_id)?.name ?? "بدون فريق"}</span>
-                    <time dateTime={item.created_at}>{new Date(item.created_at).toLocaleString("ar-EG")}</time>
-                  </div>
-                </div>
-                <div className="submission-history-actions">
-                  <button type="button" className="submission-button submission-button-quiet" onClick={() => setSelected(selected === item.id ? null : item.id)}>
-                    {selected === item.id ? "إخفاء النص" : "عرض النص"}
-                  </button>
-                  {supervisor && (
-                    <button
-                      type="button"
-                      className="submission-button submission-button-secondary"
-                      onClick={() => { sessionStorage.setItem("review_submission", item.body); window.location.href = "/ai-review"; }}
-                    >
-                      إرسال للوكيل للمراجعة
-                    </button>
-                  )}
-                </div>
-                {selected === item.id && (
-                  <div className="submission-history-body">
-                    {item.category === "روابط ومصادر"
-                      ? <a href={item.body} target="_blank" rel="noopener noreferrer">{item.body}</a>
-                      : item.body}
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-        )}
-
-        {attachments.length > 0 && (
-          <div className="submission-attachments">
-            <div className="submission-subheading"><h3>الملفات المرفوعة</h3><span>{attachments.length}</span></div>
-            <div className="submission-attachment-list">
-              {attachments.map((attachment) => (
-                <article className="submission-attachment-item" key={attachment.id}>
-                  <span className="submission-attachment-icon" aria-hidden="true">
-                    {attachment.file_name.toLowerCase().includes("تسجيل صوتي") ? "♫" : "▧"}
-                  </span>
-                  <div><strong>{attachment.file_name}</strong><small>{teams.find((entry) => entry.id === attachment.team_id)?.name ?? "ملف"} · {new Date(attachment.created_at).toLocaleDateString("ar-EG")}</small></div>
-                  <button type="button" className="submission-text-button" disabled={!attachment.storage_path} onClick={() => attachment.storage_path && void openAsset(attachment.storage_path)}>فتح</button>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
-      </section>
+      {(error||notice)&&<p className={error?"qs-error":"qs-success"} role={error?"alert":"status"}>{error||notice}</p>}
+      {authReady&&user&&supervisor&&<a className="qs-review" href="/dashboard">مراجعة التسليمات في لوحة المشرف ←</a>}
     </main>
   );
 }
