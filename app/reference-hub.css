@@ -708,7 +708,10 @@ body:has(.reference-hub) .site-bottom-nav{display:none!important}
  filter:drop-shadow(0 5px 6px #4a2c7a24);
 }
 .reference-hub .reference-card .reference-icon img{
- transform:translateZ(8px)!important;
+ transform-style:preserve-3d!important;
+ transform-origin:50% 72%!important;
+ will-change:transform;
+ animation:reference-icon-art-float 3.6s ease-in-out infinite!important;
 }
 .reference-hub .reference-card .reference-copy{
  gap:4px!important;
@@ -886,4 +889,18 @@ body:has(.reference-hub) .site-bottom-nav{display:none!important}
  .reference-hub .reference-hero-flare,
  .reference-hub .reference-hero-flare:before,
  .reference-hub .reference-hero-flare:after{animation:none!important}
+}
+
+
+/* Final touch: float each card illustration independently inside its fixed 3D frame. */
+@keyframes reference-icon-art-float{
+ 0%,100%{transform:translate3d(0,0,8px) rotate(0deg) scale(1)}
+ 50%{transform:translate3d(0,-5px,13px) rotate(-2deg) scale(1.035)}
+}
+.reference-hub .reference-card:nth-child(2) .reference-icon img{animation-delay:-.7s!important}
+.reference-hub .reference-card:nth-child(3) .reference-icon img{animation-delay:-1.4s!important}
+.reference-hub .reference-card:nth-child(4) .reference-icon img{animation-delay:-2.1s!important}
+.reference-hub .reference-card:nth-child(5) .reference-icon img{animation-delay:-2.8s!important}
+@media(prefers-reduced-motion:reduce){
+ .reference-hub .reference-card .reference-icon img{animation:none!important}
 }
