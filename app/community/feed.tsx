@@ -31,7 +31,6 @@ const mediaTypes: Record<string, string> = {
 };
 const dateFormatter = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium", timeStyle: "short" });
 const postColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location";
-const memberPostColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location,user_id" as const;
 const zeroCounts = { likes: 0, comments: 0, liked: false };
 const pageSize = 20;
 
@@ -115,13 +114,22 @@ export default function Feed() {
     const db = getSupabase();
     if (!db) return;
     const requestId = ++refreshId.current;
-    const request = db.from("plateau_posts").select(viewer ? memberPostColumns : postColumns)
+    const request = db.from("plateau_posts").select(postColumns)
       .order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false })
       .order("id", { ascending: false }).limit(limit + 1);
     const result = await (signal ? request.abortSignal(signal) : request);
     if (signal?.aborted || requestId !== refreshId.current) return;
     if (result.error) { setNotice("تعذّر تحميل المنشورات. جرّب التحديث."); return; }
-    const posts = (result.data ?? []) as Post[];
+    let posts = (result.data ?? []) as Post[];
+    if (viewer && posts.length) {
+      const ownerResult = await db.from("plateau_posts").select("id,user_id")
+        .in("id", posts.slice(0, limit).map(post => post.id));
+      if (signal?.aborted || requestId !== refreshId.current) return;
+      if (!ownerResult.error) {
+        const owners = new Map((ownerResult.data ?? []).map(row => [row.id, row.user_id]));
+        posts = posts.map(post => ({ ...post, user_id: owners.get(post.id) ?? null }));
+      }
+    }
     const visible = posts.slice(0, limit);
     const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : []);
     const paths = [...new Set(newPaths)];
