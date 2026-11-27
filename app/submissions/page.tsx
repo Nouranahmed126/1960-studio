@@ -64,6 +64,8 @@ export default function Submissions() {
   const [names, setNames] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   const [user, setUser] = useState("");
+  const [authReady, setAuthReady] = useState(false);
+  const [authRequired, setAuthRequired] = useState(false);
   const [supervisor, setSupervisor] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [items, setItems] = useState<Submission[]>([]);
@@ -77,10 +79,20 @@ export default function Submissions() {
 
   async function load() {
     const db = getSupabase();
-    if (!db) return;
+    if (!db) {
+      setError("تعذر الاتصال بقاعدة البيانات.");
+      setAuthReady(true);
+      return;
+    }
     const { data: { user: currentUser } } = await db.auth.getUser();
-    if (!currentUser) return;
+    if (!currentUser) {
+      setUser("");
+      setAuthRequired(true);
+      setAuthReady(true);
+      return;
+    }
 
+    setAuthRequired(false);
     setUser(currentUser.id);
     const [profile, teamResult, submissions, attachmentResult] = await Promise.all([
       db.from("profiles").select("app_role").eq("id", currentUser.id).single(),
@@ -110,6 +122,7 @@ export default function Submissions() {
         }
       }
     }
+    setAuthReady(true);
   }
 
   useEffect(() => {
@@ -452,7 +465,22 @@ export default function Submissions() {
         </div>
       )}
 
-      {user && (
+      {!authReady ? (
+        <section className="submission-card submission-login-required" aria-live="polite">
+          <div className="submission-card-heading">
+            <span className="submission-step">🔐</span>
+            <div><h2>جارٍ استعادة جلستك</h2><p>نتحقق من تسجيل الدخول المحفوظ على هذا المتصفح…</p></div>
+          </div>
+        </section>
+      ) : authRequired ? (
+        <section className="submission-card submission-login-required">
+          <div className="submission-card-heading">
+            <span className="submission-step">🔐</span>
+            <div><h2>تسجيل الدخول مطلوب</h2><p>سجّلي الدخول مرة واحدة على هذا الرابط والمتصفح، وستظل جلستك محفوظة.</p></div>
+          </div>
+          <button type="button" className="submission-button submission-button-primary" onClick={() => window.location.assign("/login?next=%2Fsubmissions")}>تسجيل الدخول والعودة للتسليمات</button>
+        </section>
+      ) : user && (
         <>
           <section className="submission-card submission-card-details">
             <div className="submission-card-heading">
