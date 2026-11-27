@@ -1,5 +1,5 @@
 "use client";
-import {useCallback,useEffect,useState,type FormEvent} from "react";
+import {useCallback,useEffect,useId,useState,type FormEvent} from "react";
 import {createPortal} from "react-dom";
 import {getAuthUser,getPublicSupabase,getSupabase} from "../../lib/supabase-browser";
 
@@ -7,12 +7,12 @@ type Honor={id:number;student_name:string;achievement:string;award:string;stars:
 type CrewMember={id:string;full_name:string;created_at?:string};
 type PhotoRow={user_id:string;photo_path:string|null};
 
-const burstStars=Array.from({length:44},(_,i)=>({
+const burstStars=Array.from({length:56},(_,i)=>({
  left:(2+(i*47)%96)+"%",
  top:(3+(i*53)%91)+"%",
- delay:(i%9)*65+"ms",
- duration:(3.2+(i%5)*0.18)+"s",
- size:17+(i%5)*5
+ delay:(i%11)*42+"ms",
+ duration:(2.7+(i%6)*0.2)+"s",
+ size:19+(i%5)*5
 }));
 
 function normalizeName(value:string){
@@ -30,14 +30,59 @@ function findStudentPhoto(studentName:string,crew:CrewMember[],photos:Record<str
 }
 
 function dateLabel(value:string){
- return new Date(value).toLocaleDateString("ar-EG",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ return new Date(value).toLocaleDateString("ar-EG",{day:"numeric",month:"long",year:"numeric"});
 }
 
 function SignatureStamp(){
- return <div className="honor-signature-lockup" dir="ltr">
-  <span className="honor-signature-caption">SIGNED &amp; APPROVED BY</span>
-  <strong className="honor-signature-script">Dr. Nouran Ahmed</strong>
-  <span className="honor-signature-role">TEACHING ASSISTANT &amp; SUPERVISOR</span>
+ const uid=useId().replace(/:/g,"");
+ return <div className="honor-seal-wrap" dir="ltr" aria-label="Nouran Ahmed, Teaching Assistant">
+  <div className="honor-gold-seal">
+   <svg className="honor-seal-art" viewBox="0 0 160 160" aria-hidden="true">
+    <defs>
+     <radialGradient id={uid+"-face"} cx="34%" cy="25%" r="78%">
+      <stop offset="0%" stopColor="#fff9d9"/>
+      <stop offset="25%" stopColor="#f6df98"/>
+      <stop offset="52%" stopColor="#d8a33e"/>
+      <stop offset="76%" stopColor="#a96e1e"/>
+      <stop offset="100%" stopColor="#f0d17b"/>
+     </radialGradient>
+     <linearGradient id={uid+"-rim"} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#fff8ce"/>
+      <stop offset="23%" stopColor="#c18b2b"/>
+      <stop offset="48%" stopColor="#fff0a6"/>
+      <stop offset="72%" stopColor="#986019"/>
+      <stop offset="100%" stopColor="#fff1b0"/>
+     </linearGradient>
+    </defs>
+    <circle cx="80" cy="80" r="76" fill="#8c5d19" opacity=".42"/>
+    <circle cx="80" cy="78" r="73" fill={"url(#"+uid+"-rim)"} stroke="#fff4c2" strokeWidth="2"/>
+    <circle cx="80" cy="78" r="66" fill={"url(#"+uid+"-face)"} stroke="#9d6a1e" strokeWidth="2.5"/>
+    <circle cx="80" cy="78" r="59" fill="none" stroke="#fff3bd" strokeWidth="1.5"/>
+    <circle cx="80" cy="78" r="54" fill="none" stroke="#9c681d" strokeWidth="1.4" strokeDasharray="2 4"/>
+    <circle cx="80" cy="78" r="48" fill="none" stroke="#fff4c4" strokeWidth="1" opacity=".85"/>
+    <path d="M33 79 Q25 66 36 56 M127 79 Q135 66 124 56" fill="none" stroke="#fff2b4" strokeWidth="2" strokeLinecap="round" opacity=".8"/>
+    <path d="M42 112 Q80 132 118 112" fill="none" stroke="#9b681d" strokeWidth="1.3" opacity=".7"/>
+   </svg>
+   <div className="honor-seal-copy">
+    <span className="honor-seal-caption">OFFICIAL SIGNATURE</span>
+    <strong>Nouran Ahmed</strong>
+    <small>TEACHING ASSISTANT</small>
+   </div>
+  </div>
+  <span className="honor-seal-star" aria-hidden="true">
+   <svg viewBox="0 0 100 100">
+    <defs>
+     <linearGradient id={uid+"-star"} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#fffbd9"/>
+      <stop offset="35%" stopColor="#ffe58a"/>
+      <stop offset="68%" stopColor="#bd8123"/>
+      <stop offset="100%" stopColor="#fff0ad"/>
+     </linearGradient>
+    </defs>
+    <polygon points="50,3 62,36 97,37 69,59 79,94 50,73 21,94 31,59 3,37 38,36" fill={"url(#"+uid+"-star)"} stroke="#fff5c7" strokeWidth="4" strokeLinejoin="round"/>
+    <path d="M50 13 L59 39 L86 40 L65 57 L72 82 L50 66 L28 82 L35 57 L14 40 L41 39 Z" fill="none" stroke="#fffbe6" strokeWidth="2" opacity=".9"/>
+   </svg>
+  </span>
  </div>;
 }
 
@@ -78,6 +123,7 @@ export default function HonorBoard(){
  const [award,setAward]=useState("النجم الأسبوعي");
  const [stars,setStars]=useState(5);
  const [note,setNote]=useState("");
+ const [editingId,setEditingId]=useState<number|null>(null);
  const [status,setStatus]=useState("");
  const [celebrating,setCelebrating]=useState(false);
  const [mounted,setMounted]=useState(false);
@@ -152,29 +198,60 @@ export default function HonorBoard(){
   return()=>{void db.removeChannel(channel)};
  },[load]);
 
- async function add(event:FormEvent){
+ function startEdit(item:Honor){
+  setEditingId(item.id);
+  setName(item.student_name);
+  setSelectedCrewId("");
+  setAchievement(item.achievement);
+  setAward(item.award);
+  setStars(item.stars);
+  setNote(item.note??"");
+  setStatus("تعديل شهادة التكريم رقم "+item.id);
+  document.querySelector(".honor-board-form")?.scrollIntoView({behavior:"smooth",block:"center"});
+ }
+
+ function cancelEdit(){
+  setEditingId(null);
+  setName("");
+  setSelectedCrewId("");
+  setAchievement("");
+  setAward("النجم الأسبوعي");
+  setStars(5);
+  setNote("");
+  setStatus("تم إلغاء التعديل.");
+ }
+
+ async function save(event:FormEvent){
   event.preventDefault();
   const db=getSupabase();
   if(!db)return;
   const {data:{user}}=await getAuthUser();
-  if(!user){setStatus("سجّلي الدخول بحساب المشرفة لإضافة تكريم.");return;}
+  if(!user){setStatus("سجّلي الدخول بحساب المشرفة لإدارة التكريم.");return;}
   const profile=await db.from("profiles").select("app_role").eq("id",user.id).maybeSingle();
   if(profile.error||profile.data?.app_role!=="supervisor"){
    setSupervisor(false);
-   setStatus("إضافة التكريم متاحة للمشرفة المعتمدة فقط.");
+   setStatus("إدارة التكريمات متاحة للمشرفة المعتمدة فقط.");
    return;
   }
-  const result=await db.from("studio_honors").insert({
+
+  const values={
    student_name:name.trim(),achievement:achievement.trim(),award,stars,
-   note:note.trim()||null,created_by:user.id
-  });
-  if(result.error)setStatus("تعذر نشر التكريم: "+result.error.message);
+   note:note.trim()||null
+  };
+  const result=editingId!==null
+   ?await db.from("studio_honors").update(values).eq("id",editingId)
+   :await db.from("studio_honors").insert({...values,created_by:user.id});
+
+  if(result.error)setStatus("تعذر حفظ التكريم: "+result.error.message);
   else{
+   setEditingId(null);
    setName("");
    setSelectedCrewId("");
    setAchievement("");
+   setAward("النجم الأسبوعي");
+   setStars(5);
    setNote("");
-   setStatus("تم نشر شهادة التكريم بنجاح ⭐");
+   setStatus(editingId!==null?"تم تحديث شهادة التكريم بنجاح ✨":"تم نشر شهادة التكريم بنجاح ⭐");
    await load();
   }
  }
@@ -194,6 +271,7 @@ export default function HonorBoard(){
   const result=await db.from("studio_honors").delete().eq("id",id);
   if(result.error)setStatus("تعذر حذف التكريم: "+result.error.message);
   else{
+   if(editingId===id)cancelEdit();
    setStatus("تم حذف التكريم.");
    await load();
   }
@@ -213,15 +291,15 @@ export default function HonorBoard(){
    <header className="honor-board-header">
     <p className="honor-board-eyebrow">PLATEAU CREW HUB · FILM STARS &amp; HONORS</p>
     <h1 className="honor-board-title">🏆 لوحة شرف الفريق</h1>
-    <p className="honor-board-subtitle">إنجازك يستحق التقدير، وهذه لحظتك لتتألقي ✨</p>
+    <p className="honor-board-subtitle">كل إنجاز يستحق أن يلمع ✨</p>
    </header>
 
    {status&&<p className="honor-board-status" role="status">{status}</p>}
 
-   {supervisor&&<form className="honor-board-form" onSubmit={add}>
+   {supervisor&&<form className="honor-board-form" onSubmit={save}>
     <div className="honor-form-heading">
      <span className="honor-form-icon">✦</span>
-     <div><h2>إضافة شهادة تكريم</h2><p>احتفي بإنجاز جديد من إنجازات الفريق</p></div>
+     <div><h2>{editingId!==null?"تعديل شهادة التكريم":"إضافة شهادة تكريم"}</h2><p>{editingId!==null?"حدّثي بيانات الإنجاز ورسالة التقدير":"احتفي بإنجاز جديد من إنجازات الفريق"}</p></div>
     </div>
     {crew.length>0&&<label className="honor-form-field">
      <span>اختيار طالب من طاقم الفيلم لربط صورته تلقائيًا</span>
@@ -241,7 +319,7 @@ export default function HonorBoard(){
     </label>
     <label className="honor-form-field">
      <span>الإنجاز أو التكليف المميز</span>
-     <textarea required maxLength={500} rows={3} placeholder="عنوان الإنجاز الذي يستحق التكريم" value={achievement} onChange={event=>setAchievement(event.target.value)}/>
+     <textarea required maxLength={500} rows={2} placeholder="عنوان الإنجاز الذي يستحق التكريم" value={achievement} onChange={event=>setAchievement(event.target.value)}/>
     </label>
     <div className="honor-form-row">
      <label className="honor-form-field">
@@ -259,9 +337,12 @@ export default function HonorBoard(){
     </div>
     <label className="honor-form-field">
      <span>رسالة تقدير من المشرفة</span>
-     <textarea maxLength={1200} rows={4} placeholder="اكتبي كلمات التقدير التي ستظهر كاملة في الشهادة..." value={note} onChange={event=>setNote(event.target.value)}/>
+     <textarea maxLength={1200} rows={3} placeholder="كلمات تقدير قصيرة ودافئة تظهر على الشهادة..." value={note} onChange={event=>setNote(event.target.value)}/>
     </label>
-    <button className="honor-publish-button" type="submit">نشر شهادة التكريم ⭐</button>
+    <div className="honor-form-actions">
+     <button className="honor-publish-button" type="submit">{editingId!==null?"حفظ التعديلات":"نشر شهادة التكريم ⭐"}</button>
+     {editingId!==null&&<button className="honor-cancel-edit" type="button" onClick={cancelEdit}>إلغاء التعديل</button>}
+    </div>
    </form>}
 
    {items.length>0?<section className="honor-board-certificates" aria-label="شهادات تكريم الفريق">
@@ -281,7 +362,7 @@ export default function HonorBoard(){
       <div className="honor-certificate-body">
        <section className="honor-certificate-recipient">
         <StudentPortrait name={item.student_name} photo={photo}/>
-        <p className="honor-certificate-presented">تُمنح هذه الشهادة بكل فخر وتقدير إلى</p>
+        <p className="honor-certificate-presented">تُمنح بكل فخر إلى</p>
         <h2>{item.student_name}</h2>
         <p className="honor-certificate-achievement">{item.achievement}</p>
         <div className="honor-certificate-stars" aria-label={"التقييم "+rating+" من 5"}>
@@ -290,8 +371,8 @@ export default function HonorBoard(){
        </section>
 
        <section className="honor-certificate-appreciation">
-        <div className="honor-appreciation-heading"><span>✦</span> رسالة تقدير خاصة <span>✦</span></div>
-        <p className="honor-certificate-note">{item.note?.trim()||"لم تُضف رسالة تقدير خاصة لهذا التكريم بعد."}</p>
+        <div className="honor-appreciation-heading"><span>✦</span> رسالة تقدير <span>✦</span></div>
+        <p className="honor-certificate-note">{item.note?.trim()||"بكل فخر، نحتفي بإنجازك ونقدّر تميزك."}</p>
         <div className="honor-certificate-approval">
          <div className="honor-certificate-date">
           <small>تاريخ التكريم</small>
@@ -304,9 +385,12 @@ export default function HonorBoard(){
 
       <footer className="honor-certificate-footer">
        <span>WITH PRIDE · WITH APPRECIATION</span>
-       <span>EVERY ACHIEVEMENT DESERVES TO SHINE</span>
+       <span>✦</span>
       </footer>
-      {supervisor&&<button type="button" className="honor-certificate-delete" onClick={()=>void remove(item.id)}>حذف هذا التكريم</button>}
+      {supervisor&&<div className="honor-certificate-actions">
+       <button type="button" className="honor-certificate-edit" onClick={()=>startEdit(item)}>تعديل التكريم</button>
+       <button type="button" className="honor-certificate-delete" onClick={()=>void remove(item.id)}>حذف التكريم</button>
+      </div>}
      </article>;
     })}
    </section>:<section className="honor-board-empty"><span>✦</span><strong>بانتظار أول لحظة تكريم</strong><p>ستظهر شهادات إنجازات الفريق هنا.</p></section>}
