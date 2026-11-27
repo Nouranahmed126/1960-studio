@@ -2,7 +2,7 @@
 
 import { cleanupFailedUpload } from "../../lib/cleanup-failed-upload";
 import { useEffect, useRef, useState } from "react";
-import { getSupabase } from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 import "./submissions.css";
 
 type Team = { id: number; name: string };
@@ -84,7 +84,7 @@ export default function Submissions() {
       setAuthReady(true);
       return;
     }
-    const { data: { user: currentUser } } = await db.auth.getUser();
+    const { data: { user: currentUser } } = await getAuthUser();
     if (!currentUser) {
       setUser("");
       setAuthRequired(true);
