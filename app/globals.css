@@ -2595,3 +2595,44 @@ main.supervisor-v2 .sv-task-card strong{font-size:13px!important;line-height:1.5
   main.supervisor-v2 .sv-greeting h1{font-size:20px!important}
   main.supervisor-v2 .sv-section-heading h2{font-size:18px!important}
 }
+
+
+/* Supervisor dashboard: keep latest submission titles tidy and student cards even on mobile */
+main.supervisor-v2 .sv-student-main p{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  overflow-wrap:anywhere!important;
+  min-height:3em!important;
+  max-height:3em!important;
+}
+main.supervisor-v2 .sv-student-main p b{
+  overflow-wrap:anywhere!important;
+}
+@media(max-width:650px){
+  main.supervisor-v2 .sv-student-card{
+    height:118px!important;
+    min-height:118px!important;
+    max-height:118px!important;
+    overflow:hidden!important;
+  }
+  main.supervisor-v2 .sv-student-main{
+    height:100%!important;
+    min-height:0!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    align-content:stretch!important;
+    overflow:hidden!important;
+  }
+  main.supervisor-v2 .sv-student-heading>strong{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  main.supervisor-v2 .sv-student-main time{
+    white-space:nowrap!important;
+  }
+}
