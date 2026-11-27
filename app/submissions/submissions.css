@@ -704,3 +704,22 @@ body main.submissions-page .submission-attachment-item small {
     transition: none !important;
   }
 }
+
+/* Login notice: visible without hiding the complete submission layout. */
+body main.submissions-page .submission-login-required {
+  border-color: #d8bf7a;
+  background: linear-gradient(135deg, #fffdf6 0%, #fbf7ff 72%, #f2eaf8 100%) !important;
+  box-shadow: 0 4px 0 #e8d9ad, 0 9px 22px #8b6c3512, inset 0 1px 0 #fff;
+}
+body main.submissions-page .submission-login-required .submission-step {
+  font-size: 17px;
+}
+body main.submissions-page input:disabled,
+body main.submissions-page select:disabled,
+body main.submissions-page textarea:disabled,
+body main.submissions-page input[type="file"]:disabled {
+  opacity: .68 !important;
+  color: #64566f !important;
+  background: #f7f3fa !important;
+  cursor: not-allowed;
+}
