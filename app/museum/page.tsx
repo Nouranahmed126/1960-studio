@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
-import {getAuthUser,getSupabase} from "../../lib/supabase-browser";
+import {getAuthUser,getPublicSupabase,getSupabase} from "../../lib/supabase-browser";
 import MiniCinemaIcon from "../mini-cinema-icon";
 import Link from "next/link";
 
@@ -16,14 +16,15 @@ export default function Museum(){
   let active=true;
   async function load(){
    const db=getSupabase();
-   if(!db){setError("تعذر الاتصال بالأرشيف");setLoading(false);return;}
+   const publicDb=getPublicSupabase();
+   if(!publicDb){setError("تعذر الاتصال بالأرشيف");setLoading(false);return;}
 
    const {data:{user}}=await getAuthUser();
    if(!active)return;
 
    // The keepsakes archive is public. Only the legacy cassette entry still
    // uses the private gallery bucket, so request it only for signed-in users.
-   const r=await db.from("studio_props")
+   const r=await publicDb.from("studio_props")
     .select("id,title,description,category,image_path")
     .order("created_at",{ascending:false})
     .limit(150);
@@ -34,11 +35,11 @@ export default function Museum(){
    }else{
     const photos:Record<number,string>={};
     for(const p of r.data||[]){
-     if(p.image_path)photos[p.id]=db.storage.from("crew-photos").getPublicUrl(p.image_path).data.publicUrl;
+     if(p.image_path)photos[p.id]=publicDb.storage.from("crew-photos").getPublicUrl(p.image_path).data.publicUrl;
     }
 
     const moved:Artifact[]=[];
-    if(user){
+    if(user&&db){
      const cassette=await db.from("project_gallery")
       .select("id,title,description,storage_path")
       .eq("id",1)
