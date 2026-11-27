@@ -1,0 +1,29 @@
+body main.student-review-clean{box-sizing:border-box;width:min(100%,720px)!important;max-width:720px!important;margin:0 auto!important;padding:20px 15px 70px!important;color:#443151!important;background:transparent!important}
+body .student-review-clean *{box-sizing:border-box}
+body .student-review-clean .sr-head{display:flex;align-items:center;gap:12px;margin:0 0 18px!important;padding:0!important;background:transparent!important;border:0!important}
+body .student-review-clean h1{margin:0!important;color:#443151!important;font-family:inherit!important;font-size:clamp(24px,5.8vw,32px)!important;font-weight:850!important;text-shadow:none!important;letter-spacing:0!important;-webkit-text-stroke:0!important}
+body .student-review-clean .sr-back{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:1px solid #d8c9e2!important;border-radius:11px!important;background:#f4edf8!important;color:#493456!important;font-size:22px!important;text-decoration:none!important;padding:0!important;box-shadow:none!important}
+body .student-review-clean .sr-student{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;margin-bottom:14px;border:1px solid #ddd0e7;border-radius:14px;background:#f7f1fa;color:#443151!important}
+body .student-review-clean strong{color:#443151!important;overflow-wrap:anywhere;text-shadow:none!important}
+body .student-review-clean small{color:#6c5b77!important;font-size:12px!important}
+body .student-review-clean .sr-list{display:grid;gap:8px}
+body .student-review-clean button.sr-row{width:100%;min-height:55px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;text-align:right;padding:11px 12px!important;border:1px solid #dacde5!important;border-radius:12px!important;background:#fff!important;color:#443151!important;box-shadow:none!important;font-family:inherit!important;font-size:14px!important;line-height:1.5!important;cursor:pointer}
+body .student-review-clean button.sr-all{border-color:#c3a05e!important;background:#f6effa!important}
+body .student-review-clean button.sr-row:disabled{opacity:.6!important}
+body .student-review-clean .sr-count{min-width:28px;padding:3px 7px;border-radius:9px;background:#efe7f5;color:#624579!important;text-align:center;font-size:12px;font-weight:800}
+body .student-review-clean .sr-row>span:last-child{font-size:23px;color:#98783f!important}
+body .student-review-clean .sr-section-title{margin:0 0 6px!important;color:#493456!important;font-size:16px!important;font-weight:800!important;text-shadow:none!important}
+body .student-review-clean .sr-file-name{display:grid;gap:3px;min-width:0}
+body .student-review-clean .sr-open{color:#694b80!important;font-size:13px;font-weight:800}
+body .student-review-clean .sr-status,body .student-review-clean .sr-error{padding:13px;text-align:center;color:#685874!important;font-size:14px!important;margin:0!important;text-shadow:none!important}
+body .student-review-clean .sr-error{color:#9c2636!important}
+body .student-review-clean .sr-overlay{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#25182cb8;padding:12px}
+body .student-review-clean .sr-dialog{width:min(100%,850px);max-height:90dvh;overflow:auto;border-radius:16px;background:#fff;padding:14px;color:#443151}
+body .student-review-clean .sr-dialog header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;border:0!important;padding:0!important;background:transparent!important}
+body .student-review-clean .sr-close{flex-shrink:0;border:1px solid #d8c9e2!important;border-radius:10px!important;background:#f4edf8!important;color:#443151!important;padding:8px!important;font:inherit!important;box-shadow:none!important}
+body .student-review-clean .sr-dialog img{display:block;max-width:100%;max-height:65dvh;object-fit:contain;margin:auto}
+body .student-review-clean .sr-dialog video{width:100%;max-height:65dvh}
+body .student-review-clean .sr-dialog audio{width:100%}
+body .student-review-clean .sr-dialog iframe{width:100%;height:65dvh;border:0}
+body .student-review-clean .sr-external{display:block;margin-top:12px;text-align:center;color:#624579!important;text-decoration:underline!important;font-weight:750}
+body .student-review-clean .sr-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#443151!important;text-shadow:none!important;line-height:1.8}

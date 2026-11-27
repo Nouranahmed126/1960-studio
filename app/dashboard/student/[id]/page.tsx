@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import type { CSSProperties } from "react";
-import { getSupabase } from "../../../../lib/supabase-browser";
+import "./student-review.css";
+import { getAuthUser, getSupabase } from "../../../../lib/supabase-browser";
 
 type Profile = { id: string; full_name: string; approval_status: string; app_role: string };
 type Team = { id: number; name: string };
@@ -23,19 +23,6 @@ type Item = {
 };
 type Preview = { title: string; url: string; mime: string };
 
-const panel: CSSProperties = {
-  background: "#fff", border: "1px solid #e2d5e9", borderRadius: 18,
-  boxShadow: "0 10px 28px rgba(74,52,86,.07)",
-};
-const goldButton: CSSProperties = {
-  border: "1px solid #c5a15b", borderRadius: 12, padding: "11px 15px",
-  background: "linear-gradient(135deg,#f1dfb8,#d4b06f)", color: "#493650",
-  fontWeight: 800, cursor: "pointer",
-};
-const mutedButton: CSSProperties = {
-  border: "1px solid #d9c9e1", borderRadius: 12, padding: "10px 14px",
-  background: "#fff", color: "#60466e", fontWeight: 750, cursor: "pointer",
-};
 
 function fileMime(item: Item) {
   if (item.fileType) return item.fileType.toLowerCase();
@@ -62,7 +49,7 @@ function kindLabel(item: Item) {
     if (mime.includes("pdf")) return "📕 ملف PDF";
     return "📎 ملف";
   }
-  if (item.sourceType === "work") return "✍️ تسليم نصي";
+  if (item.sourceType === "work") return item.category === "روابط ومصادر" ? "↗ رابط" : "✍️ تسليم نصي";
   if (item.sourceType === "contribution") return "📝 مشاركة مكتوبة";
   return "📄 إجابة مكتوبة";
 }
@@ -78,8 +65,8 @@ export default function StudentReviewPage() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedAssignment, setSelectedAssignment] = useState<number | "unassigned" | null>(null);
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<number | "unassigned" | "all" | null>(null);
+  const [textItem, setTextItem] = useState<Item | null>(null);
   const [openingFile, setOpeningFile] = useState<string | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
 
@@ -94,9 +81,9 @@ export default function StudentReviewPage() {
         return;
       }
 
-      const { data: { user }, error: authError } = await db.auth.getUser();
+      const { data: { user }, error: authError } = await getAuthUser();
       if (authError || !user) {
-        window.location.replace("/login");
+        window.location.replace("/login?next="+encodeURIComponent("/dashboard/student/"+studentId));
         return;
       }
 
@@ -143,26 +130,9 @@ export default function StudentReviewPage() {
 
       const contributions = contributionsResult.data || [];
       const contributionMap = new Map(contributions.map(x => [x.id, x]));
-      let allFiles = filesResult.data || [];
+      const allFiles = filesResult.data || [];
 
-      // Include files attached to this student's written contributions, even if another team member uploaded them.
-      const contributionIds = contributions.map(x => x.id);
-      if (contributionIds.length) {
-        const linked = await db.from("attachments")
-          .select("id,uploaded_by,file_name,storage_path,external_url,file_type,description,created_at,team_id,contribution_id")
-          .in("contribution_id", contributionIds)
-          .order("created_at", { ascending: false })
-          .limit(1000);
-        if (linked.error) {
-          setError("تعذر تحميل الملفات المرتبطة بمشاركات الطالب.");
-          setLoading(false);
-          return;
-        }
-        const byId = new Map(allFiles.map(x => [x.id, x]));
-        for (const file of linked.data || []) byId.set(file.id, file);
-        allFiles = [...byId.values()];
-      }
-
+      // Only files actually uploaded by this student belong in this review.
       const classifications = classificationsResult.data || [];
       const classMap = new Map(classifications.map(x => [x.source_type + ":" + x.source_id, x]));
       const built: Item[] = [];
@@ -241,7 +211,7 @@ export default function StudentReviewPage() {
   const grouped = useMemo(() => {
     const assignedIds = new Set(assignmentTeams.filter(link => studentTeamIds.includes(link.team_id)).map(link => link.assignment_id));
     const groups = assignments
-      .filter(assignment => assignedIds.has(assignment.id) || items.some(item => item.assignmentId === assignment.id))
+      .filter(assignment => (!assignment.archived_at && assignedIds.has(assignment.id)) || items.some(item => item.assignmentId === assignment.id))
       .map(assignment => ({
         assignment,
         items: items.filter(item => item.assignmentId === assignment.id),
@@ -251,7 +221,7 @@ export default function StudentReviewPage() {
     return { groups, unassigned };
   }, [assignments, assignmentTeams, studentTeamIds, items]);
 
-  const selectedItems = selectedAssignment === "unassigned"
+  const selectedItems = selectedAssignment === "all" ? items : selectedAssignment === "unassigned"
     ? grouped.unassigned
     : grouped.groups.find(group => group.assignment.id === selectedAssignment)?.items || [];
 
@@ -261,7 +231,7 @@ export default function StudentReviewPage() {
     setOpeningFile(item.key);
     setError("");
     try {
-      let url = item.externalUrl || "";
+      let url = item.externalUrl || (item.category === "روابط ومصادر" ? item.body || "" : "");
       if (item.storagePath) {
         const result = await db.storage.from("studio-files").createSignedUrl(item.storagePath, 300);
         if (result.error || !result.data?.signedUrl) {
@@ -270,11 +240,11 @@ export default function StudentReviewPage() {
         }
         url = result.data.signedUrl;
       }
-      if (!url) {
+      if (!/^https?:\/\//i.test(url)) {
         setError("لا يوجد رابط صالح لهذا الملف.");
         return;
       }
-      setPreview({ title: item.title, url, mime: fileMime(item) });
+      setPreview({ title: item.title, url, mime: item.storagePath ? fileMime(item) : "text/uri-list" });
     } catch {
       setError("حدث خطأ أثناء فتح الملف.");
     } finally {
@@ -282,155 +252,51 @@ export default function StudentReviewPage() {
     }
   }
 
-  const page: CSSProperties = {
-    maxWidth: 980, margin: "0 auto", padding: "24px 14px 110px",
-    color: "#4b3554", direction: "rtl",
-  };
+  const selectedTitle = selectedAssignment === "all" ? "كل ملفات الطالب" : selectedAssignment === "unassigned" ? "ملفات غير مرتبطة بتكليف" : assignments.find(x=>x.id===selectedAssignment)?.title || "";
+  function chooseAssignment(id: number | "all" | "unassigned" | null) {
+    setSelectedAssignment(id); setTextItem(null); setPreview(null); setError("");
+    window.scrollTo({top:0,behavior:"auto"});
+  }
+  useEffect(()=>{
+    if (!preview && !textItem) return;
+    const previous=document.body.style.overflow;
+    document.body.style.overflow="hidden";
+    const escape=(event:KeyboardEvent)=>{if(event.key==="Escape"){setPreview(null);setTextItem(null);}};
+    window.addEventListener("keydown",escape);
+    return ()=>{document.body.style.overflow=previous;window.removeEventListener("keydown",escape);};
+  },[preview,textItem]);
 
-  return (
-    <main style={page}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-        <div>
-          <p style={{ margin: 0, color: "#aa8a4e", fontWeight: 850, letterSpacing: 2 }}>PLATEAU CREW HUB</p>
-          <h1 style={{ margin: "7px 0 3px", fontSize: 26 }}>ملفات الطالب وتسليماته</h1>
-          <p style={{ margin: 0, color: "#806f87" }}>اختاري التكليف لعرض كل الملفات والتسليمات المرتبطة به</p>
-        </div>
-        <a href="/dashboard#assignments" style={{ color: "#694b79", fontWeight: 800, textDecoration: "none" }}>← العودة للطلاب</a>
-      </header>
-
-      {loading ? <section style={{ ...panel, padding: 22 }}>جارٍ تحميل ملفات الطالب...</section> : error && !student ? (
-        <section style={{ ...panel, padding: 22, color: "#a13d48" }}>{error}</section>
-      ) : student && <>
-        <section style={{ ...panel, padding: 18, marginBottom: 18, background: "linear-gradient(135deg,#fff 0%,#f6eff9 100%)", borderColor: "#d8c6e2" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <div>
-              <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 99, background: "#eee4f4", color: "#6b4b7b", fontSize: 12, fontWeight: 800 }}>ملف الطالب</span>
-              <h2 style={{ margin: "9px 0 4px", fontSize: 23 }}>{student.full_name}</h2>
-              <p style={{ margin: 0, color: "#786982" }}>
-                {items.length} تسليم · {grouped.groups.length} تكليف مخصص لفرق الطالب
-              </p>
-              <p style={{ margin: "6px 0 0", color: "#88788e", fontSize: 13 }}>{teams.filter(t => studentTeamIds.includes(t.id)).map(t => t.name).join(" · ") || "لم يتم ربط الطالب بفريق بعد"}</p>
-            </div>
-            <div style={{ color: "#8b7b91", fontSize: 13 }}>
-              {student.approval_status === "approved" ? "✓ حساب معتمد" : "حالة الحساب: " + student.approval_status}
-            </div>
-          </div>
-        </section>
-
-        {error && <p role="status" style={{ color: "#a13d48", lineHeight: 1.7 }}>{error}</p>}
-
-        {grouped.groups.length === 0 && grouped.unassigned.length === 0 ? (
-          <section style={{ ...panel, padding: 22, textAlign: "center" }}>
-            <strong>لا توجد ملفات أو تسليمات مسجلة لهذا الطالب حتى الآن.</strong>
-          </section>
-        ) : <>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "18px 0 12px" }}>
-            <h2 style={{ margin: 0, fontSize: 20 }}>اختاري التكليف</h2>
-            <span style={{ color: "#87768e", fontSize: 13 }}>اضغطي على أي بطاقة لعرض محتواها</span>
-          </div>
-
-          <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
-            {grouped.groups.map(group => {
-              const active = selectedAssignment === group.assignment.id;
-              const latest = group.items[0]?.createdAt;
-              return (
-                <button key={group.assignment.id} type="button" onClick={() => { setSelectedAssignment(active ? null : group.assignment.id); setExpandedItem(null); }}
-                  aria-pressed={active}
-                  style={{ ...panel, padding: 16, textAlign: "right", cursor: "pointer", border: active ? "2px solid #c6a15c" : "1px solid #dfd2e6", background: active ? "#f4edf8" : "#fff", color: "#4b3554" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-                    <strong style={{ fontSize: 16, lineHeight: 1.6 }}>{group.assignment.title}</strong>
-                    <span style={{ color: "#98783f", fontSize: 22 }}>›</span>
-                  </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginTop: 10 }}>
-                    <span style={{ background: "#eee5f3", color: "#654b73", borderRadius: 99, padding: "4px 9px", fontSize: 12, fontWeight: 800 }}>{group.items.length} تسليم</span>
-                    {latest ? <small style={{ color: "#88788e" }}>آخر تسليم: {dateLabel(latest)}</small> : <small style={{ color: "#88788e" }}>لم يسلّم بعد</small>}
-                  </div>
-                </button>
-              );
-            })}
-            {grouped.unassigned.length > 0 && (
-              <button type="button" onClick={() => { setSelectedAssignment(selectedAssignment === "unassigned" ? null : "unassigned"); setExpandedItem(null); }}
-                aria-pressed={selectedAssignment === "unassigned"}
-                style={{ ...panel, padding: 16, textAlign: "right", cursor: "pointer", border: selectedAssignment === "unassigned" ? "2px solid #c6a15c" : "1px solid #dfd2e6", background: selectedAssignment === "unassigned" ? "#f4edf8" : "#fff", color: "#4b3554" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-                  <strong style={{ fontSize: 16 }}>تسليمات غير مرتبطة بتكليف</strong><span style={{ color: "#98783f", fontSize: 22 }}>›</span>
-                </div>
-                <div style={{ marginTop: 10 }}>
-                  <span style={{ background: "#f7efdf", color: "#80632f", borderRadius: 99, padding: "4px 9px", fontSize: 12, fontWeight: 800 }}>{grouped.unassigned.length} تسليم</span>
-                </div>
-              </button>
-            )}
-          </section>
-
-          {selectedAssignment !== null && (
-            <section style={{ marginTop: 18, ...panel, padding: 16, borderColor: "#d8c7e2" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
-                <h2 style={{ margin: 0, fontSize: 20 }}>
-                  {selectedAssignment === "unassigned" ? "تسليمات غير مرتبطة بتكليف" : assignments.find(x => x.id === selectedAssignment)?.title}
-                </h2>
-                <button type="button" style={mutedButton} onClick={() => { setSelectedAssignment(null); setExpandedItem(null); }}>إغلاق التكليف</button>
-              </div>
-
-              {selectedItems.length === 0 ? <p style={{ color: "#88788e", margin: 0 }}>لا توجد ملفات أو تسليمات مرتبطة بهذا التكليف حتى الآن.</p> : <div style={{ display: "grid", gap: 10 }}>
-                {selectedItems.map(item => (
-                  <article key={item.key} style={{ border: "1px solid #e6dcea", borderRadius: 14, padding: 13, background: "#fff" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
-                      <div style={{ minWidth: 0, flex: "1 1 220px" }}>
-                        <strong style={{ display: "block", overflowWrap: "anywhere", lineHeight: 1.6 }}>{item.title}</strong>
-                        <small style={{ color: "#897990" }}>
-                          {kindLabel(item)} · {teams.find(t => t.id === item.teamId)?.name || "بدون فريق"} · {dateLabel(item.createdAt)}
-                        </small>
-                      </div>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        {item.sourceType === "file" ? (
-                          <button type="button" style={goldButton} disabled={openingFile === item.key} onClick={() => void openFile(item)}>
-                            {openingFile === item.key ? "جارٍ الفتح..." : "فتح الملف"}
-                          </button>
-                        ) : item.body ? (
-                          <button type="button" style={mutedButton} onClick={() => setExpandedItem(expandedItem === item.key ? null : item.key)}>
-                            {expandedItem === item.key ? "إخفاء النص" : "عرض النص"}
-                          </button>
-                        ) : <span style={{ color: "#9a8da0", fontSize: 13 }}>لا يوجد محتوى نصي</span>}
-                      </div>
-                    </div>
-                    {item.body && expandedItem === item.key && (
-                      <div style={{ marginTop: 12, borderTop: "1px solid #eee5f2", paddingTop: 12, whiteSpace: "pre-wrap", overflowWrap: "anywhere", lineHeight: 1.9, color: "#55435e" }}>
-                        {item.category && <strong style={{ display: "block", marginBottom: 6 }}>التصنيف: {item.category}</strong>}
-                        {item.body}
-                      </div>
-                    )}
-                  </article>
-                ))}
-              </div>}
-            </section>
-          )}
+  return <main className="student-review-clean" dir="rtl">
+    <header className="sr-head" dir="ltr">
+      {selectedAssignment===null?<a href="/dashboard" className="sr-back" aria-label="العودة للطلاب">←</a>:<button type="button" className="sr-back" onClick={()=>chooseAssignment(null)} aria-label="العودة للتكليفات">←</button>}
+      <h1>{selectedAssignment===null?"Student Files":"Assignment Files"}</h1>
+    </header>
+    {loading?<p className="sr-status" role="status">جارٍ تحميل الملفات…</p>:!student?<p className="sr-error" role="alert">{error||"تعذر تحميل الطالب."}</p>:<>
+      <div className="sr-student"><strong>{student.full_name}</strong><small>{items.length} ملف / تسليم</small></div>
+      {error&&<p className="sr-error" role="alert">{error}</p>}
+      {selectedAssignment===null?<section className="sr-list" aria-label="تكليفات الطالب">
+        <button type="button" className="sr-row sr-all" onClick={()=>chooseAssignment("all")}><strong>كل ملفات الطالب</strong><span className="sr-count">{items.length}</span><span aria-hidden="true">‹</span></button>
+        {grouped.groups.map(group=><button type="button" className="sr-row" key={group.assignment.id} onClick={()=>chooseAssignment(group.assignment.id)}><strong>{group.assignment.title}{group.assignment.archived_at&&<small> · مؤرشف</small>}</strong><span className="sr-count">{group.items.length}</span><span aria-hidden="true">‹</span></button>)}
+        {grouped.unassigned.length>0&&<button type="button" className="sr-row" onClick={()=>chooseAssignment("unassigned")}><strong>ملفات غير مرتبطة بتكليف</strong><span className="sr-count">{grouped.unassigned.length}</span><span aria-hidden="true">‹</span></button>}
+      </section>:<section className="sr-list" aria-label="ملفات التكليف">
+        <h2 className="sr-section-title">{selectedTitle}</h2>
+        {selectedItems.length===0?<p className="sr-status">لا توجد ملفات مرتبطة بهذا التكليف.</p>:selectedItems.map(item=>{
+          const canOpen=Boolean(item.storagePath||item.externalUrl||item.body);
+          return <button type="button" className="sr-row sr-file" key={item.key} disabled={!canOpen||openingFile!==null} onClick={()=>{if(item.storagePath||item.externalUrl||item.category==="روابط ومصادر"){void openFile(item);}else setTextItem(item);}}>
+            <span className="sr-file-name"><strong>{item.title}</strong><small>{kindLabel(item)}</small></span>
+            <span className="sr-open">{openingFile===item.key?"جارٍ الفتح…":"فتح"}</span><span aria-hidden="true">‹</span>
+          </button>;
+        })}
+      </section>}
+    </>}
+    {(preview||textItem)&&<div className="sr-overlay" onMouseDown={event=>{if(event.target===event.currentTarget){setPreview(null);setTextItem(null);}}}>
+      <section role="dialog" aria-modal="true" aria-label={preview?.title||textItem?.title} className="sr-dialog">
+        <header><strong>{preview?.title||textItem?.title}</strong><button type="button" className="sr-close" onClick={()=>{setPreview(null);setTextItem(null);}}>إغلاق ×</button></header>
+        {textItem?<p className="sr-text">{textItem.body}</p>:preview&&<>
+          {preview.mime.startsWith("image/")?<img src={preview.url} alt={preview.title}/>:preview.mime.startsWith("video/")?<video src={preview.url} controls playsInline/>:preview.mime.startsWith("audio/")?<audio src={preview.url} controls/>:preview.mime.includes("pdf")?<iframe src={preview.url} title={preview.title}/>:null}
+          <a className="sr-external" href={preview.url} target="_blank" rel="noopener noreferrer">{preview.mime==="text/uri-list"?"فتح الرابط ↗":"فتح في تبويب جديد ↗"}</a>
         </>}
-      </>}
-
-      {preview && (
-        <div role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setPreview(null); }}
-          style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(35,22,43,.72)", display: "grid", placeItems: "center", padding: 12 }}>
-          <section role="dialog" aria-modal="true" aria-label={preview.title}
-            style={{ width: "min(920px,100%)", maxHeight: "92vh", overflow: "auto", background: "#fff", borderRadius: 18, padding: 14, color: "#4b3554" }}>
-            <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 12 }}>
-              <strong style={{ overflowWrap: "anywhere" }}>{preview.title}</strong>
-              <button type="button" style={mutedButton} onClick={() => setPreview(null)}>إغلاق ×</button>
-            </header>
-            {preview.mime.startsWith("image/") ? (
-              <img src={preview.url} alt={preview.title} style={{ display: "block", maxWidth: "100%", maxHeight: "72vh", objectFit: "contain", margin: "0 auto" }} />
-            ) : preview.mime.startsWith("video/") ? (
-              <video src={preview.url} controls playsInline style={{ width: "100%", maxHeight: "72vh" }} />
-            ) : preview.mime.startsWith("audio/") ? (
-              <audio src={preview.url} controls style={{ width: "100%" }} />
-            ) : preview.mime.includes("pdf") ? (
-              <iframe src={preview.url} title={preview.title} style={{ width: "100%", height: "72vh", border: 0 }} />
-            ) : (
-              <p>هذا النوع من الملفات لا يدعم المعاينة هنا. <a href={preview.url} target="_blank" rel="noopener noreferrer" style={{ color: "#684b78", fontWeight: 800 }}>افتحيه في تبويب جديد</a></p>
-            )}
-            <p style={{ textAlign: "left", marginBottom: 0 }}><a href={preview.url} target="_blank" rel="noopener noreferrer" style={{ color: "#684b78", fontWeight: 800 }}>فتح الملف في تبويب جديد ↗</a></p>
-          </section>
-        </div>
-      )}
-    </main>
-  );
+      </section>
+    </div>}
+  </main>;
 }
