@@ -3,6 +3,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { getSupabase } from "../../lib/supabase-browser";
 
+function getSafeNextPath() {
+  const candidate = new URLSearchParams(window.location.search).get("next");
+  return candidate && candidate.startsWith("/") && !candidate.startsWith("//") ? candidate : "/";
+}
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +19,7 @@ export default function Login() {
     if (!db) return;
     let active = true;
     void db.auth.getSession().then(({ data: { session } }) => {
-      if (active && session?.user) window.location.replace("/");
+      if (active && session?.user) window.location.replace(getSafeNextPath());
     });
     return () => { active = false; };
   }, []);
@@ -35,7 +40,7 @@ export default function Login() {
           : "Unable to sign in.");
         return;
       }
-      window.location.replace("/");
+      window.location.replace(getSafeNextPath());
     } catch {
       setMessage("Unable to sign in.");
     } finally {
