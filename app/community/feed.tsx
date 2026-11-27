@@ -10,6 +10,7 @@ import PostInteractions, { type InteractionCounts } from "../gallery/post-intera
 type Media = { path: string; kind: "image" | "video" };
 type Post = {
   id: number;
+  user_id?: string | null;
   author_name: string;
   author_role: string;
   body: string;
@@ -30,6 +31,7 @@ const mediaTypes: Record<string, string> = {
 };
 const dateFormatter = new Intl.DateTimeFormat("ar-EG", { dateStyle: "medium", timeStyle: "short" });
 const postColumns = "id,author_name,author_role,body,created_at,pinned_at,media_path,media_kind,legacy_media,youtube_id,location";
+const memberPostColumns = postColumns + ",user_id";
 const zeroCounts = { likes: 0, comments: 0, liked: false };
 const pageSize = 20;
 
@@ -74,6 +76,10 @@ export default function Feed() {
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState("");
   const [moderating, setModerating] = useState<number>();
+  const [editingPost, setEditingPost] = useState<number | null>(null);
+  const [editBody, setEditBody] = useState("");
+  const [editLocation, setEditLocation] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
   const [lightbox, setLightbox] = useState("");
   const mediaInput = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -109,7 +115,7 @@ export default function Feed() {
     const db = getSupabase();
     if (!db) return;
     const requestId = ++refreshId.current;
-    const request = db.from("plateau_posts").select(postColumns)
+    const request = db.from("plateau_posts").select(viewer ? memberPostColumns : postColumns)
       .order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false })
       .order("id", { ascending: false }).limit(limit + 1);
     const result = await (signal ? request.abortSignal(signal) : request);
@@ -212,18 +218,63 @@ export default function Feed() {
     }
   }
 
+  function beginPostEdit(post: Post) {
+    if (!viewer || post.user_id !== viewer.id) return;
+    setEditingPost(post.id);
+    setEditBody(post.body);
+    setEditLocation(post.location ?? "");
+    setActionError("");
+  }
+
+  function cancelPostEdit() {
+    setEditingPost(null);
+    setEditBody("");
+    setEditLocation("");
+  }
+
+  async function savePostEdit(event: FormEvent<HTMLFormElement>, post: Post) {
+    event.preventDefault();
+    const db = getSupabase();
+    if (!db || !viewer || post.user_id !== viewer.id || savingEdit) return;
+    const text = editBody.trim();
+    const place = editLocation.trim();
+    if (place.length > 160) { setActionError("اسم المكان لازم يكون 160 حرف أو أقل."); return; }
+    setSavingEdit(true);
+    setActionError("");
+    try {
+      const result = await db.from("plateau_posts")
+        .update({ body: text, location: place || null })
+        .eq("id", post.id)
+        .eq("user_id", viewer.id)
+        .select("id")
+        .single();
+      if (result.error) throw result.error;
+      cancelPostEdit();
+      await refresh();
+    } catch {
+      setActionError("تعذّر حفظ التعديلات. تأكد من اتصالك وحاول مرة أخرى.");
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
   async function moderate(post: Post, remove: boolean) {
     const db = getSupabase();
-    if (!db || !viewer?.supervisor || moderating) return;
-    if (remove && !window.confirm("حذف المنشور وتعليقاته من التايم لاين؟")) return;
+    if (!db || !viewer || moderating) return;
+    if (!remove && !viewer.supervisor) return;
+    if (remove && !viewer.supervisor && post.user_id !== viewer.id) return;
+    if (remove && !window.confirm("حذف المنشور وتعليقاته نهائيًا؟")) return;
     setModerating(post.id);
     setActionError("");
     try {
       const result = remove
-        ? await db.from("plateau_posts").delete().eq("id", post.id).select("id").single()
+        ? viewer.supervisor
+          ? await db.from("plateau_posts").delete().eq("id", post.id).select("id").single()
+          : await db.from("plateau_posts").delete().eq("id", post.id).eq("user_id", viewer.id).select("id").single()
         : await db.from("plateau_posts").update({ pinned_at: post.pinned_at ? null : new Date().toISOString() })
           .eq("id", post.id).select("id").single();
       if (result.error) throw result.error;
+      if (remove && editingPost === post.id) cancelPostEdit();
       if (remove && post.media_path) {
         const cleanup = await db.storage.from("post-media").remove([post.media_path]);
         if (cleanup.error) setActionError("اتحذف المنشور، وتعذّر تنظيف الملف المرفق.");
@@ -316,10 +367,29 @@ export default function Feed() {
             </div>}
             {post.youtube_id && <iframe className="plateau-embed" title={`فيديو YouTube من ${post.author_name}`} loading="lazy"
               src={`https://www.youtube-nocookie.com/embed/${post.youtube_id}`} allowFullScreen />}
-            {viewer?.supervisor && <div className="plateau-moderation">
-              <button disabled={!!moderating} onClick={() => void moderate(post, false)}>{post.pinned_at ? "إلغاء التثبيت" : "تثبيت"}</button>
-              <button disabled={!!moderating} onClick={() => void moderate(post, true)}>حذف المنشور</button>
+            {viewer && (viewer.supervisor || post.user_id === viewer.id) && <div className="plateau-moderation">
+              {post.user_id === viewer.id && <button type="button" disabled={!!moderating || savingEdit}
+                onClick={() => beginPostEdit(post)}>تعديل المنشور</button>}
+              {viewer.supervisor && <button type="button" disabled={!!moderating}
+                onClick={() => void moderate(post, false)}>{post.pinned_at ? "إلغاء التثبيت" : "تثبيت"}</button>}
+              <button type="button" disabled={!!moderating || savingEdit}
+                onClick={() => void moderate(post, true)}>حذف المنشور</button>
             </div>}
+            {editingPost === post.id && <form className="plateau-edit-form" onSubmit={event => void savePostEdit(event, post)}>
+              <label>نص المنشور
+                <textarea rows={3} maxLength={4000} value={editBody} disabled={savingEdit}
+                  onChange={event => setEditBody(event.target.value)} />
+              </label>
+              <label>المكان أو الزيارة
+                <input type="text" maxLength={160} value={editLocation} disabled={savingEdit}
+                  onChange={event => setEditLocation(event.target.value)} placeholder="مثال: دار الكتب — القاهرة" />
+              </label>
+              <p>يمكنك تعديل النص والمكان، وستظل الصورة أو الفيديو كما هما.</p>
+              <div className="plateau-edit-actions">
+                <button type="submit" disabled={savingEdit}>{savingEdit ? "جارٍ الحفظ…" : "حفظ التعديلات"}</button>
+                <button type="button" disabled={savingEdit} onClick={cancelPostEdit}>إلغاء</button>
+              </div>
+            </form>}
             <PostInteractions postId={post.id} counts={feed.counts[post.id] ?? zeroCounts} refreshVersion={refreshVersion}
               viewerId={viewer?.id} supervisor={viewer?.supervisor ?? false} />
           </article>;
