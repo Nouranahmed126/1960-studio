@@ -139,7 +139,7 @@ export default function Ribbons(){
   {visibleRows.map(row=><section className={"reference-ribbon ribbon-"+row.index} key={row.label} aria-label={row.label}>
    <Link href={row.href} className="ribbon-heading"><span aria-hidden="true">{row.direction==="left"?"←":"→"}</span><strong>{row.label}</strong></Link>
    <div className="ribbon-window">
-    <div className={"reference-ribbon-track ribbon-track-"+index}>
+    <div className={"reference-ribbon-track ribbon-track-"+row.index}>
      {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
       {row.items.map(item=><Link href={row.href} prefetch className={"ribbon-item ribbon-item-"+item.kind} key={copy+"-"+item.kind+"-"+item.id} tabIndex={copy===1?-1:0} aria-label={item.label} title={item.label}>
        {item.image&&<img className={item.kind==="artifact"?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
