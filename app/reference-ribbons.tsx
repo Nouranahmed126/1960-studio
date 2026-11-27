@@ -143,7 +143,7 @@ export default function Ribbons(){
      {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
       {row.items.map(item=><Link href={row.href} prefetch className={"ribbon-item ribbon-item-"+item.kind} key={copy+"-"+item.kind+"-"+item.id} tabIndex={copy===1?-1:0} aria-label={item.label} title={item.label}>
        {item.image&&<img className={item.kind==="artifact"?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
-       {item.kind!=="artifact"&&(item.kind==="honor"&&!item.image?<span className="ribbon-honor-star" aria-hidden="true">★</span>:<bdi>{item.label}</bdi>)}
+       {item.kind!=="artifact"&&(item.kind==="honor"?<>{!item.image&&<span className="ribbon-honor-star" aria-hidden="true">★</span>}<bdi>{item.label}</bdi></>:<bdi>{item.label}</bdi>)}
       </Link>)}
      </div>)}
     </div>
