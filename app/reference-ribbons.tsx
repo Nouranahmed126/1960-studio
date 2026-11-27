@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import {useCallback,useEffect,useState} from "react";
-import {getAuthUser,getSupabase} from "../lib/supabase-browser";
+import {getAuthUser,getPublicSupabase,getSupabase} from "../lib/supabase-browser";
 
 type CrewMember={id:string;full_name:string};
 type Honor={id:number;student_name:string;award:string;achievement:string;stars:number};
@@ -26,24 +26,26 @@ export default function Ribbons(){
 
  const load=useCallback(async()=>{
   const db=getSupabase();
-  if(!db){setAccess("guest");setLoading(false);return;}
+  const publicDb=getPublicSupabase();
+  if(!publicDb){setAccess("guest");setLoading(false);return;}
 
   const {data:{user}}=await getAuthUser();
   let isApprovedMember=false;
-  if(user){
+  if(user&&db){
    const profile=await db.from("profiles").select("app_role,approval_status").eq("id",user.id).maybeSingle();
    isApprovedMember=!!profile.data&&(profile.data.app_role==="supervisor"||profile.data.approval_status==="approved");
   }
   setAccess(isApprovedMember?"member":"guest");
 
-  // These two collections are intentionally public and expose display fields only.
+  // Public, display-only data always loads through the isolated anon client.
   const [propResult,honorResult]=await Promise.all([
-   db.from("studio_props").select("id,title,image_path").not("image_path","is",null).neq("id",2).order("created_at",{ascending:false}).limit(60),
-   db.from("studio_honors").select("id,student_name,award,achievement,stars").order("created_at",{ascending:false}).limit(100)
+   publicDb.from("studio_props").select("id,title,image_path").not("image_path","is",null).neq("id",2).order("created_at",{ascending:false}).limit(60),
+   publicDb.from("studio_honors").select("id,student_name,award,achievement,stars").order("created_at",{ascending:false}).limit(100)
   ]);
 
   let crewItems:RibbonItem[]=[];
-  if(isApprovedMember&&user){
+  let cassetteItem:RibbonItem|null=null;
+  if(isApprovedMember&&user&&db){
    const [crewResult,detailResult,cassetteResult]=await Promise.all([
     db.rpc("list_approved_crew"),
     db.from("crew_profiles").select("user_id,photo_path"),
@@ -53,7 +55,7 @@ export default function Ribbons(){
    const details=(detailResult.data??[]) as {user_id:string;photo_path:string|null}[];
    const photoById=new Map<string,string>();
    await Promise.all(details.map(async d=>{
-    const url=await storageImage(db,"crew-photos",d.photo_path);
+    const url=await storageImage(publicDb,"crew-photos",d.photo_path);
     if(url)photoById.set(d.user_id,url);
    }));
    const uniqueMembers=new Map<string,CrewMember>();
@@ -66,13 +68,10 @@ export default function Ribbons(){
     if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});
    }
 
-   // This one imported item still lives in the private gallery bucket.
    const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
    if(cassette?.storage_path){
     const image=await storageImage(db,"studio-gallery",cassette.storage_path);
-    if(image&&propResult.data){
-     propResult.data.push({id:-1,title:cassette.title||"1960 Archive",image_path:image});
-    }
+    if(image)cassetteItem={id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"};
    }
   }
 
@@ -80,16 +79,15 @@ export default function Ribbons(){
   const propRows=propResult.data??[];
   const artifactImages=await Promise.all(propRows.map(async p=>({
    row:p,
-   image:p.id===-1?p.image_path:await storageImage(db,"crew-photos",p.image_path)
+   image:await storageImage(publicDb,"crew-photos",p.image_path)
   })));
   for(const entry of artifactImages){
    if(entry.image)artifactItems.push({id:String(entry.row.id),label:entry.row.title,image:entry.image,kind:"artifact"});
   }
+  if(cassetteItem)artifactItems.push(cassetteItem);
 
   const byName=new Map<string,string>();
-  for(const m of crewItems){
-   byName.set(normalizeName(m.label),m.image||"");
-  }
+  for(const m of crewItems)if(m.image)byName.set(normalizeName(m.label),m.image);
   const honorRows=(honorResult.data??[]) as Honor[];
   const honorItems:RibbonItem[]=honorRows.map(h=>({
    id:String(h.id),
@@ -107,22 +105,21 @@ export default function Ribbons(){
  useEffect(()=>{
   let active=true;
   const db=getSupabase();
-  if(!db){setAccess("guest");setLoading(false);return;}
+  const publicDb=getPublicSupabase();
+  if(!publicDb){setAccess("guest");setLoading(false);return;}
   const safeLoad=async()=>{if(active)await load();};
   void safeLoad();
-  const channel=db.channel("home-ribbons-live")
-   .on("postgres_changes",{event:"*",schema:"public",table:"crew_profiles"},()=>void safeLoad())
+  const channel=publicDb.channel("home-ribbons-public-live")
    .on("postgres_changes",{event:"*",schema:"public",table:"studio_props"},()=>void safeLoad())
    .on("postgres_changes",{event:"*",schema:"public",table:"studio_honors"},()=>void safeLoad())
-   .on("postgres_changes",{event:"*",schema:"public",table:"project_gallery"},()=>void safeLoad())
    .subscribe();
-  const auth=db.auth.onAuthStateChange(()=>{setTimeout(()=>void safeLoad(),0);});
+  const auth=db?.auth.onAuthStateChange(()=>{setTimeout(()=>void safeLoad(),0);});
   const timer=setInterval(()=>void safeLoad(),45_000);
   return()=>{
    active=false;
    clearInterval(timer);
-   auth.data.subscription.unsubscribe();
-   void db.removeChannel(channel);
+   auth?.data.subscription.unsubscribe();
+   void publicDb.removeChannel(channel);
   };
  },[load]);
 
@@ -134,25 +131,21 @@ export default function Ribbons(){
  const visibleRows=rows.filter(row=>row.items.length>0);
 
  if(loading||access==="checking"){
-  return <section className="reference-ribbons reference-ribbons-loading" aria-label="Studio highlights" aria-busy="true">
-   <span/><span/><span/>
-  </section>;
+  return <section className="reference-ribbons reference-ribbons-loading" aria-label="Studio highlights" aria-busy="true"><span/><span/><span/></section>;
  }
  if(!visibleRows.length)return null;
 
  return <section className="reference-ribbons" aria-label="Studio highlights">
   {visibleRows.map(row=><section className={"reference-ribbon ribbon-"+row.index} key={row.label} aria-label={row.label}>
    <Link href={row.href} className="ribbon-heading"><span aria-hidden="true">{row.direction==="left"?"←":"→"}</span><strong>{row.label}</strong></Link>
-   <div className="ribbon-window">
-    <div className={"reference-ribbon-track ribbon-track-"+row.index}>
-     {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
-      {row.items.map(item=><Link href={row.href} prefetch className={"ribbon-item ribbon-item-"+item.kind} key={copy+"-"+item.kind+"-"+item.id} tabIndex={copy===1?-1:0} aria-label={item.label} title={item.label}>
-       {item.image&&<img className={item.kind==="artifact"?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
-       {item.kind!=="artifact"&&(item.kind==="honor"?<>{!item.image&&<span className="ribbon-honor-star" aria-hidden="true">★</span>}<bdi>{item.label}</bdi></>:<bdi>{item.label}</bdi>)}
-      </Link>)}
-     </div>)}
-    </div>
-   </div>
+   <div className="ribbon-window"><div className={"reference-ribbon-track ribbon-track-"+row.index}>
+    {[0,1].map(copy=><div className="reference-ribbon-group" key={copy} aria-hidden={copy===1}>
+     {row.items.map(item=><Link href={row.href} prefetch className={"ribbon-item ribbon-item-"+item.kind} key={copy+"-"+item.kind+"-"+item.id} tabIndex={copy===1?-1:0} aria-label={item.label} title={item.label}>
+      {item.image&&<img className={item.kind==="artifact"?"ribbon-artifact":"ribbon-emblem"} src={item.image} alt="" loading="lazy" decoding="async"/>}
+      {item.kind!=="artifact"&&(item.kind==="honor"?<>{!item.image&&<span className="ribbon-honor-star" aria-hidden="true">★</span>}<bdi>{item.label}</bdi></>:<bdi>{item.label}</bdi>)}
+     </Link>)}
+    </div>)}
+   </div></div>
   </section>)}
  </section>;
 }
