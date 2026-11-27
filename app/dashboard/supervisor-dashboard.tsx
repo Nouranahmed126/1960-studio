@@ -144,7 +144,7 @@ export default function SupervisorDashboard(props: Props) {
       <section className="sv-stats" aria-label="إحصائيات المشروع">
         <article><strong>{approvedStudents.length}</strong><span>طالب معتمد</span></article>
         <article><strong>{teams.length}</strong><span>فرق</span></article>
-        <article><strong>{totalSubmissions}</strong><span>إجمالي التسليمات</span></article>
+        <article className="sv-stat-total-submissions"><strong>{totalSubmissions}</strong><span>إجمالي التسليمات</span></article>
         <article><strong>{activeAssignments.length}</strong><span>تكليف نشط</span></article>
       </section>
 
