@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { getSupabase } from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 import { getVisitorToken } from "../../lib/plateau-visitor";
 import PostInteractions, { type InteractionCounts } from "../gallery/post-interactions";
 
@@ -89,10 +89,10 @@ export default function Feed() {
     if (!db) { setAccess("offline"); return; }
     let active = true;
     async function identify() {
-      const { data: { user }, error } = await db!.auth.getUser();
+      const { data: { user } } = await getAuthUser();
       if (!active) return;
       if (!user) {
-        setAccess(error && error.name !== "AuthSessionMissingError" ? "offline" : "guest");
+        setAccess("guest");
         return;
       }
       const profile = await db!.from("profiles").select("approval_status,app_role").eq("id", user.id).single();

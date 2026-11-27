@@ -2,7 +2,7 @@
 import { assignmentLabel } from "../../../lib/assignment-label";
 import {useEffect,useMemo,useState} from "react";
 import {useParams} from "next/navigation";
-import {getSupabase} from "../../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../../lib/supabase-browser";
 
 type Team={id:number;name:string};
 type Assignment={id:number;title:string;description:string|null;due_at:string|null};
@@ -39,7 +39,7 @@ export default function TeamRoom(){
 
  async function load(){
   const db=getSupabase();if(!db){setError("الاتصال غير متاح.");return;}
-  const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
+  const {data:{user}}=await getAuthUser();if(!user){window.location.replace("/login");return;}
   const [profile,membership,teams,allMemberships]=await Promise.all([db.from("profiles").select("app_role,approval_status").eq("id",user.id).single(),db.from("team_members").select("team_id").eq("user_id",user.id).eq("team_id",id),db.from("teams").select("id,name").order("id"),db.from("team_members").select("team_id,user_id")]);
   const isSupervisor=profile.data?.app_role==="supervisor";
   if(!isSupervisor&&(profile.data?.approval_status!=="approved"||!membership.data?.length)){setError("هذه المساحة مخصصة لأعضاء الفريق والمشرفة فقط.");return;}
@@ -95,15 +95,15 @@ export default function TeamRoom(){
  const pending=members.length-completed;
 
  async function openReview(item:ReviewItem){
-  if(supervisor){const db=getSupabase();if(db){const {data:{user}}=await db.auth.getUser();if(user){const r=await db.from("supervisor_submission_views").upsert({source_type:item.kind,source_id:item.id,supervisor_id:user.id},{onConflict:"source_type,source_id,supervisor_id",ignoreDuplicates:true});if(r.error)setError("تعذر حفظ حالة المشاهدة: "+r.error.message);}}}
+  if(supervisor){const db=getSupabase();if(db){const {data:{user}}=await getAuthUser();if(user){const r=await db.from("supervisor_submission_views").upsert({source_type:item.kind,source_id:item.id,supervisor_id:user.id},{onConflict:"source_type,source_id,supervisor_id",ignoreDuplicates:true});if(r.error)setError("تعذر حفظ حالة المشاهدة: "+r.error.message);}}}
   setStampChoice((stamps[keyFor(item.kind,item.id)]?.stamp_status as "approved"|"revise"|"reviewing")||"reviewing");setSelected(item);setReviewNote(notes[keyFor(item.kind,item.id)]??"");setReviewStars(stars[keyFor(item.kind,item.id)]??0);setPreviewUrl("");
   if(item.kind==="file"&&item.path){const db=getSupabase();if(db){const signed=await db.storage.from("studio-files").createSignedUrl(item.path,60);if(signed.data?.signedUrl)setPreviewUrl(signed.data.signedUrl);}}
  }
  async function saveReview(){
   if(!selected||!supervisor)return;const db=getSupabase();if(!db)return;setReviewBusy(true);
   const sourceType=selected.kind==="file"?"file":"work";const k=keyFor(sourceType,selected.id);
-  const reviewer=(await db.auth.getUser()).data.user?.id??null;const stampFields={stamp_status:stampChoice,stamp_at:new Date().toISOString(),stamp_by:reviewer};
-  const noteResult=await db.from("submission_feedback_notes").upsert({source_type:sourceType,source_id:selected.id,note:reviewNote.trim(),updated_by:(await db.auth.getUser()).data.user?.id??null},{onConflict:"source_type,source_id"});
+  const reviewer=(await getAuthUser()).data.user?.id??null;const stampFields={stamp_status:stampChoice,stamp_at:new Date().toISOString(),stamp_by:reviewer};
+  const noteResult=await db.from("submission_feedback_notes").upsert({source_type:sourceType,source_id:selected.id,note:reviewNote.trim(),updated_by:(await getAuthUser()).data.user?.id??null},{onConflict:"source_type,source_id"});
   let ratingError:any=null;
   if(selected.kind==="file"){
    const r=await db.from("attachment_reviews").upsert({attachment_id:selected.id,stars:reviewStars,received:true,reviewed_by:reviewer,...stampFields},{onConflict:"attachment_id"});ratingError=r.error;
@@ -116,7 +116,7 @@ export default function TeamRoom(){
  }
  async function openFile(path:string){const db=getSupabase();if(!db)return;const r=await db.storage.from("studio-files").createSignedUrl(path,60);if(r.data?.signedUrl)window.open(r.data.signedUrl,"_blank","noopener,noreferrer");else setError("تعذر فتح الملف.");}
  async function sendQuickText(){
-  const db=getSupabase();if(!db||quickText.trim().length<20)return;const {data:{user}}=await db.auth.getUser();if(!user)return;
+  const db=getSupabase();if(!db||quickText.trim().length<20)return;const {data:{user}}=await getAuthUser();if(!user)return;
   setQuickBusy(true);const r=await db.from("work_submissions").insert({student_id:user.id,team_id:id,title:look.english+" — تسليم سريع",category:"أخرى",body:quickText.trim()});
   setQuickBusy(false);if(r.error){setError("تعذر إرسال النص: "+r.error.message);return;}setQuickText("");setQuickNotice("وصل التسليم النصي للمشرفة ✓");await load();
  }

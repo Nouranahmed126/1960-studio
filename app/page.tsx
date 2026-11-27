@@ -35,9 +35,5 @@ export default function Home(){
    </Link>)}
   </section>
   <Ribbons/>
-  <footer className="reference-credits" dir="ltr">
-   <div><small>Academic Supervision</small><b>Dr. Ahmed Abdelmoneim</b></div>
-   <div><small>Designed &amp; Developed by</small><b>Nouran Ahmed</b></div>
-  </footer>
  </main>;
 }

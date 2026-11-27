@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState,type FormEvent} from "react";
-import {getSupabase} from "../../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../../lib/supabase-browser";
 type Team={id:number;name:string};
 type Assignment={id:number;title:string};
 type Pair={assignment_id:number;team_id:number};
@@ -18,7 +18,7 @@ export default function Contributions(){
  const [busy,setBusy]=useState(false);
  async function load(){
   const db=getSupabase();if(!db){setMessage("إعدادات Supabase غير مكتملة.");return;}
-  const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
+  const {data:{user}}=await getAuthUser();if(!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("approval_status,app_role").eq("id",user.id).single();
   if(p.error||p.data?.approval_status!=="approved"||p.data?.app_role!=="student"){setMessage("الصفحة متاحة للطلاب المعتمدين فقط.");return;}
   const [members,allTeams,links,allAssignments,contributions]=await Promise.all([
@@ -43,7 +43,7 @@ export default function Contributions(){
   if(!pairs.some(p=>p.team_id===teamId&&p.assignment_id===assignmentId)){setMessage("اختاري تكليف تابع لفريقك.");return;}
   const db=getSupabase();if(!db)return;
   setBusy(true);setMessage("");
-  const {data:{user}}=await db.auth.getUser();
+  const {data:{user}}=await getAuthUser();
   if(!user){setBusy(false);window.location.replace("/login");return;}
   const result=await db.from("contributions").insert({team_id:teamId,assignment_id:assignmentId,user_id:user.id,title:title.trim(),content:content.trim()});
   setBusy(false);

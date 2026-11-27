@@ -2,7 +2,8 @@
 import { useCallback, useEffect, useState } from "react";
 import SubmissionRadar from "../submission-radar";
 import SupervisorArchive from "../supervisor-archive";
-import { getSupabase } from "../../lib/supabase-browser";
+import SupervisorDashboard from "./supervisor-dashboard";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 type Profile={id:string;full_name:string;approval_status:string;app_role:string};
 type Team={id:number;name:string};
 type Star={id:string;full_name:string};
@@ -45,7 +46,7 @@ export default function Dashboard(){
  const load=useCallback(async()=>{
   const db=getSupabase();
   if(!db){setMessage("إعدادات Supabase غير مكتملة.");return;}
-  const {data:{user},error}=await db.auth.getUser();
+  const {data:{user},error}=await getAuthUser();
   if(error||!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("id,full_name,approval_status,app_role").eq("id",user.id).single();
   if(p.error||!p.data){setMessage("تعذر قراءة حسابك. راجعي إعدادات قاعدة البيانات.");return;}
@@ -145,18 +146,41 @@ export default function Dashboard(){
  const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));
  const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
+ if(profile?.app_role==="supervisor" && !(typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "advanced")){
+  return <SupervisorDashboard
+   profile={profile}
+   students={students}
+   teams={teams}
+   assignments={assignmentRegister}
+   files={uploadedFiles}
+   writtenItems={writtenItems}
+   classifications={classifications}
+   requests={requests}
+   fileReviews={fileReviews}
+   writtenReviews={writtenReviews}
+   busy={busy}
+   message={message}
+   onLogout={logout}
+   onApprove={approve}
+   onOpenFile={openTrackedFile}
+   onMarkFileReceived={markFileReceived}
+   onUpdateWrittenReview={updateWrittenReview}
+   onSaved={load}
+   onClearMessage={()=>setMessage("")}
+  />;
+ }
  return <main className="dashboard-shell"><SubmissionRadar/>
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
    <a href="/" style={{color:"#d5a66d",fontWeight:700}}>Plateau Crew Hub</a>
    <button onClick={logout} style={buttonStyle}>تسجيل خروج</button>
   </header>
   {profile&&<section style={{marginTop:48}}>{profile.app_role==="supervisor"&&<section className="executive-office" aria-label="مكتب قيادة Plateau">
-    <div className="executive-office-content"><p className="executive-eyebrow">Plateau Crew Hub · EXECUTIVE OFFICE</p><h2>أهلاً بحضرتك، د/ نوران أحمد</h2><p>مكتب قيادة الاستوديو — كل مراحل صناعة الفيلم، وكل إبداعات الفريق، في مكان واحد.</p><section className="director-mini-stats"><a href="/crew"><strong>{students.filter(x=>x.approval_status==="approved").length}</strong><small>طالب معتمد</small></a><a href="/sectors"><strong>{teams.length}</strong><small>فرق</small></a><a href="/submissions"><strong>{uploadedFiles.length+writtenItems.length}</strong><small>تسليم</small></a><a href="/assignments/new"><strong>{assignmentRegister.filter(x=>!x.archived_at).length}</strong><small>تكليف نشط</small></a></section><section id="assignments" className="director-roster-compact"><h3>متابعة الطلاب</h3>{students.filter(x=>x.approval_status==="approved").map(x=><div className="director-roster-row" key={x.id}><strong>{x.full_name}</strong><small>{uploadedFiles.filter(f=>f.uploaded_by===x.id).length+writtenItems.filter(w=>w.user_id===x.id).length} تسليم</small><a href="/submissions">فتح ومراجعة ←</a></div>)}</section><SupervisorArchive supervisorId={profile.id} teams={teams} students={students.filter(x=>x.approval_status==="approved")} assignments={assignmentRegister} onSaved={load} rows={[...uploadedFiles.map(f=>({source_type:"file" as const,source_id:f.id,title:f.file_name,student_id:f.uploaded_by,team_id:f.team_id,assignment_id:null})),...writtenItems.map(w=>({source_type:w.source_type,source_id:w.source_id,title:w.title,student_id:w.user_id,team_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.team_id??w.team_id,assignment_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.assignment_id??w.assignment_id}))]}/><div className="executive-office-links">
+    <div className="executive-office-content"><p className="executive-eyebrow">Plateau Crew Hub · EXECUTIVE OFFICE</p><h2>أهلاً بحضرتك، د/ نوران أحمد</h2><p>مكتب قيادة الاستوديو — كل مراحل صناعة الفيلم، وكل إبداعات الفريق، في مكان واحد.</p><section className="director-mini-stats"><a href="/crew"><strong>{students.filter(x=>x.approval_status==="approved").length}</strong><small>طالب معتمد</small></a><a href="/sectors"><strong>{teams.length}</strong><small>فرق</small></a><a href="/submissions"><strong>{uploadedFiles.length+writtenItems.length}</strong><small>تسليم</small></a><a href="/assignments/new"><strong>{assignmentRegister.filter(x=>!x.archived_at).length}</strong><small>تكليف نشط</small></a></section><section id="assignments" className="director-roster-compact"><h3>متابعة الطلاب</h3>{students.filter(x=>x.approval_status==="approved").map(x=><div className="director-roster-row" key={x.id}><strong>{x.full_name}</strong><small>{uploadedFiles.filter(f=>f.uploaded_by===x.id).length+writtenItems.filter(w=>w.user_id===x.id).length} تسليم</small><a href={"/dashboard/student/"+x.id}>فتح ومراجعة ←</a></div>)}</section><SupervisorArchive supervisorId={profile.id} teams={teams} students={students.filter(x=>x.approval_status==="approved")} assignments={assignmentRegister} onSaved={load} rows={[...uploadedFiles.map(f=>({source_type:"file" as const,source_id:f.id,title:f.file_name,student_id:f.uploaded_by,team_id:f.team_id,assignment_id:null})),...writtenItems.map(w=>({source_type:w.source_type,source_id:w.source_id,title:w.title,student_id:w.user_id,team_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.team_id??w.team_id,assignment_id:classifications.find(c=>c.source_type===w.source_type&&c.source_id===w.source_id)?.assignment_id??w.assignment_id}))]}/><div className="executive-office-links">
     {([{href:"/dashboard/accounts",icon:"🔐",name:"استعادة حسابات الطلاب",sub:"أسماء المستخدمين وكلمات المرور المؤقتة"},{href:"/production-hub",icon:"🎬",name:"غرفة عمليات الإنتاج",sub:"المحطات والتكليفات"},{href:"/director-room",icon:"🎞️",name:"غرفة العرض والإخراج",sub:"السيناريو والتقييم"},{href:"/gallery",icon:"📽️",name:"سينما الكواليس",sub:"الصور والفيديوهات"},{href:"/crew",icon:"🎭",name:"طاقم الفيلم",sub:"أعضاء الفريق وأدوارهم"},{href:"/sectors",icon:"🗂️",name:"قطاعات العمل",sub:"الفرق والمهام والمحادثات"},{href:"/submissions",icon:"📁",name:"التسليمات",sub:"النصوص والملفات والتسجيلات"},{href:"/requests",icon:"✉️",name:"رسائل الفريق",sub:"الطلبات والمراسلات"},{href:"/chat",icon:"💬",name:"غرفة التواصل",sub:"شات فريق الفيلم"},{href:"/assignments/new",icon:"✍️",name:"التكليفات الجديدة",sub:"إدارة أعمال الفرق"}] as const).map(link=><a className="executive-office-link" key={link.href} href={link.href}><span className="executive-office-icon">{link.icon}</span><strong>{link.name}</strong><small>{link.sub}</small></a>)}
     </div><div className="executive-special"><h3>✦ المساحات الحصرية لمكتب القيادة</h3><div className="executive-special-grid"><article><span>01 · PRIVATE SCREENING</span><h4>غرفة العرض الخاصة</h4><p>مدخل مباشر لمشاهدة الفيديوهات والكواليس المنشورة، ومراجعة مواد الفيلم بصريًا.</p><a href="/gallery">دخول غرفة العرض ←</a></article><article><span>02 · BEHIND THE SCENES</span><h4>رحلة صناعة الفيلم</h4><p>متابعة مراحل العمل والتكليفات والتقدم من غرفة عمليات الإنتاج.</p><a href="/production-hub">استعراض الرحلة ←</a></article><article><span>03 · CREATIVE ARCHIVE</span><h4>أرشيف الإبداع</h4><p>العودة إلى ملفات الفرق وأعمالهم والتصورات التي طُورت خلال المشروع.</p><a href="/submissions">فتح الأرشيف ←</a></article></div><div className="executive-mentor"><span>THE MENTOR'S LEGACY · بصمة المشرف</span><p>مساحة تقدير لرحلة التعلم والإبداع التي تجمع فريق Plateau بمشرفيه. محتوى الإهداء سيُضاف عند اعتماده، دون عرض رسائل منسوبة للفريق قبل كتابتها.</p></div></div><section className="executive-stars" aria-label="نجوم الفريق"><div className="executive-stars-heading"><div><span>PLATEAU · CAST & CREW</span><h3>✦ نجوم الفريق</h3><p>الناس اللي ورا كل لقطة وكل فكرة — بطاقاتهم الحقيقية بتتحدث من الاستوديو تلقائيًا.</p></div><a href="/crew">كل نجوم الفيلم ←</a></div>{stars.length>0?<div className="executive-stars-viewport" dir="ltr" tabIndex={0} aria-label="شريط متحرك لنجوم الفيلم، يتوقف عند التفاعل معه"><div className="executive-stars-track">{[0,1].map(copy=><div className="executive-stars-set" key={copy} aria-hidden={copy===1}>{stars.map((star,i)=>{const info=starDetails.find(d=>d.user_id===star.id);const photo=info?.photo_path?getSupabase()?.storage.from("crew-photos").getPublicUrl(info.photo_path).data.publicUrl:null;return <a href="/crew" className="executive-star-card" key={star.id} dir="rtl" tabIndex={copy===1?-1:0}><div className="executive-star-portrait">{photo?<img src={photo} alt="" loading="lazy"/>:<span>✦</span>}</div><small>PLATEAU · STAR {String(i+1).padStart(2,"0")}</small><strong>{star.full_name}</strong><span>{info?.film_role||"عضو طاقم الفيلم"}</span></a>})}</div>)}</div></div>:<p className="executive-stars-empty">بطاقات النجوم هتظهر هنا تلقائيًا بمجرد تحميل بيانات الطاقم المعتمد.</p>}</section><p className="executive-office-footer">مساحة مشتركة لإدارة أعمال الفريق — نفس الواجهة ونفس الأدوات لكل حساب مشرف معتمد.</p></div>
    </section>}
    <p style={{color:"#d5a66d"}}>{profile.app_role==="supervisor"?"لوحة المشرفة":"لوحة الطالب"}</p>
-   <h1>أهلًا، {profile.full_name}</h1><nav style={{display:"flex",gap:12,flexWrap:"wrap",margin:"18px 0"}}><a href="/sectors" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>🎬 قطاعات فرق العمل · المهام والملفات</a></nav><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p><p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>
+   <h1>أهلًا، {profile.full_name}</h1><nav style={{display:"flex",gap:12,flexWrap:"wrap",margin:"18px 0"}}><a href="/sectors" style={{color:"#f5d6a7",padding:12,border:"1px solid #795a70",borderRadius:10}}>🎬 قطاعات فرق العمل · المهام والملفات</a><a href="/assignments" style={{color:"#f5d6a7",padding:12,border:"1px solid #d2b16c",borderRadius:10,textDecoration:"none"}}>📋 التكاليف المطلوبة</a></nav><p><a href="/crew" style={{color:"#f5c2d5",fontWeight:700}}>🎞 طاقم الفيلم · بطاقات الأعضاء المعتمدين</a></p>{profile.app_role==="supervisor"&&<p><a href="/production-hub" style={{display:"inline-block",padding:"13px 18px",background:"#4b3540",border:"1px solid #b48b65",borderRadius:12,color:"#f5d6a7",fontWeight:700,textDecoration:"none"}}>🎬 غرفة عمليات الإنتاج · المحطات والتكليفات</a></p>}
    {profile.app_role==="supervisor"?<>
     <p style={{color:"#b7c0ce"}}>راجعي طلبات الانضمام قبل اعتماد الطلاب.</p><section style={{...panel,borderColor:"#886277"}}><h2>🎞 متابعة طاقم الفيلم</h2><p>الأعضاء المعتمدون: <strong>{students.filter(s=>s.approval_status==="approved").length}</strong> من العدد المستهدف 18</p><p>طلبات بانتظار الاعتماد: <strong>{visiblePending.length}</strong></p>{students.filter(s=>s.approval_status==="approved").length>=18&&<p>تنبيه: العدد المستهدف اكتمل أو تم تجاوزه؛ راجعي الأسماء قبل الموافقة على حسابات إضافية.</p>}<a href="/crew">عرض بطاقات الطاقم والأدوار</a></section><p><a href="/director-room" style={{color:"#f5c2d5",fontWeight:700}}>🎬 غرفة المخرجة الخاصة · السيناريو والتقييم</a></p><p><a href="/assignments/new" style={{color:"#d5a66d"}}>+ إنشاء تكليف جديد للفرق</a></p><p><a href="/submissions" style={{color:"#d5a66d"}}>عرض التسليمات</a></p>
     
