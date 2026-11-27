@@ -2683,3 +2683,135 @@ body .studio-museum .museum-message::after{
   content:none!important;
   display:none!important;
 }
+
+
+/* Student assignments: focused, accessible accordion */
+body main.assignments-page{
+ max-width:920px!important;margin:0 auto!important;padding:30px 18px 110px!important;
+ color:#493456!important;min-height:70vh;
+}
+body main.assignments-page .assignments-back{
+ display:inline-flex!important;align-items:center;gap:7px;color:#60466e!important;
+ font-size:14px!important;font-weight:800!important;text-decoration:none!important;
+ border-bottom:1px solid #d2b16c;padding:5px 0;
+}
+body main.assignments-page .assignments-hero{
+ margin:22px 0 20px;padding:22px clamp(16px,4vw,28px);
+ border:1px solid #d9cde1;border-radius:22px;
+ background:linear-gradient(145deg,#fffdfd 0%,#f0e9f5 100%)!important;
+ box-shadow:0 8px 26px #50376012!important;
+}
+body main.assignments-page .assignments-eyebrow{
+ margin:0 0 8px!important;color:#9679a7!important;
+ font-size:10px!important;font-weight:800!important;letter-spacing:2px;
+}
+body main.assignments-page .assignments-hero h1{
+ margin:0 0 8px!important;color:#493456!important;
+ font-size:clamp(25px,5vw,36px)!important;font-weight:850!important;
+ line-height:1.35!important;letter-spacing:0!important;
+ text-shadow:none!important;filter:none!important;transform:none!important;
+}
+body main.assignments-page .assignments-intro{
+ margin:0!important;color:#65556f!important;font-size:14px!important;line-height:1.8!important;
+}
+.assignments-count{
+ display:inline-flex;margin-top:14px;padding:6px 12px;border-radius:999px;
+ background:#f4ead4;border:1px solid #d2b16c;color:#60466e;
+ font-size:12px;font-weight:800;
+}
+.assignments-accordion-list{display:grid;gap:12px;margin-top:18px}
+.assignment-accordion{
+ overflow:hidden;border:1px solid #d9cde1;border-radius:18px;
+ background:#fffdfd;box-shadow:0 6px 20px #4934560b;
+}
+.assignment-accordion-trigger{
+ width:100%;min-height:78px;display:grid!important;
+ grid-template-columns:40px minmax(0,1fr) 34px;align-items:center;gap:12px;
+ padding:14px 16px!important;border:0!important;border-radius:0!important;
+ background:transparent!important;color:#493456!important;
+ box-shadow:none!important;text-align:right!important;cursor:pointer;
+}
+.assignment-accordion-trigger:hover,.assignment-accordion-trigger:focus-visible{
+ background:#f8f3fa!important;outline:2px solid #d2b16c;outline-offset:-3px;
+}
+.assignment-index{
+ width:38px;height:38px;display:grid;place-items:center;border-radius:12px;
+ background:#f2eaf5;border:1px solid #ded0e6;color:#60466e;
+ font-size:12px;font-weight:900;direction:ltr;
+}
+.assignment-trigger-copy{min-width:0;display:grid;gap:5px}
+.assignment-trigger-copy>strong{
+ color:#493456!important;font-size:16px!important;font-weight:850!important;
+ line-height:1.55!important;overflow-wrap:anywhere;
+}
+.assignment-due-badge{
+ justify-self:start;display:inline-flex;max-width:100%;padding:3px 9px;
+ border-radius:999px;background:#f6f0f8;border:1px solid #e3d8e9;
+ color:#665270!important;font-size:11px!important;font-weight:700;line-height:1.5;
+}
+.assignment-due-badge.is-past{background:#f7eee9;border-color:#e7cbbd;color:#80513f!important}
+.assignment-chevron{
+ width:32px;height:32px;display:grid;place-items:center;border-radius:50%;
+ background:#f2eaf5;border:1px solid #ded0e6;color:#60466e;
+ font-size:24px;line-height:1;transition:transform .3s ease,background .3s ease;
+}
+.assignment-accordion.is-open .assignment-chevron{transform:rotate(180deg);background:#f4ead4;border-color:#d2b16c}
+.assignment-accordion-panel{
+ display:grid;grid-template-rows:0fr;opacity:0;
+ transition:grid-template-rows .36s ease,opacity .25s ease;
+}
+.assignment-accordion.is-open .assignment-accordion-panel{grid-template-rows:1fr;opacity:1}
+.assignment-accordion-panel-inner{min-height:0;overflow:hidden}
+.assignment-details{
+ border-top:1px solid #e8deec;padding:16px 18px 18px;
+}
+.assignment-description{
+ margin:0!important;color:#493456!important;
+ font-size:15px!important;line-height:1.95!important;
+ white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.assignment-due-row{
+ display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+ flex-wrap:wrap;margin-top:16px;padding:12px 14px;
+ border:1px solid #e4d8eb;border-radius:12px;background:#f7f2f9;
+}
+.assignment-due-row span{color:#796a83!important;font-size:12px!important;font-weight:700}
+.assignment-due-row strong{color:#493456!important;font-size:13px!important;line-height:1.7}
+.assignments-feedback{padding:14px 16px;color:#60466e!important;background:#f4eef7;border:1px solid #ded0e6;border-radius:14px}
+.assignments-empty{
+ padding:22px 18px;border:1px dashed #cbbbd8;border-radius:18px;
+ background:#fffdfd;text-align:center;color:#493456;
+}
+.assignments-empty strong{display:block;color:#493456!important;font-size:17px!important}
+.assignments-empty p{margin:8px 0 0!important;color:#65556f!important;font-size:13px!important;line-height:1.8!important}
+@media(max-width:600px){
+ body main.assignments-page{padding:18px 12px 100px!important}
+ body main.assignments-page .assignments-hero{margin:16px 0;padding:17px 14px;border-radius:17px}
+ body main.assignments-page .assignments-hero h1{font-size:24px!important}
+ body main.assignments-page .assignments-intro{font-size:13px!important}
+ .assignment-accordion{border-radius:15px}
+ .assignment-accordion-trigger{grid-template-columns:32px minmax(0,1fr) 30px;gap:9px;padding:12px 11px!important;min-height:72px}
+ .assignment-index{width:31px;height:31px;border-radius:9px;font-size:10px}
+ .assignment-trigger-copy>strong{font-size:14px!important;line-height:1.55!important}
+ .assignment-due-badge{font-size:10px!important}
+ .assignment-chevron{width:29px;height:29px;font-size:22px}
+ .assignment-details{padding:13px 12px 15px}
+ .assignment-description{font-size:14px!important;line-height:1.9!important}
+ .assignment-due-row{padding:10px 11px}
+ .assignment-due-row strong{font-size:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .assignment-accordion-panel,.assignment-chevron{transition:none!important}
+}
+
+/* Honors title is intentionally flat: no offset, glow or duplicate pseudo-layer */
+body main.honor-board-page .honor-board-title{
+ color:#493456!important;-webkit-text-fill-color:#493456!important;
+ font-weight:850!important;letter-spacing:0!important;
+ text-shadow:none!important;filter:none!important;transform:none!important;
+ -webkit-text-stroke:0 transparent!important;animation:none!important;
+}
+body main.honor-board-page .honor-board-title::before,
+body main.honor-board-page .honor-board-title::after{
+ content:none!important;display:none!important;
+}
