@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState,type FormEvent} from "react";
-import {getAuthUser,getSupabase} from "../../lib/supabase-browser";
+import {getAuthUser,getPublicSupabase,getSupabase} from "../../lib/supabase-browser";
 
 type Honor={id:number;student_name:string;achievement:string;award:string;stars:number;note:string|null;created_at:string};
 
@@ -16,15 +16,16 @@ export default function HonorBoard(){
 
  async function load(){
   const db=getSupabase();
-  if(!db)return;
+  const publicDb=getPublicSupabase();
+  if(!publicDb)return;
   const {data:{user}}=await getAuthUser();
-  if(user){
+  if(user&&db){
    const p=await db.from("profiles").select("app_role").eq("id",user.id).single();
    setSupervisor(p.data?.app_role==="supervisor");
   }else{
    setSupervisor(false);
   }
-  const r=await db.from("studio_honors")
+  const r=await publicDb.from("studio_honors")
    .select("id,student_name,achievement,award,stars,note,created_at")
    .order("created_at",{ascending:false})
    .limit(100);
