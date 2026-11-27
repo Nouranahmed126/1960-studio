@@ -10,7 +10,6 @@ import PostInteractions, { type InteractionCounts } from "../gallery/post-intera
 type Media = { path: string; kind: "image" | "video" };
 type Post = {
   id: number;
-  user_id?: string | null;
   author_name: string;
   author_role: string;
   body: string;
@@ -121,15 +120,6 @@ export default function Feed() {
     if (signal?.aborted || requestId !== refreshId.current) return;
     if (result.error) { setNotice("تعذّر تحميل المنشورات. جرّب التحديث."); return; }
     let posts = (result.data ?? []) as Post[];
-    if (viewer && posts.length) {
-      const ownerResult = await db.from("plateau_posts").select("id,user_id")
-        .in("id", posts.slice(0, limit).map(post => post.id));
-      if (signal?.aborted || requestId !== refreshId.current) return;
-      if (!ownerResult.error) {
-        const owners = new Map((ownerResult.data ?? []).map(row => [row.id, row.user_id]));
-        posts = posts.map(post => ({ ...post, user_id: owners.get(post.id) ?? null }));
-      }
-    }
     const visible = posts.slice(0, limit);
     const newPaths = visible.flatMap(post => post.media_path ? [post.media_path] : []);
     const paths = [...new Set(newPaths)];
@@ -227,7 +217,7 @@ export default function Feed() {
   }
 
   function beginPostEdit(post: Post) {
-    if (!viewer || post.user_id !== viewer.id) return;
+    if (!viewer?.supervisor) return;
     setEditingPost(post.id);
     setEditBody(post.body);
     setEditLocation(post.location ?? "");
@@ -243,7 +233,7 @@ export default function Feed() {
   async function savePostEdit(event: FormEvent<HTMLFormElement>, post: Post) {
     event.preventDefault();
     const db = getSupabase();
-    if (!db || !viewer || post.user_id !== viewer.id || savingEdit) return;
+    if (!db || !viewer?.supervisor || savingEdit) return;
     const text = editBody.trim();
     const place = editLocation.trim();
     if (place.length > 160) { setActionError("اسم المكان لازم يكون 160 حرف أو أقل."); return; }
@@ -268,17 +258,13 @@ export default function Feed() {
 
   async function moderate(post: Post, remove: boolean) {
     const db = getSupabase();
-    if (!db || !viewer || moderating) return;
-    if (!remove && !viewer.supervisor) return;
-    if (remove && !viewer.supervisor && post.user_id !== viewer.id) return;
+    if (!db || !viewer?.supervisor || moderating) return;
     if (remove && !window.confirm("حذف المنشور وتعليقاته نهائيًا؟")) return;
     setModerating(post.id);
     setActionError("");
     try {
       const result = remove
-        ? viewer.supervisor
-          ? await db.from("plateau_posts").delete().eq("id", post.id).select("id").single()
-          : await db.from("plateau_posts").delete().eq("id", post.id).eq("user_id", viewer.id).select("id").single()
+        ? await db.from("plateau_posts").delete().eq("id", post.id).select("id").single()
         : await db.from("plateau_posts").update({ pinned_at: post.pinned_at ? null : new Date().toISOString() })
           .eq("id", post.id).select("id").single();
       if (result.error) throw result.error;
@@ -354,13 +340,32 @@ export default function Feed() {
           const media = post.media_path && post.media_kind ? [{ path: post.media_path, kind: post.media_kind }] : post.legacy_media;
           return <article className="plateau-card plateau-post" key={post.id}>
             <header className="plateau-post-header">
-              <span aria-hidden="true" className="plateau-avatar">{post.author_name.trim().slice(0, 1) || "P"}</span>
-              <div><strong>{post.author_name}</strong>
-                <div className="plateau-byline"><span>{post.author_role === "supervisor" ? "المشرفة" : "عضو الفريق"}</span>
-                  <time dateTime={post.created_at}>{dateFormatter.format(new Date(post.created_at))}</time>
-                  {post.pinned_at && <span>منشور مثبّت</span>}
+              <div className="plateau-post-identity">
+                <span aria-hidden="true" className="plateau-avatar">{post.author_name.trim().slice(0, 1) || "P"}</span>
+                <div><strong>{post.author_name}</strong>
+                  <div className="plateau-byline"><span>{post.author_role === "supervisor" ? "المشرفة" : "عضو الفريق"}</span>
+                    <time dateTime={post.created_at}>{dateFormatter.format(new Date(post.created_at))}</time>
+                    {post.pinned_at && <span>منشور مثبّت</span>}
+                  </div>
                 </div>
               </div>
+              {viewer?.supervisor && <details className="plateau-post-menu">
+                <summary aria-label="خيارات إدارة المنشور" title="خيارات المنشور">•••</summary>
+                <div className="plateau-post-menu-items" role="menu">
+                  <button type="button" role="menuitem" disabled={!!moderating || savingEdit}
+                    onClick={event => { event.currentTarget.closest("details")?.removeAttribute("open"); beginPostEdit(post); }}>
+                    تعديل المنشور
+                  </button>
+                  <button type="button" role="menuitem" disabled={!!moderating}
+                    onClick={event => { event.currentTarget.closest("details")?.removeAttribute("open"); void moderate(post, false); }}>
+                    {post.pinned_at ? "إلغاء التثبيت" : "تثبيت المنشور"}
+                  </button>
+                  <button type="button" role="menuitem" className="is-danger" disabled={!!moderating || savingEdit}
+                    onClick={event => { event.currentTarget.closest("details")?.removeAttribute("open"); void moderate(post, true); }}>
+                    حذف المنشور
+                  </button>
+                </div>
+              </details>}
             </header>
             {post.location && <div className="plateau-post-location" dir="auto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>{post.location}</span></div>}
             {post.body && <p className="plateau-post-body" dir="auto">{post.body}</p>}
@@ -368,20 +373,17 @@ export default function Feed() {
               {media.map((item, index) => {
                 const url = feed.urls[item.path];
                 if (!url) return <p key={item.path}>المرفق غير متاح حاليًا.</p>;
-                return item.kind === "video" ? <video key={item.path} src={url} controls playsInline preload="metadata" /> :
-                  <button key={item.path} className="plateau-media-button" onClick={() => { setLightbox(url); dialog.current?.showModal(); }}
-                    aria-label={`تكبير صورة ${index + 1}`}><img loading="lazy" src={url} alt={`صورة من منشور ${post.author_name}`} /></button>;
+                return item.kind === "video" ? <div key={item.path} className="plateau-media-frame">
+                  <video src={url} controls playsInline preload="metadata" />
+                </div> : <div key={item.path} className="plateau-media-frame">
+                  <button className="plateau-media-button" onClick={() => { setLightbox(url); dialog.current?.showModal(); }}
+                    aria-label={"تكبير صورة " + (index + 1)}><img loading="lazy" src={url} alt={"صورة من منشور " + post.author_name} /></button>
+                </div>;
               })}
             </div>}
-            {post.youtube_id && <iframe className="plateau-embed" title={`فيديو YouTube من ${post.author_name}`} loading="lazy"
-              src={`https://www.youtube-nocookie.com/embed/${post.youtube_id}`} allowFullScreen />}
-            {viewer && (viewer.supervisor || post.user_id === viewer.id) && <div className="plateau-moderation">
-              {post.user_id === viewer.id && <button type="button" disabled={!!moderating || savingEdit}
-                onClick={() => beginPostEdit(post)}>تعديل المنشور</button>}
-              {viewer.supervisor && <button type="button" disabled={!!moderating}
-                onClick={() => void moderate(post, false)}>{post.pinned_at ? "إلغاء التثبيت" : "تثبيت"}</button>}
-              <button type="button" disabled={!!moderating || savingEdit}
-                onClick={() => void moderate(post, true)}>حذف المنشور</button>
+            {post.youtube_id && <div className="plateau-media-frame plateau-embed-frame">
+              <iframe className="plateau-embed" title={"فيديو YouTube من " + post.author_name} loading="lazy"
+                src={"https://www.youtube-nocookie.com/embed/" + post.youtube_id} allowFullScreen />
             </div>}
             {editingPost === post.id && <form className="plateau-edit-form" onSubmit={event => void savePostEdit(event, post)}>
               <label>نص المنشور
