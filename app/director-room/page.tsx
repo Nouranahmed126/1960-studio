@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
-import {getSupabase} from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 type Bible={premise:string;synopsis:string;characters:string;timeline:string;continuity_notes:string;next_steps:string};
 const blankBible:Bible={premise:"",synopsis:"",characters:"",timeline:"",continuity_notes:"",next_steps:""};
 type Scene={id:number;scene_number:number;title:string;setting:string;location:string;time_of_day:string;characters:string;dramatic_goal:string;action_text:string;dialogue:string;camera:string;lighting:string;sound:string;production_notes:string;status:string};
@@ -15,7 +15,7 @@ export default function DirectorRoom(){
  const [allowed,setAllowed]=useState<boolean|null>(null),[scenes,setScenes]=useState<Scene[]>([]),[contributions,setContributions]=useState<Contribution[]>([]),[reviews,setReviews]=useState<Review[]>([]),[draft,setDraft]=useState(empty),[editing,setEditing]=useState<number|null>(null),[note,setNote]=useState<Record<number,string>>({}),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
  async function load(){
   const db=getSupabase();if(!db)return;
-  const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
+  const {data:{user}}=await getAuthUser();if(!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("app_role").eq("id",user.id).single();
   if(p.data?.app_role!=="supervisor"){setAllowed(false);return;}setAllowed(true);
   const [s,c,r,a,b]=await Promise.all([db.from("director_scenes").select("*").order("scene_number"),db.from("contributions").select("id,title,content,team_id,created_at").order("created_at",{ascending:false}).limit(60),db.from("director_reviews").select("*").order("created_at",{ascending:false}),db.from("attachments").select("id,contribution_id,file_name,storage_path,external_url,description").order("created_at",{ascending:false}),db.from("director_story_bible").select("*").eq("id",1).maybeSingle()]);
