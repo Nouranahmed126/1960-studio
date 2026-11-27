@@ -2581,3 +2581,17 @@ body .studio-museum .museum-photo::after{content:""!important;position:absolute!
   .sv-tab-panel{animation:none!important}
   .supervisor-v2 .sv-tabs button,.supervisor-v2 .sv-student-card,.supervisor-v2 .sv-task-card{transition:none!important}
 }
+
+
+/* Dashboard typography wins over the site's generic page defaults */
+main.supervisor-v2 .sv-greeting h1{font-size:clamp(19px,4.5vw,27px)!important;line-height:1.3!important}
+main.supervisor-v2 .sv-section-heading h2{font-size:20px!important;line-height:1.35!important}
+main.supervisor-v2 .sv-student-modal>header h2{font-size:19px!important;line-height:1.35!important}
+main.supervisor-v2 .sv-student-main p{font-size:10px!important;line-height:1.5!important}
+main.supervisor-v2 .sv-submission-item details p{font-size:12px!important;line-height:1.8!important}
+main.supervisor-v2 .sv-empty{font-size:12px!important;line-height:1.6!important}
+main.supervisor-v2 .sv-task-card strong{font-size:13px!important;line-height:1.5!important}
+@media(max-width:650px){
+  main.supervisor-v2 .sv-greeting h1{font-size:20px!important}
+  main.supervisor-v2 .sv-section-heading h2{font-size:18px!important}
+}
