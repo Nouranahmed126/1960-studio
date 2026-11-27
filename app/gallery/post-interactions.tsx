@@ -121,13 +121,15 @@ export default function PostInteractions({ postId, viewerId, supervisor, counts,
 
   return <div className="community-interactions">
     <div className="community-actions">
-      <button type="button" aria-pressed={liked} disabled={liking} onClick={toggleLike}>
-        <span aria-hidden="true">{liked ? "♥" : "♡"}</span> إعجاب <b>{likes}</b>
+      <button className="community-like-button" type="button" aria-label={liked ? "إلغاء الإعجاب" : "إعجاب"}
+        title={liked ? "إلغاء الإعجاب" : "إعجاب"} aria-pressed={liked} disabled={liking} onClick={toggleLike}>
+        <span className="community-heart" aria-hidden="true">{liked ? "♥" : "♡"}</span><b>{likes}</b>
       </button>
-      <button type="button" aria-expanded={open} aria-controls={`comments-${postId}`} disabled={loadingComments} onClick={() => {
-        setOpen(!open);
-        if (!open) void updateComments(() => fetchComments(commentPageSize));
-      }}>تعليقات <b>{total}</b></button>
+      <button className="community-comments-button" type="button" aria-expanded={open}
+        aria-controls={`comments-${postId}`} disabled={loadingComments} onClick={() => {
+          setOpen(!open);
+          if (!open) void updateComments(() => fetchComments(commentPageSize));
+        }}><span>التعليقات</span><b>{total}</b></button>
     </div>
     {likeError && <p role="alert">{likeError}</p>}
     {open && <section id={`comments-${postId}`} aria-label="تعليقات المنشور">
