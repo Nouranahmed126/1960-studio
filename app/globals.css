@@ -2648,3 +2648,38 @@ main.supervisor-v2 .sv-student-main p b{
   text-align:center!important;
   line-height:1.2!important;
 }
+
+
+/* Plateau Archive — clean, single-layer title and login notice */
+body .studio-museum .museum-header-compact h1{
+  color:#493456!important;
+  -webkit-text-fill-color:#493456!important;
+  font:700 clamp(28px,4.2vw,43px)/1.12 Georgia,serif!important;
+  font-weight:700!important;
+  letter-spacing:0!important;
+  text-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  animation:none!important;
+  opacity:1!important;
+  -webkit-text-stroke:0 transparent!important;
+}
+body .studio-museum .museum-header-compact h1::before,
+body .studio-museum .museum-header-compact h1::after{
+  content:none!important;
+  display:none!important;
+}
+body .studio-museum .museum-message{
+  color:#6f5b79!important;
+  -webkit-text-fill-color:#6f5b79!important;
+  font:600 clamp(15px,3.2vw,20px)/1.6 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  text-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  -webkit-text-stroke:0 transparent!important;
+}
+body .studio-museum .museum-message::before,
+body .studio-museum .museum-message::after{
+  content:none!important;
+  display:none!important;
+}
