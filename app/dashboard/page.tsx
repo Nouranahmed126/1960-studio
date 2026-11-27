@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import SubmissionRadar from "../submission-radar";
 import SupervisorArchive from "../supervisor-archive";
+import SupervisorDashboard from "./supervisor-dashboard";
 import { getSupabase } from "../../lib/supabase-browser";
 type Profile={id:string;full_name:string;approval_status:string;app_role:string};
 type Team={id:number;name:string};
@@ -145,6 +146,29 @@ export default function Dashboard(){
  const visiblePending=students.filter(s=>s.approval_status==="pending"&&requests.some(r=>r.user_id===s.id&&r.status==="pending"));
  const teamName=(id:number)=>teams.find(t=>t.id===id)?.name??"فريق غير معروف";
  const buttonStyle={border:0,borderRadius:9,padding:"12px 18px",background:"#d5a66d",color:"#16171d",fontWeight:700 as const,cursor:"pointer"};
+ if(profile?.app_role==="supervisor"){
+  return <SupervisorDashboard
+   profile={profile}
+   students={students}
+   teams={teams}
+   assignments={assignmentRegister}
+   files={uploadedFiles}
+   writtenItems={writtenItems}
+   classifications={classifications}
+   requests={requests}
+   fileReviews={fileReviews}
+   writtenReviews={writtenReviews}
+   busy={busy}
+   message={message}
+   onLogout={logout}
+   onApprove={approve}
+   onOpenFile={openTrackedFile}
+   onMarkFileReceived={markFileReceived}
+   onUpdateWrittenReview={updateWrittenReview}
+   onSaved={load}
+   onClearMessage={()=>setMessage("")}
+  />;
+ }
  return <main className="dashboard-shell"><SubmissionRadar/>
   <header style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
    <a href="/" style={{color:"#d5a66d",fontWeight:700}}>Plateau Crew Hub</a>
