@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, type FormEvent } from "react";
-import { getSupabase } from "../../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../../lib/supabase-browser";
 type Team={id:number;name:string};
 export default function NewAssignment(){
  const [teams,setTeams]=useState<Team[]>([]);
@@ -13,7 +13,7 @@ export default function NewAssignment(){
  const [message,setMessage]=useState("جارٍ التحقق من صلاحية المشرفة...");
  useEffect(()=>{void (async()=>{
   const db=getSupabase();if(!db){setMessage("إعدادات Supabase غير مكتملة.");return;}
-  const {data:{user}}=await db.auth.getUser();
+  const {data:{user}}=await getAuthUser();
   if(!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("app_role,approval_status").eq("id",user.id).single();
   if(p.error||p.data?.app_role!=="supervisor"||p.data?.approval_status!=="approved"){setMessage("الصفحة دي للمشرفة فقط.");return;}
@@ -28,7 +28,7 @@ export default function NewAssignment(){
   const db=getSupabase();if(!db)return;
   setBusy(true);setMessage("");
   try{
-   const {data:{user}}=await db.auth.getUser();
+   const {data:{user}}=await getAuthUser();
    if(!user){setMessage("سجلي الدخول مرة تانية.");return;}
    const created=await db.from("assignments").insert({title:title.trim(),description:description.trim(),due_at:due?new Date(due).toISOString():null,created_by:user.id}).select("id").single();
    if(created.error||!created.data){setMessage("تعذر إنشاء التكليف. راجعي سياسات قاعدة البيانات.");return;}
