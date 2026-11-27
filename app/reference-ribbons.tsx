@@ -44,12 +44,12 @@ export default function Ribbons(){
   ]);
 
   let crewItems:RibbonItem[]=[];
-  let cassetteItem:RibbonItem|null=null;
+  const keepsakeItems:RibbonItem[]=[];
   if(isApprovedMember&&user&&db){
-   const [crewResult,detailResult,cassetteResult]=await Promise.all([
+   const [crewResult,detailResult,keepsakesResult]=await Promise.all([
     db.rpc("list_approved_crew"),
     db.from("crew_profiles").select("user_id,photo_path"),
-    db.from("project_gallery").select("id,title,storage_path").eq("id",1).maybeSingle()
+    db.from("project_gallery").select("id,title,storage_path").in("id",[1,2])
    ]);
    const members=(crewResult.data??[]) as CrewMember[];
    const details=(detailResult.data??[]) as {user_id:string;photo_path:string|null}[];
@@ -68,10 +68,10 @@ export default function Ribbons(){
     if(photo)crewItems.push({id:m.id,label:m.full_name,image:photo,kind:"crew"});
    }
 
-   const cassette=cassetteResult.data as {id:number;title:string|null;storage_path:string|null}|null;
-   if(cassette?.storage_path){
-    const image=await storageImage(db,"studio-gallery",cassette.storage_path);
-    if(image)cassetteItem={id:"cassette-"+cassette.id,label:cassette.title||"1960 Archive",image,kind:"artifact"};
+   for(const item of keepsakesResult.data??[]){
+    if(!item.storage_path)continue;
+    const image=await storageImage(db,"studio-gallery",item.storage_path);
+    if(image)keepsakeItems.push({id:"keepsake-"+item.id,label:item.id===2?"تلفزيون قديم":item.title||"1960 Archive",image,kind:"artifact"});
    }
   }
 
@@ -84,7 +84,7 @@ export default function Ribbons(){
   for(const entry of artifactImages){
    if(entry.image)artifactItems.push({id:String(entry.row.id),label:entry.row.title,image:entry.image,kind:"artifact"});
   }
-  if(cassetteItem)artifactItems.push(cassetteItem);
+  artifactItems.push(...keepsakeItems);
 
   const byName=new Map<string,string>();
   for(const m of crewItems)if(m.image)byName.set(normalizeName(m.label),m.image);

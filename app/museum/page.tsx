@@ -23,7 +23,7 @@ export default function Museum(){
    const {data:{user}}=await getAuthUser();
    if(!active)return;
 
-   // The keepsakes archive is public. Only the legacy cassette entry still
+   // The keepsakes archive is public. The legacy keepsake entries still
    // uses the private gallery bucket, so request it only for signed-in users.
    const r=await publicDb.from("studio_props")
     .select("id,title,description,category,image_path")
@@ -41,15 +41,15 @@ export default function Museum(){
 
     const moved:Artifact[]=[];
     if(user&&db){
-     const cassette=await db.from("project_gallery")
+     const keepsakes=await db.from("project_gallery")
       .select("id,title,description,storage_path")
-      .eq("id",1)
-      .maybeSingle();
-     if(cassette.data?.storage_path){
-      const signed=await db.storage.from("studio-gallery").createSignedUrl(cassette.data.storage_path,3600);
+      .in("id",[1,2]);
+     for(const item of keepsakes.data??[]){
+      if(!item.storage_path)continue;
+      const signed=await db.storage.from("studio-gallery").createSignedUrl(item.storage_path,3600);
       if(signed.data?.signedUrl){
-       moved.push({id:-1,title:cassette.data.title||"شرائط الكاسيت القديمة",description:cassette.data.description,category:"أجهزة قديمة",image_path:null});
-       photos[-1]=signed.data.signedUrl;
+       moved.push({id:-item.id,title:item.id===2?"تلفزيون قديم":item.title||"شرائط الكاسيت القديمة",description:item.description,category:"أجهزة قديمة",image_path:null});
+       photos[-item.id]=signed.data.signedUrl;
       }
      }
     }
