@@ -1,13 +1,12 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let client: SupabaseClient | null = null;
+let publicClient: SupabaseClient | null = null;
 
 /**
- * Browser-only Supabase client.
- *
- * Supabase JS already persists browser sessions in localStorage by default.
- * Keep one client per tab and avoid mirroring rotating refresh tokens into
- * a second, hand-written cookie store (which can become stale on Safari).
+ * Authenticated browser client.
+ * Supabase JS persists the browser session in localStorage by default.
+ * Avoid duplicating rotating refresh tokens in a second custom cookie store.
  */
 export function getSupabase(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -28,9 +27,31 @@ export function getSupabase(): SupabaseClient | null {
 }
 
 /**
- * Read the already-restored browser session without making an extra /user
- * network request on every route change. Database RLS remains the authority
- * for every read/write; this helper is only for client-side UI state.
+ * Public read-only client. It deliberately never loads or stores a user
+ * session, so public archive/highlight queries keep using the anon role even
+ * when an unapproved or signed-in user is browsing the site.
+ */
+export function getPublicSupabase(): SupabaseClient | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+
+  if (!publicClient) {
+    publicClient = createClient(url, key, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
+  }
+
+  return publicClient;
+}
+
+/**
+ * Read the restored browser session without making an extra /user request
+ * on every route change. RLS remains the authority for every database action.
  */
 export async function getAuthUser() {
   const db = getSupabase();
