@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useState,type FormEvent} from "react";
-import {getSupabase} from "../../lib/supabase-browser";
+import { getAuthUser, getSupabase } from "../../lib/supabase-browser";
 type Item={id:number;title:string;description:string|null;storage_path:string;mime_type:string;created_at:string;category:"reference"|"behind_scenes";carousel_id:string|null;carousel_position:number|null};
 export default function Gallery(){
  const [items,setItems]=useState<Item[]>([]),[urls,setUrls]=useState<Record<number,string>>({});
@@ -8,7 +8,7 @@ export default function Gallery(){
  const [supervisor,setSupervisor]=useState(false),[canPost,setCanPost]=useState(false),[title,setTitle]=useState(""),[description,setDescription]=useState(""),[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState("جارٍ تحميل المعرض...");
  async function load(){
   const db=getSupabase();if(!db){setMessage("الاتصال غير متاح.");return;}
-  const {data:{user}}=await db.auth.getUser();if(!user){window.location.replace("/login");return;}
+  const {data:{user}}=await getAuthUser();if(!user){window.location.replace("/login");return;}
   const p=await db.from("profiles").select("app_role,approval_status").eq("id",user.id).single();
   if(p.error||!p.data){setMessage("تعذر التحقق من صلاحية الحساب.");return;}
   if(p.data.app_role!=="supervisor"&&p.data.approval_status!=="approved"){setMessage("المعرض متاح بعد موافقة المشرفة على الحساب.");return;}
@@ -27,7 +27,7 @@ export default function Gallery(){
   e.preventDefault();const db=getSupabase();if(!db||!files.length||!canPost||!title.trim())return;
   if(files.some(f=>f.size===0||f.size>52428800||!supported.includes(f.type))){setMessage("كل ملف لازم يكون بصيغة مدعومة وحجمه لا يتجاوز 50 ميجابايت.");return;}
   setBusy(true);setMessage("جارٍ تجهيز الملفات...");
-  const {data:{user}}=await db.auth.getUser();if(!user){setBusy(false);setMessage("سجلي الدخول مرة أخرى.");return;}
+  const {data:{user}}=await getAuthUser();if(!user){setBusy(false);setMessage("سجلي الدخول مرة أخرى.");return;}
   const uploaded:string[]=[];const group=files.length>1?crypto.randomUUID():null;
   try{
    const records=[];
