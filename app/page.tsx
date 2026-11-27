@@ -38,7 +38,6 @@ export default function Home(){
   <Ribbons/>
   <footer className="reference-credits" dir="ltr">
    <div><small>Academic Supervision</small><b>Dr. Ahmed Abdelmoneim</b></div>
-   <span className="reference-credit-star" aria-hidden="true">✦</span>
    <div><small>Designed &amp; Developed by</small><b>Nouran Ahmed</b></div>
   </footer>
  </main>;
