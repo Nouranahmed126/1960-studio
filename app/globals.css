@@ -3327,3 +3327,47 @@ body .studio-museum .museum-polaroid:nth-child(4n){
   body .studio-museum .museum-photo img,
   body .studio-museum .museum-photo-caption{transition:none!important}
 }
+
+
+/* Unified supervisor submission review: status colors and one in-place review window */
+.radar-pending .radar-rec{background:#d2a84b;box-shadow:0 0 8px #d2a84b;animation:none}
+.radar-item.radar-status-unseen{border-right:4px solid #d9485f;background:#fff1f3}
+.radar-item.radar-status-pending{border-right:4px solid #d2a84b;background:#fff8e9}
+.radar-item.radar-status-reviewed{border-right:4px solid #3d9b70;background:#eff9f3}
+.supervisor-v2 .submission-radar .radar-item.radar-status-unseen{background:#fff1f3!important;border-color:#e8c8d0!important;border-right:4px solid #d9485f!important}
+.supervisor-v2 .submission-radar .radar-item.radar-status-pending{background:#fff8e9!important;border-color:#eadcb9!important;border-right:4px solid #d2a84b!important}
+.supervisor-v2 .submission-radar .radar-item.radar-status-reviewed{background:#eff9f3!important;border-color:#cce5d6!important;border-right:4px solid #3d9b70!important}
+.radar-item.radar-status-unseen .radar-item-text em{color:#b52f48!important}
+.radar-item.radar-status-pending .radar-item-text em{color:#9a741f!important}
+.radar-item.radar-status-reviewed .radar-item-text em{color:#26764f!important}
+.radar-detail-inbox{width:min(760px,100%)!important;max-height:calc(100dvh - 24px - env(safe-area-inset-bottom,0px))!important;padding:14px!important}
+.radar-detail-header{display:flex!important;align-items:center!important;gap:10px!important;border-bottom:1px solid #d9cde1!important;padding:0 0 11px!important}
+.radar-detail-header>div{display:grid;gap:3px;flex:1;min-width:0}
+.radar-detail-header>div small{color:#98773e;font-size:9px;font-weight:900;letter-spacing:1.6px}
+.radar-detail-header>div strong{color:#493456;font-size:16px;font-weight:900}
+.radar-detail-header .radar-back-button{width:34px!important;height:34px!important;min-width:34px!important;border:1px solid #d2b16c!important;border-radius:10px!important;background:#f0e9f5!important;color:#493456!important;font-size:20px!important}
+.radar-detail-preview{max-height:none!important;min-height:170px!important;max-height:48dvh!important;padding:10px!important;background:#fff!important;color:#493456!important}
+.radar-detail-preview img{display:block;width:auto;max-width:100%;max-height:44dvh;margin:auto;object-fit:contain}
+.radar-detail-preview video{display:block;width:100%;max-height:44dvh;margin:auto}
+.radar-detail-preview audio{display:block;width:100%;margin:16px auto}
+.radar-detail-preview iframe{display:block;width:100%;height:45dvh;min-height:230px;border:0;border-radius:8px;background:#fff}
+.radar-detail-preview object{display:block;width:100%;height:42dvh;min-height:220px;border:0;background:#fff}
+.radar-detail-preview a{color:#76558c!important;font-weight:800}
+.radar-work-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9}
+.radar-review-form{padding-bottom:6px}
+.radar-review-form textarea{display:block;width:100%;box-sizing:border-box;min-height:82px;margin:5px 0;padding:10px!important;border:1px solid #cbbbd8!important;border-radius:11px!important;background:#fff!important;color:#493456!important;font:inherit;font-size:13px!important;line-height:1.7}
+.radar-review-form .studio-review-label{color:#76558c!important;font-size:12px!important;font-weight:850!important}
+.radar-detail-inbox .studio-review-actions{position:sticky!important;bottom:0!important;z-index:5!important;margin:12px -6px -4px!important;padding:10px 6px max(8px,env(safe-area-inset-bottom,0px))!important;background:linear-gradient(180deg,#fffdfdF0,#fffdfd)!important;border-top:1px solid #d2b16c!important;box-shadow:0 -7px 18px #49345612!important}
+.radar-detail-inbox .studio-review-save{display:block!important;width:100%!important;min-height:46px!important;margin:0!important;border:1px solid #d2b16c!important;border-radius:11px!important;background:linear-gradient(110deg,#e8d8b2,#d2b16c)!important;color:#493456!important;font-size:14px!important;font-weight:900!important}
+.radar-error{margin:8px 0;padding:8px 10px;border:1px solid #e4b7bf;border-radius:9px;background:#fff1f3;color:#a62e42;font-size:11px;line-height:1.6}
+.radar-saved-message{margin:8px 0;padding:8px 10px;border:1px solid #b9dcc8;border-radius:9px;background:#eff9f3;color:#26764f;font-size:12px;font-weight:850}
+@media(max-width:600px){
+ .radar-detail-inbox{padding:10px!important;max-height:calc(100dvh - 16px - env(safe-area-inset-bottom,0px))!important}
+ .radar-detail-header>div strong{font-size:14px}
+ .radar-detail-preview{min-height:145px!important;max-height:40dvh!important}
+ .radar-detail-preview iframe{height:38dvh;min-height:190px}
+ .radar-detail-preview object{height:36dvh;min-height:180px}
+ .radar-detail-preview img,.radar-detail-preview video{max-height:36dvh}
+ .radar-review-form .gold-stamp-options{gap:5px}
+ .radar-review-form .gold-stamp-options button{font-size:10px;padding:7px 8px}
+}
