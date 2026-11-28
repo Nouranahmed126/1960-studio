@@ -37,13 +37,37 @@ export default function Home(){
   </section>
   <Ribbons/>
   <section className="reference-bts-section" aria-label="Behind the Scenes">
-   <Link href="/gallery" className="reference-frame reference-bts-card" aria-label="Behind the Scenes">
+   <Link
+    href="/gallery"
+    className="reference-frame reference-bts-card"
+    aria-label="Behind the Scenes — Every frame has a story."
+    aria-describedby="reference-bts-photo-attribution"
+   >
     <span className="reference-bts-scene" aria-hidden="true">
-     <img className="reference-bts-art" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Filming%2C_movie_camera_Fortepan_93266.jpg/960px-Filming%2C_movie_camera_Fortepan_93266.jpg" alt="" width={960} height={618} decoding="async" loading="lazy"/>
+     <img
+      className="reference-bts-art"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Filming%2C_movie_camera_Fortepan_93266.jpg/960px-Filming%2C_movie_camera_Fortepan_93266.jpg"
+      alt=""
+      width={960}
+      height={618}
+      decoding="async"
+      loading="lazy"
+     />
     </span>
-    <span className="reference-bts-copy"><strong>Behind the Scenes</strong><small>Every frame has a story.</small><span className="reference-bts-enter" aria-hidden="true">↗</span></span>
+    <span className="reference-bts-copy">
+     <strong>Behind the Scenes</strong>
+     <small>Every frame has a story.</small>
+     <span className="reference-bts-enter" aria-hidden="true">↗</span>
+    </span>
+    <span className="reference-bts-orbit-star" aria-hidden="true">✦</span>
+    <span className="reference-bts-shimmer-badge" aria-hidden="true">✧</span>
+    <span id="reference-bts-photo-attribution" className="reference-bts-attribution-sr">
+     Photo by FOTO:FORTEPAN / Inkey Tibor. Source:
+     https://commons.wikimedia.org/wiki/File:Filming,_movie_camera_Fortepan_93266.jpg.
+     License: Creative Commons Attribution-ShareAlike 3.0 (CC BY-SA 3.0).
+     https://creativecommons.org/licenses/by-sa/3.0/
+    </span>
    </Link>
-   <small className="reference-bts-credit"><a href="https://commons.wikimedia.org/wiki/File:Filming,_movie_camera_Fortepan_93266.jpg">1962 archival photo · FOTO:FORTEPAN / Inkey Tibor</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> · tinted and cropped</small>
   </section>
  </main>;
 }
