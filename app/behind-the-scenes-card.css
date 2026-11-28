@@ -363,6 +363,8 @@
 
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  .reference-hub a.reference-bts-card::before,
+  .reference-hub a.reference-bts-card::after,
   .reference-hub .reference-bts-orbit-star,
   .reference-hub .reference-bts-shimmer-badge,
   .reference-hub .reference-bts-shimmer-badge::before,
